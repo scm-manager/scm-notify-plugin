@@ -33,6 +33,9 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
 
@@ -45,8 +48,23 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param contentBuilder
+   */
+  @Inject
+  public DefaultNotifyHandlerFactory(ContentBuilder contentBuilder)
+  {
+    this.contentBuilder = contentBuilder;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -81,7 +99,8 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
       collectContacts(contacts, repository);
     }
 
-    return new DefaultNotifyHandler(configuration, repository, contacts);
+    return new DefaultNotifyHandler(contentBuilder, configuration, repository,
+                                    contacts);
   }
 
   /**
@@ -96,4 +115,9 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
 
     // todo implement
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ContentBuilder contentBuilder;
 }

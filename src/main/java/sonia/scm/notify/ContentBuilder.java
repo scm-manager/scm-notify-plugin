@@ -33,57 +33,39 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.AbstractModule;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Repository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.plugin.ext.Extension;
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class NotifyModule extends AbstractModule
+public interface ContentBuilder
 {
 
   /**
-   * the logger for NotifyModule
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(NotifyModule.class);
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
    * Method description
    *
+   *
+   * @param repository
+   * @param changesets
+   *
+   * @return
    */
-  @Override
-  protected void configure()
-  {
-    bind(NotifyContext.class);
-    bind(ContentBuilder.class, SimpleContentBuilder.class);
-    bind(NotifyHandlerFactory.class, DefaultNotifyHandlerFactory.class);
-  }
+  public Content createContent(Repository repository,
+                               Collection<Changeset> changesets);
 
   /**
    * Method description
    *
    *
-   * @param interfaceClass
-   * @param implementationClass
-   * @param <T>
+   * @param repository
+   *
+   * @return
    */
-  private <T> void bind(Class<T> interfaceClass,
-                        Class<? extends T> implementationClass)
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("bind {} as {}", implementationClass, interfaceClass);
-    }
-
-    bind(interfaceClass).to(implementationClass);
-  }
+  public String createSubject(Repository repository);
 }

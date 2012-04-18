@@ -33,57 +33,70 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.AbstractModule;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Repository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.plugin.ext.Extension;
+import java.text.MessageFormat;
+
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class NotifyModule extends AbstractModule
+public class SimpleContentBuilder implements ContentBuilder
 {
 
-  /**
-   * the logger for NotifyModule
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(NotifyModule.class);
+  /** Field description */
+  public static final String MIMETYPE = "text/plain";
+
+  /** Field description */
+  public static final String PATTERN_CHANGESET = "  {0} - {1}";
+
+  /** Field description */
+  public static final String PATTERN_SUBJECT = "Repository {0} has changed";
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param repository
+   * @param changesets
+   *
+   * @return
    */
   @Override
-  protected void configure()
+  public Content createContent(Repository repository,
+                               Collection<Changeset> changesets)
   {
-    bind(NotifyContext.class);
-    bind(ContentBuilder.class, SimpleContentBuilder.class);
-    bind(NotifyHandlerFactory.class, DefaultNotifyHandlerFactory.class);
+    StringBuilder content = new StringBuilder();
+
+    content.append("Changesets:\n");
+
+    for (Changeset c : changesets)
+    {
+      content.append(MessageFormat.format(PATTERN_CHANGESET, c.getId(),
+              c.getDescription())).append("\n");
+    }
+
+    return new Content(content.toString(), MIMETYPE);
   }
 
   /**
    * Method description
    *
    *
-   * @param interfaceClass
-   * @param implementationClass
-   * @param <T>
+   * @param repository
+   *
+   * @return
    */
-  private <T> void bind(Class<T> interfaceClass,
-                        Class<? extends T> implementationClass)
+  @Override
+  public String createSubject(Repository repository)
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("bind {} as {}", implementationClass, interfaceClass);
-    }
-
-    bind(interfaceClass).to(implementationClass);
+    return MessageFormat.format(PATTERN_SUBJECT, repository.getName());
   }
 }

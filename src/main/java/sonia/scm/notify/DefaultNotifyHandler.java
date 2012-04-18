@@ -62,9 +62,6 @@ import javax.mail.internet.MimeMessage;
 public class DefaultNotifyHandler implements NotifyHandler
 {
 
-  /** Field description */
-  public static final String MIMETYPE = "text/plain";
-
   /**
    * the logger for DefaultNotifyHandler
    */
@@ -77,13 +74,17 @@ public class DefaultNotifyHandler implements NotifyHandler
    * Constructs ...
    *
    *
+   *
+   * @param contentBuilder
    * @param configuration
    * @param repository
    * @param contacts
    */
-  public DefaultNotifyHandler(NotifyConfiguration configuration,
+  public DefaultNotifyHandler(ContentBuilder contentBuilder,
+                              NotifyConfiguration configuration,
                               Repository repository, Set<String> contacts)
   {
+    this.contentBuilder = contentBuilder;
     this.configuration = configuration;
     this.repository = repository;
     this.contacts = contacts;
@@ -129,26 +130,6 @@ public class DefaultNotifyHandler implements NotifyHandler
    * Method description
    *
    *
-   * @param changesets
-   *
-   * @return
-   */
-  private String createContent(Collection<Changeset> changesets)
-  {
-    StringBuilder content = new StringBuilder();
-
-    for (Changeset c : changesets)
-    {
-      content.append(c.getDescription()).append("\n");
-    }
-
-    return content.toString();
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param session
    * @param changesets
    *
@@ -165,7 +146,10 @@ public class DefaultNotifyHandler implements NotifyHandler
     msg.setFrom(new InternetAddress(configuration.getFrom()));
     msg.setRecipients(RecipientType.BCC, createRecipients());
     msg.setSubject(createSubject());
-    msg.setContent(createContent(changesets), MIMETYPE);
+
+    Content content = contentBuilder.createContent(repository, changesets);
+
+    msg.setContent(content.getBody(), content.getMimeType());
 
     return msg;
   }
@@ -207,8 +191,7 @@ public class DefaultNotifyHandler implements NotifyHandler
       content.append(prefix).append(" ");
     }
 
-    content.append("Repository ").append(repository.getName());
-    content.append("has changed");
+    content.append(contentBuilder.createSubject(repository));
 
     return content.toString();
   }
@@ -220,6 +203,9 @@ public class DefaultNotifyHandler implements NotifyHandler
 
   /** Field description */
   private Set<String> contacts;
+
+  /** Field description */
+  private ContentBuilder contentBuilder;
 
   /** Field description */
   private Repository repository;

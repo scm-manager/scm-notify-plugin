@@ -31,59 +31,55 @@
 
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.AbstractModule;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.plugin.ext.Extension;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class NotifyModule extends AbstractModule
+public class Content
 {
 
   /**
-   * the logger for NotifyModule
+   * Constructs ...
+   *
+   *
+   * @param body
+   * @param mimeType
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(NotifyModule.class);
+  public Content(Object body, String mimeType)
+  {
+    this.body = body;
+    this.mimeType = mimeType;
+  }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @return
    */
-  @Override
-  protected void configure()
+  public Object getBody()
   {
-    bind(NotifyContext.class);
-    bind(ContentBuilder.class, SimpleContentBuilder.class);
-    bind(NotifyHandlerFactory.class, DefaultNotifyHandlerFactory.class);
+    return body;
   }
 
   /**
    * Method description
    *
    *
-   * @param interfaceClass
-   * @param implementationClass
-   * @param <T>
+   * @return
    */
-  private <T> void bind(Class<T> interfaceClass,
-                        Class<? extends T> implementationClass)
+  public String getMimeType()
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("bind {} as {}", implementationClass, interfaceClass);
-    }
-
-    bind(interfaceClass).to(implementationClass);
+    return mimeType;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Object body;
+
+  /** Field description */
+  private String mimeType;
 }
