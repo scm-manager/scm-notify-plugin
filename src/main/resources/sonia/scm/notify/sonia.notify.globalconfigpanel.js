@@ -29,18 +29,62 @@
  * 
  */
 
-// register global config panel
-registerGeneralConfigPanel({
-  id: 'notifyGlobalConfigPanel',
-  xtype: 'notifyGlobalConfigPanel'
-});
 
-// register repository config panel
-Sonia.repository.openListeners.push(function(repository, panels){
-  if (Sonia.repository.isOwner(repository)){
-    panels.push({
-      xtype: 'notifyConfigPanel',
-      item: repository
+Ext.ns("Sonia.notify");
+
+
+Sonia.notify.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
+  
+  initComponent: function(){
+    var config = {
+      
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.notify.GlobalConfigPanel.superclass.initComponent.apply(this, arguments);
+  },
+
+  onSubmit: function(values){
+    this.el.mask(this.submitText);
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/notify/config.json',
+      method: 'POST',
+      jsonData: values,
+      scope: this,
+      disableCaching: true,
+      success: function(response){
+        this.el.unmask();
+      },
+      failure: function(){
+        this.el.unmask();
+      }
+    });
+  },
+
+  onLoad: function(el){
+    var tid = setTimeout( function(){
+      el.mask(this.loadingText);
+    }, 100);
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/notify/config.json',
+      method: 'GET',
+      scope: this,
+      disableCaching: true,
+      success: function(response){
+        var obj = Ext.decode(response.responseText);
+        this.load(obj);
+        clearTimeout(tid);
+        el.unmask();
+      },
+      failure: function(){
+        el.unmask();
+        clearTimeout(tid);
+        alert('failure');
+      }
     });
   }
+
+  
 });
+
+Ext.reg("notifyGlobalConfigPanel", Sonia.notify.GlobalConfigPanel);

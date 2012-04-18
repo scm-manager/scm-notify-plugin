@@ -29,18 +29,20 @@
  * 
  */
 
-// register global config panel
-registerGeneralConfigPanel({
-  id: 'notifyGlobalConfigPanel',
-  xtype: 'notifyGlobalConfigPanel'
+
+Ext.ns("Sonia.notify");
+
+Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
+  
+  initComponent: function(){
+    var config = {
+      
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.notify.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  }
+  
 });
 
-// register repository config panel
-Sonia.repository.openListeners.push(function(repository, panels){
-  if (Sonia.repository.isOwner(repository)){
-    panels.push({
-      xtype: 'notifyConfigPanel',
-      item: repository
-    });
-  }
-});
+Ext.reg("notifyConfigPanel", Sonia.notify.ConfigPanel);

@@ -48,6 +48,8 @@
 
   <resources>
     <script>/sonia/scm/notify/sonia.notify.js</script>
+    <script>/sonia/scm/notify/sonia.notify.configpanel.js</script>
+    <script>/sonia/scm/notify/sonia.notify.globalconfigpanel.js</script>
   </resources>
 
 </plugin>
