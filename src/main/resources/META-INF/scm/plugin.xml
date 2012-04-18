@@ -42,6 +42,10 @@
     <min-version>${project.parent.version}</min-version>
   </conditions>
 
+  <packages>
+    <package>sonia.scm.notify</package>
+  </packages>
+
   <resources>
     <script>/sonia/scm/notify/sonia.notify.js</script>
   </resources>
