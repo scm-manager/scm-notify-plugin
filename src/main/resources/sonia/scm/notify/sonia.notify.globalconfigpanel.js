@@ -35,9 +35,87 @@ Ext.ns("Sonia.notify");
 
 Sonia.notify.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   
+  titleText: 'Notify Configuration',
+  
+  serverText: 'Mail Server',
+  portText: 'Port',
+  usernameText: 'Username',
+  passwordText: 'Password',
+  fromText: 'From',
+  connectionSecurityText: 'Connection Security',
+  subjectPrefixText: 'Subject Prefix',
+  
+  // TODO
+  serverHelpText: '',
+  portHelpText: '',
+  usernameHelpText: '',
+  passwordHelpText: '',
+  fromHelpText: '',
+  connectionSecurityHelpText: '',
+  subjectPrefixHelpText: '',
+  
+  
   initComponent: function(){
     var config = {
-      
+      title: this.titleText,
+      items: [{
+        xtype : 'textfield',
+        name: 'server',
+        allowBlank : false,
+        fieldLabel: this.serverText,
+        helpText: this.serverHelpText
+      },{
+        xtype : 'textfield',
+        name: 'port',
+        allowBlank : false,
+        fieldLabel: this.portText,
+        helpText: this.portHelpText
+      },{
+        xtype : 'textfield',
+        name: 'username',
+        allowBlank : true,
+        fieldLabel: this.usernameText,
+        helpText: this.usernameHelpText
+      },{
+        xtype : 'textfield',
+        name: 'password',
+        inputType: 'password',
+        allowBlank : true,
+        fieldLabel: this.passwordText,
+        helpText: this.passwordHelpText
+      },{
+        xtype : 'textfield',
+        name: 'from',
+        vtype: 'email',
+        allowBlank : false,
+        fieldLabel: this.fromText,
+        helpText: this.fromHelpText
+      },{
+        xtype : 'combo',
+        name: 'connection-security',
+        fieldLabel: this.connectionSecurityText,
+        helpText: this.connectionSecurityHelpText,
+        valueField: 'cs',
+        displayField: 'cs',
+        typeAhead: false,
+        editable: false,
+        triggerAction: 'all',
+        mode: 'local',
+        store: new Ext.data.SimpleStore({
+          fields: ['cs'],
+          data: [
+            ['NONE'],
+            ['SSL'],
+            ['STARTTLS']
+          ]
+        })
+      },{
+        xtype : 'textfield',
+        name: 'subject-prefix',
+        allowBlank : true,
+        fieldLabel: this.subjectPrefixText,
+        helpText: this.subjectPrefixHelpText
+      }]
     };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));

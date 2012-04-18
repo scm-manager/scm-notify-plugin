@@ -111,6 +111,11 @@ public class NotifyContext
    */
   public NotifyConfiguration getConfiguration()
   {
+    if (configuration == null)
+    {
+      configuration = new NotifyConfiguration();
+    }
+
     return configuration;
   }
 

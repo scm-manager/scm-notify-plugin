@@ -222,7 +222,7 @@ public class NotifyConfiguration
 
   /** Field description */
   @XmlElement(name = "connection-security")
-  private ConnectionSecurity connectionSecurity;
+  private ConnectionSecurity connectionSecurity = ConnectionSecurity.NONE;
 
   /** Field description */
   private String from;
@@ -231,7 +231,7 @@ public class NotifyConfiguration
   private String password;
 
   /** Field description */
-  private int port;
+  private int port = 25;
 
   /** Field description */
   private String server;
