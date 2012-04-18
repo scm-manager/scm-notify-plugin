@@ -71,6 +71,7 @@ public class NotifyContext
   public NotifyContext(StoreFactory storeFactory)
   {
     this.store = storeFactory.getStore(NotifyConfiguration.class, STORE_NAME);
+    this.configuration = this.store.get();
   }
 
   //~--- methods --------------------------------------------------------------
