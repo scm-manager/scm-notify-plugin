@@ -31,6 +31,10 @@
 
 package sonia.scm.notify;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -56,6 +60,17 @@ public class NotifyConfiguration
   public ConnectionSecurity getConnectionSecurity()
   {
     return connectionSecurity;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getFrom()
+  {
+    return from;
   }
 
   /**
@@ -97,9 +112,31 @@ public class NotifyConfiguration
    *
    * @return
    */
+  public String getSubjectPrefix()
+  {
+    return subjectPrefix;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getUsername()
   {
     return username;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isAuthenticationEnabled()
+  {
+    return Util.isNotEmpty(username) && Util.isNotEmpty(password);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -113,6 +150,17 @@ public class NotifyConfiguration
   public void setConnectionSecurity(ConnectionSecurity connectionSecurity)
   {
     this.connectionSecurity = connectionSecurity;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param from
+   */
+  public void setFrom(String from)
+  {
+    this.from = from;
   }
 
   /**
@@ -152,6 +200,17 @@ public class NotifyConfiguration
    * Method description
    *
    *
+   * @param subjectPrefix
+   */
+  public void setSubjectPrefix(String subjectPrefix)
+  {
+    this.subjectPrefix = subjectPrefix;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param username
    */
   public void setUsername(String username)
@@ -166,6 +225,9 @@ public class NotifyConfiguration
   private ConnectionSecurity connectionSecurity;
 
   /** Field description */
+  private String from;
+
+  /** Field description */
   private String password;
 
   /** Field description */
@@ -173,6 +235,10 @@ public class NotifyConfiguration
 
   /** Field description */
   private String server;
+
+  /** Field description */
+  @XmlElement(name = "subject-prefix")
+  private String subjectPrefix = "[SCM]";
 
   /** Field description */
   private String username;
