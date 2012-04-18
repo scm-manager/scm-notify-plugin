@@ -79,6 +79,7 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
                               NotifyHandlerFactory handlerFactory)
   {
     this.context = context;
+    this.handlerFactory = handlerFactory;
   }
 
   //~--- methods --------------------------------------------------------------
