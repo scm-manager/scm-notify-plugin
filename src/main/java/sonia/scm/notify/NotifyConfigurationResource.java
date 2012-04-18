@@ -34,43 +34,40 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import sonia.scm.util.SecurityUtil;
+import sonia.scm.web.security.WebSecurityContext;
 
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class NotifyContext
+@Path("plugins/notify/config")
+public class NotifyConfigurationResource
 {
-
-  /** Field description */
-  public static final String STORE_NAME = "notify";
-
-  /**
-   * the logger for NotifyContext
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(NotifyContext.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param storeFactory
+   * @param securityContext
+   * @param context
    */
   @Inject
-  public NotifyContext(StoreFactory storeFactory)
+  public NotifyConfigurationResource(WebSecurityContext securityContext,
+                                     NotifyContext context)
   {
-    this.store = storeFactory.getStore(NotifyConfiguration.class, STORE_NAME);
+    this.securityContext = securityContext;
+    this.context = context;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -78,27 +75,15 @@ public class NotifyContext
   /**
    * Method description
    *
-   */
-  public void store()
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("store new notify configuration");
-    }
-
-    this.store.set(configuration);
-  }
-
-  /**
-   * Method description
-   *
    *
    * @param configuration
    */
-  public void store(NotifyConfiguration configuration)
+  @POST
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public synchronized void storeConfiguration(NotifyConfiguration configuration)
   {
-    setConfiguration(configuration);
-    store();
+    SecurityUtil.assertIsAdmin(securityContext);
+    context.store(configuration);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -109,29 +94,20 @@ public class NotifyContext
    *
    * @return
    */
+  @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public NotifyConfiguration getConfiguration()
   {
-    return configuration;
-  }
+    SecurityUtil.assertIsAdmin(securityContext);
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param configuration
-   */
-  public void setConfiguration(NotifyConfiguration configuration)
-  {
-    this.configuration = configuration;
+    return context.getConfiguration();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private NotifyConfiguration configuration;
+  private NotifyContext context;
 
   /** Field description */
-  private Store<NotifyConfiguration> store;
+  private WebSecurityContext securityContext;
 }
