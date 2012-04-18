@@ -34,9 +34,24 @@ Ext.ns("Sonia.notify");
 
 Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
+  titleText: 'Notification',
+  
+  notifyRepositoryContactText: 'Notify Repository Contact',
+  
+  // TODO
+  notifyRepositoryContactHelpText: '',
+  
   initComponent: function(){
     var config = {
-      
+      title: this.titleText,
+      items: [{
+        xtype: 'checkbox',
+        name: 'notify-contact-repository',
+        property: 'notify.contact.repository',
+        inputValue: 'true',
+        fieldLabel : this.notifyRepositoryContactText,
+        helpText: this.notifyRepositoryContactHelpText  
+      }]
     };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
