@@ -34,6 +34,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,7 +117,7 @@ public class DefaultNotifyHandler implements NotifyHandler
 
         Transport.send(message);
       }
-      catch (MessagingException ex)
+      catch (Exception ex)
       {
         logger.error("could not send notification", ex);
       }
@@ -140,7 +141,7 @@ public class DefaultNotifyHandler implements NotifyHandler
    */
   private Message createMessage(Session session,
                                 Collection<Changeset> changesets)
-          throws MessagingException
+          throws MessagingException, IOException
   {
     MimeMessage msg = new MimeMessage(session);
 

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -47,7 +48,7 @@ import java.util.Collection;
  *
  * @author Sebastian Sdorra
  */
-public class SimpleContentBuilder implements ContentBuilder
+public class SimpleContentBuilder extends AbstractContentBuilder
 {
 
   /** Field description */
@@ -55,9 +56,6 @@ public class SimpleContentBuilder implements ContentBuilder
 
   /** Field description */
   public static final String PATTERN_CHANGESET = "  {0} - {1}";
-
-  /** Field description */
-  public static final String PATTERN_SUBJECT = "Repository {0} has changed";
 
   //~--- methods --------------------------------------------------------------
 
@@ -85,19 +83,5 @@ public class SimpleContentBuilder implements ContentBuilder
     }
 
     return new Content(content.toString(), MIMETYPE);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public String createSubject(Repository repository)
-  {
-    return MessageFormat.format(PATTERN_SUBJECT, repository.getName());
   }
 }

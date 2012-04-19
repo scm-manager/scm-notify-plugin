@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -65,7 +66,9 @@ public class NotifyModule extends AbstractModule
   protected void configure()
   {
     bind(NotifyContext.class);
-    bind(ContentBuilder.class, SimpleContentBuilder.class);
+
+    // bind(ContentBuilder.class, SimpleContentBuilder.class);
+    bind(ContentBuilder.class, FreemarkerContentBuilder.class);
     bind(NotifyHandlerFactory.class, DefaultNotifyHandlerFactory.class);
   }
 

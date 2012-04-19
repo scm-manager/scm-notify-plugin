@@ -6,7 +6,7 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.8</version>
+    <version>1.12</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
@@ -34,10 +34,21 @@
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
-      <version>1.4.5</version>
+      <version>${javaxmail.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>${freemarker.version}</version>
     </dependency>
 
   </dependencies>
+  
+  <properties>
+    <freemarker.version>2.3.19</freemarker.version>
+    <javaxmail.version>1.4.5</javaxmail.version>
+  </properties>
   
   <build>
     <plugins>
