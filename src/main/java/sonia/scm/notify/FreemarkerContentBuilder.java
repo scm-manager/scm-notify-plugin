@@ -44,6 +44,7 @@ import freemarker.template.TemplateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
@@ -92,15 +93,19 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param configuration
    */
   @Inject
-  public FreemarkerContentBuilder(ScmConfiguration configuration)
+  public FreemarkerContentBuilder(SCMContextProvider context,
+                                  ScmConfiguration configuration)
   {
     this.configuration = configuration;
     this.templateConfiguration = new Configuration();
     this.templateConfiguration.setTemplateLoader(
         new ClassTemplateLoader(FreemarkerContentBuilder.class, PATH_BASE));
+    this.newVersion = isNewVersion(context.getVersion());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -129,7 +134,7 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
     for (Changeset c : changesets)
     {
-      String link = urlProvider.getChangesetUrl(repository.getId(), c.getId());
+      String link = createLink(urlProvider, repository, c);
 
       wrapperList.add(new ChangesetTemplateWrapper(c, link));
     }
@@ -155,10 +160,77 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
     return new Content(writer.toString(), MIME_TYPE);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param urlProvider
+   * @param repository
+   * @param c
+   *
+   * @return
+   */
+  private String createLink(RepositoryUrlProvider urlProvider,
+                            Repository repository, Changeset c)
+  {
+    String link = null;
+
+    // There is a bug in the getChangesetUrl method prior 1.15
+    if (newVersion)
+    {
+      link = urlProvider.getChangesetUrl(repository.getId(), c.getId());
+    }
+    else
+    {
+      link = urlProvider.getDiffUrl(repository.getId(), c.getId());
+    }
+
+    return link;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param version
+   *
+   * @return
+   */
+  private boolean isNewVersion(String version)
+  {
+    boolean isNew = false;
+
+    try
+    {
+      int sIndex = version.indexOf("-");
+
+      if (sIndex > 0)
+      {
+        version = version.substring(0, sIndex);
+      }
+
+      String[] parts = version.split("\\.");
+
+      isNew = (Integer.parseInt(parts[0]) > 1)
+              || (Integer.parseInt(parts[1]) >= 15);
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not parse version", ex);
+    }
+
+    return isNew;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private boolean newVersion = false;
 
   /** Field description */
   private Configuration templateConfiguration;
