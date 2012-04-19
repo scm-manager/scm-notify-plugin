@@ -39,8 +39,39 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
   // TODO
   notifyRepositoryContactHelpText: '',
+  contactGridHelpText: '',
+  
+  contactStore: null,
   
   initComponent: function(){
+    this.contactStore = new Ext.data.ArrayStore({
+      fields: [
+        {name: 'contact'}
+      ],
+      sortInfo: {
+        field: 'contact'
+      }
+    });
+    
+    this.loadContacts(this.contactStore, this.item);
+    
+    var contactColModel = new Ext.grid.ColumnModel({
+      defaults: {
+        sortable: true,
+        editable: true
+      },
+      columns: [{
+        id: 'contact',
+        dataIndex: 'contact',
+        header: this.colNameText,
+        editor: Ext.form.TextField
+      }]
+    });
+    
+    var selectionModel = new Ext.grid.RowSelectionModel({
+      singleSelect: true
+    });
+    
     var config = {
       title: this.titleText,
       items: [{
@@ -50,11 +81,124 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         inputValue: 'true',
         fieldLabel : this.notifyRepositoryContactText,
         helpText: this.notifyRepositoryContactHelpText  
+      },{
+        id: 'contactGrid',
+        xtype: 'editorgrid',
+        clicksToEdit: 1,
+        autoExpandColumn: 'uri',
+        frame: true,
+        width: '100%',
+        autoHeight: true,
+        autoScroll: false,
+        colModel: contactColModel,
+        sm: selectionModel,
+        store: this.contactStore,
+        viewConfig: {
+          forceFit:true
+        },
+        tbar: [{
+          text: this.addText,
+          scope: this,
+          icon: this.addIcon,
+          handler : function(){
+            var Contact = this.contactStore.recordType;
+            var p = new Contact();
+            var grid = Ext.getCmp('contactGrid');
+            grid.stopEditing();
+            this.contactStore.insert(0, p);
+            grid.startEditing(0, 0);
+          }
+        },{
+          text: this.removeText,
+          scope: this,
+          icon: this.removeIcon,
+          handler: function(){
+            var grid = Ext.getCmp('contactGrid');
+            var selected = grid.getSelectionModel().getSelected();
+            if ( selected ){
+              this.contactStore.remove(selected);
+            }
+          }
+        }, '->',{
+          id: 'contactGridHelp',
+          xtype: 'box',
+          autoEl: {
+            tag: 'img',
+            src: 'resources/images/help.gif'
+          }
+        }]
+
       }]
     };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.notify.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  afterRender: function(){
+    // call super
+    Sonia.notify.ConfigPanel.superclass.afterRender.apply(this, arguments);
+
+    Ext.QuickTips.register({
+      target: Ext.getCmp('contactGridHelp'),
+      title: '',
+      text: this.contactGridHelpText,
+      enabled: true
+    });
+  },
+  
+  loadContacts: function(store, repository){
+    if (debug){
+      console.debug('load contacts property');
+    }
+    if (!repository.properties){
+      repository.properties = [];
+    }
+    Ext.each(repository.properties, function(prop){
+      if ( prop.key == 'notify.contact.list' ){
+        var value = prop.value;
+        this.parseContacts(store, value);
+      }
+    }, this);
+  },
+  
+  parseContacts: function(store, contactsString){
+    var contactArray = contactsString.split(';');
+    Ext.each(contactArray, function(contactString){
+      if (contactString.length > 0){
+        var Contact = store.recordType;
+        var c = new Contact({contact: contactString});
+        store.add(c);
+      }
+    });
+  },
+  
+  storeExtraProperties: function(repository){
+    if (debug){
+      console.debug('store contact properties');
+    }
+    
+    // delete old contacts
+    Ext.each(repository.properties, function(prop, index){
+      if ( prop.key == 'notify.contact.list' ){
+        delete repository.properties[index];
+      }
+    });
+    
+    var contactsString = '';
+    this.contactStore.data.each(function(r){
+      var contactData = r.data;
+      contactsString += contactData.contact + ';';
+    });
+    
+    if (debug){
+      console.debug('add contact string: ' + contactsString);
+    }
+    
+    repository.properties.push({
+      key: 'notify.contact.list',
+      value: contactsString
+    });
   }
   
 });

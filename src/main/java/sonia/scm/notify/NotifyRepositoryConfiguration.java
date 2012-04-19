@@ -30,12 +30,20 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.PropertiesAware;
 import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -45,12 +53,14 @@ public class NotifyRepositoryConfiguration
 {
 
   /** Field description */
-  public static final String PROPERTY_CONTACT_PRIVILEGED =
-    "notify.contact.privileged";
+  public static final String PROPERTY_CONTACT_LIST = "notify.contact.list";
 
   /** Field description */
   public static final String PROPERTY_CONTACT_REPOSITORY =
     "notify.contact.repository";
+
+  /** Field description */
+  public static final String SEPARATOR_LIST = ";";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -62,10 +72,9 @@ public class NotifyRepositoryConfiguration
    */
   public NotifyRepositoryConfiguration(PropertiesAware properties)
   {
-    sendToPrivilegedUsers = getBooleanProperty(properties,
-            PROPERTY_CONTACT_PRIVILEGED);
     sendToRepositoryContact = getBooleanProperty(properties,
             PROPERTY_CONTACT_REPOSITORY);
+    contactList = getListProperty(properties, PROPERTY_CONTACT_LIST);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -76,9 +85,9 @@ public class NotifyRepositoryConfiguration
    *
    * @return
    */
-  public boolean isEnabled()
+  public List<String> getContactList()
   {
-    return sendToPrivilegedUsers || sendToRepositoryContact;
+    return contactList;
   }
 
   /**
@@ -87,9 +96,9 @@ public class NotifyRepositoryConfiguration
    *
    * @return
    */
-  public boolean isSendToPrivilegedUsers()
+  public boolean isEnabled()
   {
-    return sendToPrivilegedUsers;
+    return Util.isNotEmpty(contactList) || sendToRepositoryContact;
   }
 
   /**
@@ -125,10 +134,44 @@ public class NotifyRepositoryConfiguration
     return result;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param properties
+   * @param key
+   *
+   * @return
+   */
+  private List<String> getListProperty(PropertiesAware properties, String key)
+  {
+    List<String> list = null;
+    String value = properties.getProperty(key);
+
+    if (Util.isNotEmpty(value))
+    {
+      value = value.trim();
+
+      if (value.endsWith(SEPARATOR_LIST))
+      {
+        value = value.substring(0, value.length() - 1);
+      }
+
+      list = Arrays.asList(value.split(SEPARATOR_LIST));
+    }
+
+    if (list == null)
+    {
+      list = Collections.EMPTY_LIST;
+    }
+
+    return list;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private boolean sendToPrivilegedUsers;
+  private List<String> contactList = new ArrayList<String>();
 
   /** Field description */
   private boolean sendToRepositoryContact;

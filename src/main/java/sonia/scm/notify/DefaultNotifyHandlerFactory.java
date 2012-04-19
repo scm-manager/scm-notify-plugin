@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -95,26 +96,10 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
       }
     }
 
-    if (repositoryConfiguration.isSendToPrivilegedUsers())
-    {
-      collectContacts(contacts, repository);
-    }
+    contacts.addAll(repositoryConfiguration.getContactList());
 
     return new DefaultNotifyHandler(contentBuilder, configuration, repository,
                                     contacts);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param contacts
-   * @param repository
-   */
-  private void collectContacts(Set<String> contacts, Repository repository)
-  {
-
-    // todo implement
   }
 
   //~--- fields ---------------------------------------------------------------
