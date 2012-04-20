@@ -11,7 +11,7 @@
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-notify-plugin</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>scm-notify-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-notify-plugin</url>
   <description>This plugin sends automated email notifications to a list of subscribed addresses whenever a repo has changes.</description>
