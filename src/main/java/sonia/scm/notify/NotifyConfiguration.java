@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -49,7 +51,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "notify-configuration")
-public class NotifyConfiguration
+public class NotifyConfiguration implements Validateable
 {
 
   /**
@@ -138,6 +140,18 @@ public class NotifyConfiguration
   public boolean isAuthenticationEnabled()
   {
     return Util.isNotEmpty(username) && Util.isNotEmpty(password);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return Util.isNotEmpty(server) && Util.isNotEmpty(from) && (port > 0);
   }
 
   //~--- set methods ----------------------------------------------------------

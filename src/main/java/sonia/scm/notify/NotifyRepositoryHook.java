@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -94,6 +95,28 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
   @Override
   public void onEvent(RepositoryHookEvent event)
   {
+    NotifyConfiguration configuration = context.getConfiguration();
+
+    if (configuration.isValid())
+    {
+      handleEvent(configuration, event);
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("smpt server configuration is not valid");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param configuration
+   * @param event
+   */
+  private void handleEvent(NotifyConfiguration configuration,
+                           RepositoryHookEvent event)
+  {
     Repository repository = event.getRepository();
 
     if (repository != null)
@@ -102,7 +125,7 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
 
       if (Util.isNotEmpty(changesets))
       {
-        handleEvent(repository, changesets);
+        handleEvent(configuration, repository, changesets);
       }
       else
       {
@@ -119,10 +142,13 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
    * Method description
    *
    *
+   *
+   * @param configuration
    * @param repository
    * @param changesets
    */
-  private void handleEvent(Repository repository,
+  private void handleEvent(NotifyConfiguration configuration,
+                           Repository repository,
                            Collection<Changeset> changesets)
   {
     if (logger.isTraceEnabled())
@@ -142,11 +168,18 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
                      repository.getName());
       }
 
-      NotifyConfiguration configuration = context.getConfiguration();
       NotifyHandler handler = handlerFactory.createHandler(configuration,
                                 repositoryConfiguration, repository);
 
-      handler.send(changesets);
+      if (handler != null)
+      {
+        handler.send(changesets);
+      }
+      else if (logger.isErrorEnabled())
+      {
+        logger.error("{} returns null instead of a notify handler",
+                     handlerFactory.getClass());
+      }
     }
     else if (logger.isDebugEnabled())
     {
