@@ -44,7 +44,6 @@ Sonia.notify.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   connectionSecurityText: 'Connection Security',
   subjectPrefixText: 'Subject Prefix',
   
-  // TODO
   serverHelpText: 'Hostname of the SMTP server.',
   portHelpText: 'Port of the SMTP server.',
   usernameHelpText: 'Username used to access the SMTP server.',
