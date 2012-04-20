@@ -41,6 +41,11 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
   contactStore: null,
   
+  // icons
+  addIcon: 'resources/images/add.png',
+  removeIcon: 'resources/images/delete.png',
+  helpIcon: 'resources/images/help.png',
+  
   initComponent: function(){
     this.contactStore = new Ext.data.ArrayStore({
       fields: [
@@ -122,7 +127,7 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
           xtype: 'box',
           autoEl: {
             tag: 'img',
-            src: 'resources/images/help.gif'
+            src: this.helpIcon
           }
         }]
 
