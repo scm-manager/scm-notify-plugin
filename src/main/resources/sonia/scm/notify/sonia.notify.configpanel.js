@@ -34,12 +34,10 @@ Ext.ns("Sonia.notify");
 Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
   titleText: 'Notification',
-  
   notifyRepositoryContactText: 'Notify Repository Contact',
   
-  // TODO
-  notifyRepositoryContactHelpText: '',
-  contactGridHelpText: '',
+  notifyRepositoryContactHelpText: 'Send notification to the contact address of this repository.',
+  contactGridHelpText: 'Additional contact addresses for notifications.',
   
   contactStore: null,
   
