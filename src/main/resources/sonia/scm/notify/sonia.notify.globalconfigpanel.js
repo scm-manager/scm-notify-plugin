@@ -36,7 +36,7 @@ Sonia.notify.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   
   titleText: 'Notify Configuration',
   
-  serverText: 'Mail Server',
+  serverText: 'SMTP Server',
   portText: 'Port',
   usernameText: 'Username',
   passwordText: 'Password',
@@ -45,13 +45,13 @@ Sonia.notify.GlobalConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   subjectPrefixText: 'Subject Prefix',
   
   // TODO
-  serverHelpText: '',
-  portHelpText: '',
-  usernameHelpText: '',
-  passwordHelpText: '',
-  fromHelpText: '',
-  connectionSecurityHelpText: '',
-  subjectPrefixHelpText: '',
+  serverHelpText: 'Hostname of the SMTP server.',
+  portHelpText: 'Port of the SMTP server.',
+  usernameHelpText: 'Username used to access the SMTP server.',
+  passwordHelpText: 'Password used to access the SMTP server.',
+  fromHelpText: 'From addresse for notifications.',
+  connectionSecurityHelpText: 'Security connection setting for the SMTP server.',
+  subjectPrefixHelpText: 'Subjct prefix for notifications.',
   
   
   initComponent: function(){
