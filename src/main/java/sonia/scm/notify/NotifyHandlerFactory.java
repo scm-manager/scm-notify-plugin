@@ -34,6 +34,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.mail.MailService;
 import sonia.scm.repository.Repository;
 
 /**
@@ -54,7 +55,7 @@ public interface NotifyHandlerFactory
    * @return
    */
   public NotifyHandler createHandler(
-          NotifyConfiguration configuration,
+          MailService mailService,
           NotifyRepositoryConfiguration repositoryConfiguration,
           Repository repository);
 }

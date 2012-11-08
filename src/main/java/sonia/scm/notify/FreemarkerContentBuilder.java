@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -74,19 +75,10 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
   public static final String ENCODING = "UTF-8";
 
   /** Field description */
-  public static final String MIME_TYPE = "text/html; charset=\"UTF-8\"";
-
-  /** Field description */
   public static final String PATH_BASE = "/sonia/scm/notify/template/";
 
   /** Field description */
   public static final String PATH_TEMPLATE = "content.ftl";
-
-  /**
-   * the logger for FreemarkerContentBuilder
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(FreemarkerContentBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -100,13 +92,12 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    */
   @Inject
   public FreemarkerContentBuilder(SCMContextProvider context,
-                                  ScmConfiguration configuration)
+    ScmConfiguration configuration)
   {
     this.configuration = configuration;
     this.templateConfiguration = new Configuration();
     this.templateConfiguration.setTemplateLoader(
-        new ClassTemplateLoader(FreemarkerContentBuilder.class, PATH_BASE));
-    this.newVersion = isNewVersion(context.getVersion());
+      new ClassTemplateLoader(FreemarkerContentBuilder.class, PATH_BASE));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -124,8 +115,8 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    */
   @Override
   public Content createContent(Repository repository,
-                               Collection<Changeset> changesets)
-          throws IOException
+    Collection<Changeset> changesets)
+    throws IOException
   {
     RepositoryUrlProvider urlProvider =
       UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
@@ -158,7 +149,7 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
       throw new ContentBuilderException("could not create content", ex);
     }
 
-    return new Content(writer.toString(), MIME_TYPE);
+    return new Content(writer.toString(), true);
   }
 
   /**
@@ -172,66 +163,15 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    * @return
    */
   private String createLink(RepositoryUrlProvider urlProvider,
-                            Repository repository, Changeset c)
+    Repository repository, Changeset c)
   {
-    String link = null;
-
-    // There is a bug in the getChangesetUrl method prior 1.15
-    if (newVersion)
-    {
-      link = urlProvider.getChangesetUrl(repository.getId(), c.getId());
-    }
-    else
-    {
-      link = urlProvider.getDiffUrl(repository.getId(), c.getId());
-    }
-
-    return link;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param version
-   *
-   * @return
-   */
-  private boolean isNewVersion(String version)
-  {
-    boolean isNew = false;
-
-    try
-    {
-      int sIndex = version.indexOf("-");
-
-      if (sIndex > 0)
-      {
-        version = version.substring(0, sIndex);
-      }
-
-      String[] parts = version.split("\\.");
-
-      isNew = (Integer.parseInt(parts[0]) > 1)
-              || (Integer.parseInt(parts[1]) >= 15);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not parse version", ex);
-    }
-
-    return isNew;
+    return urlProvider.getChangesetUrl(repository.getId(), c.getId());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private ScmConfiguration configuration;
-
-  /** Field description */
-  private boolean newVersion = false;
 
   /** Field description */
   private Configuration templateConfiguration;

@@ -52,9 +52,6 @@ public class SimpleContentBuilder extends AbstractContentBuilder
 {
 
   /** Field description */
-  public static final String MIMETYPE = "text/plain";
-
-  /** Field description */
   public static final String PATTERN_CHANGESET = "  {0} - {1}";
 
   //~--- methods --------------------------------------------------------------
@@ -70,7 +67,7 @@ public class SimpleContentBuilder extends AbstractContentBuilder
    */
   @Override
   public Content createContent(Repository repository,
-                               Collection<Changeset> changesets)
+    Collection<Changeset> changesets)
   {
     StringBuilder content = new StringBuilder();
 
@@ -79,9 +76,9 @@ public class SimpleContentBuilder extends AbstractContentBuilder
     for (Changeset c : changesets)
     {
       content.append(MessageFormat.format(PATTERN_CHANGESET, c.getId(),
-              c.getDescription())).append("\n");
+        c.getDescription())).append("\n");
     }
 
-    return new Content(content.toString(), MIMETYPE);
+    return new Content(content.toString(), false);
   }
 }

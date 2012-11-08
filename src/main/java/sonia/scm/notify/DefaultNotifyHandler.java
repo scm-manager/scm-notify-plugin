@@ -30,19 +30,24 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.IOException;
+import org.codemonkey.simplejavamail.Email;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.mail.MailService;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.Collection;
 import java.util.Set;
@@ -79,15 +84,15 @@ public class DefaultNotifyHandler implements NotifyHandler
    *
    * @param contentBuilder
    * @param configuration
+   * @param mailService
    * @param repository
    * @param contacts
    */
   public DefaultNotifyHandler(ContentBuilder contentBuilder,
-                              NotifyConfiguration configuration,
-                              Repository repository, Set<String> contacts)
+    MailService mailService, Repository repository, Set<String> contacts)
   {
     this.contentBuilder = contentBuilder;
-    this.configuration = configuration;
+    this.mailService = mailService;
     this.repository = repository;
     this.contacts = contacts;
   }
@@ -112,10 +117,9 @@ public class DefaultNotifyHandler implements NotifyHandler
 
       try
       {
-        Session session = NotifyUtil.createSession(configuration);
-        Message message = createMessage(session, changesets);
+        Email mail = createMessage(changesets);
 
-        Transport.send(message);
+        mailService.send(mail);
       }
       catch (Exception ex)
       {
@@ -137,77 +141,46 @@ public class DefaultNotifyHandler implements NotifyHandler
    *
    * @return
    *
+   *
+   * @throws IOException
    * @throws MessagingException
    */
-  private Message createMessage(Session session,
-                                Collection<Changeset> changesets)
-          throws MessagingException, IOException
+  private Email createMessage(Collection<Changeset> changesets)
+    throws MessagingException, IOException
   {
-    MimeMessage msg = new MimeMessage(session);
+    Email msg = new Email();
 
-    msg.setFrom(new InternetAddress(configuration.getFrom()));
-    msg.setRecipients(RecipientType.BCC, createRecipients());
-    msg.setSubject(createSubject());
+    for (String c : contacts)
+    {
+      msg.addRecipient(null, c, RecipientType.BCC);
+    }
+
+    msg.setSubject(contentBuilder.createSubject(repository));
 
     Content content = contentBuilder.createContent(repository, changesets);
 
-    msg.setContent(content.getBody(), content.getMimeType());
+    if (content.isHtml())
+    {
+      msg.setTextHTML(content.getContent());
+    }
+    else
+    {
+      msg.setText(content.getContent());
+    }
 
     return msg;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws AddressException
-   */
-  private Address[] createRecipients() throws AddressException
-  {
-    String[] contactArray = contacts.toArray(new String[0]);
-    Address[] addresses = new Address[contactArray.length];
-
-    for (int i = 0; i < contactArray.length; i++)
-    {
-      addresses[i] = new InternetAddress(contactArray[i]);
-    }
-
-    return addresses;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String createSubject()
-  {
-    StringBuilder content = new StringBuilder();
-    String prefix = configuration.getSubjectPrefix();
-
-    if (Util.isNotEmpty(prefix))
-    {
-      content.append(prefix).append(" ");
-    }
-
-    content.append(contentBuilder.createSubject(repository));
-
-    return content.toString();
-  }
-
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private NotifyConfiguration configuration;
 
   /** Field description */
   private Set<String> contacts;
 
   /** Field description */
   private ContentBuilder contentBuilder;
+
+  /** Field description */
+  private MailService mailService;
 
   /** Field description */
   private Repository repository;

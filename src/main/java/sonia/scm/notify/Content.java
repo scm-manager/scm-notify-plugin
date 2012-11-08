@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.notify;
 
 /**
@@ -45,11 +46,14 @@ public class Content
    *
    * @param body
    * @param mimeType
+   *
+   * @param content
+   * @param html
    */
-  public Content(Object body, String mimeType)
+  public Content(String content, boolean html)
   {
-    this.body = body;
-    this.mimeType = mimeType;
+    this.content = content;
+    this.html = html;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -60,9 +64,9 @@ public class Content
    *
    * @return
    */
-  public Object getBody()
+  public String getContent()
   {
-    return body;
+    return content;
   }
 
   /**
@@ -71,16 +75,16 @@ public class Content
    *
    * @return
    */
-  public String getMimeType()
+  public boolean isHtml()
   {
-    return mimeType;
+    return html;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Object body;
+  private String content;
 
   /** Field description */
-  private String mimeType;
+  private boolean html;
 }

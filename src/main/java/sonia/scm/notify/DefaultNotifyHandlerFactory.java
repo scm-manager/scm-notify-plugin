@@ -38,6 +38,7 @@ package sonia.scm.notify;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.mail.MailService;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
 
@@ -73,16 +74,17 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
    *
    *
    * @param configuration
+   *
+   * @param mailService
    * @param repositoryConfiguration
    * @param repository
    *
    * @return
    */
   @Override
-  public NotifyHandler createHandler(
-          NotifyConfiguration configuration,
-          NotifyRepositoryConfiguration repositoryConfiguration,
-          Repository repository)
+  public NotifyHandler createHandler(MailService mailService,
+    NotifyRepositoryConfiguration repositoryConfiguration,
+    Repository repository)
   {
     Set<String> contacts = new HashSet<String>();
 
@@ -98,8 +100,8 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
 
     contacts.addAll(repositoryConfiguration.getContactList());
 
-    return new DefaultNotifyHandler(contentBuilder, configuration, repository,
-                                    contacts);
+    return new DefaultNotifyHandler(contentBuilder, mailService, repository,
+      contacts);
   }
 
   //~--- fields ---------------------------------------------------------------

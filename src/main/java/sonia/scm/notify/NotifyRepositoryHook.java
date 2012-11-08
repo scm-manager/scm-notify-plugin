@@ -41,6 +41,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.mail.MailService;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PostReceiveRepositoryHook;
@@ -74,13 +75,15 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
    *
    *
    * @param context
+   *
+   * @param mailService
    * @param handlerFactory
    */
   @Inject
-  public NotifyRepositoryHook(NotifyContext context,
-                              NotifyHandlerFactory handlerFactory)
+  public NotifyRepositoryHook(MailService mailService,
+    NotifyHandlerFactory handlerFactory)
   {
-    this.context = context;
+    this.mailService = mailService;
     this.handlerFactory = handlerFactory;
   }
 
@@ -95,11 +98,9 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
   @Override
   public void onEvent(RepositoryHookEvent event)
   {
-    NotifyConfiguration configuration = context.getConfiguration();
-
-    if (configuration.isValid())
+    if (mailService.isConfigured())
     {
-      handleEvent(configuration, event);
+      handleEvent(event);
     }
     else if (logger.isWarnEnabled())
     {
@@ -114,8 +115,7 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
    * @param configuration
    * @param event
    */
-  private void handleEvent(NotifyConfiguration configuration,
-                           RepositoryHookEvent event)
+  private void handleEvent(RepositoryHookEvent event)
   {
     Repository repository = event.getRepository();
 
@@ -125,7 +125,7 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
 
       if (Util.isNotEmpty(changesets))
       {
-        handleEvent(configuration, repository, changesets);
+        handleEvent(repository, changesets);
       }
       else
       {
@@ -147,14 +147,13 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
    * @param repository
    * @param changesets
    */
-  private void handleEvent(NotifyConfiguration configuration,
-                           Repository repository,
-                           Collection<Changeset> changesets)
+  private void handleEvent(Repository repository,
+    Collection<Changeset> changesets)
   {
     if (logger.isTraceEnabled())
     {
       logger.trace("handle notify event for repository {}",
-                   repository.getName());
+        repository.getName());
     }
 
     NotifyRepositoryConfiguration repositoryConfiguration =
@@ -165,10 +164,10 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
       if (logger.isTraceEnabled())
       {
         logger.trace("send notification for repository {}",
-                     repository.getName());
+          repository.getName());
       }
 
-      NotifyHandler handler = handlerFactory.createHandler(configuration,
+      NotifyHandler handler = handlerFactory.createHandler(mailService,
                                 repositoryConfiguration, repository);
 
       if (handler != null)
@@ -178,21 +177,21 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
       else if (logger.isErrorEnabled())
       {
         logger.error("{} returns null instead of a notify handler",
-                     handlerFactory.getClass());
+          handlerFactory.getClass());
       }
     }
     else if (logger.isDebugEnabled())
     {
       logger.debug("notify plugin is disabled for repository {}",
-                   repository.getName());
+        repository.getName());
     }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private NotifyContext context;
+  private NotifyHandlerFactory handlerFactory;
 
   /** Field description */
-  private NotifyHandlerFactory handlerFactory;
+  private MailService mailService;
 }

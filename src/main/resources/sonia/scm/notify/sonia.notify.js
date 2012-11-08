@@ -29,12 +29,6 @@
  *
  */
 
-// register global config panel
-registerGeneralConfigPanel({
-  id: 'notifyGlobalConfigPanel',
-  xtype: 'notifyGlobalConfigPanel'
-});
-
 // register repository config panel
 Sonia.repository.openListeners.push(function(repository, panels){
   if (Sonia.repository.isOwner(repository)){
