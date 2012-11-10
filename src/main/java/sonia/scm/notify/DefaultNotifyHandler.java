@@ -40,7 +40,7 @@ import org.codemonkey.simplejavamail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.mail.MailService;
+import sonia.scm.mail.api.MailService;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
@@ -52,15 +52,8 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
-import javax.mail.Address;
-import javax.mail.Message;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
 
 /**
  *

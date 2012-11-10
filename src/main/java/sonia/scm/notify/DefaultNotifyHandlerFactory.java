@@ -38,7 +38,7 @@ package sonia.scm.notify;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import sonia.scm.mail.MailService;
+import sonia.scm.mail.api.MailService;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
 

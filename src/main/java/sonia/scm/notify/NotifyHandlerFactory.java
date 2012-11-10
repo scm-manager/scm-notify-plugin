@@ -34,7 +34,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.mail.MailService;
+import sonia.scm.mail.api.MailService;
 import sonia.scm.repository.Repository;
 
 /**
