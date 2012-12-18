@@ -96,7 +96,7 @@ public class MigrationHandler
 
       if (configuration != null)
       {
-        if (configuration.isMigrated())
+        if (!configuration.isMigrated())
         {
           migrate(configuration);
         }
