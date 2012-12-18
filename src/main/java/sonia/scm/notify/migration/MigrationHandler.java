@@ -155,12 +155,20 @@ public class MigrationHandler
     MailConfiguration config = new MailConfiguration(old.getServer(),
                                  old.getPort(),
                                  convert(old.getConnectionSecurity()),
-                                 old.getUsername(), old.getPassword(),
-                                 old.getSubjectPrefix());
+                                 old.getFrom(), old.getUsername(),
+                                 old.getPassword(), old.getSubjectPrefix());
 
-    mailContext.store(config);
-    old.setMigrated(true);
-    configurationStore.set(old);
+    if (config.isValid())
+    {
+      mailContext.store(config);
+      old.setMigrated(true);
+      configurationStore.set(old);
+    }
+    else
+    {
+      logger.error(
+        "could not migrate configuration, because resulting mail configuration is not valid");
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
