@@ -56,8 +56,11 @@ public class NotifyRepositoryConfiguration
   public static final String PROPERTY_CONTACT_LIST = "notify.contact.list";
 
   /** Field description */
-  public static final String PROPERTY_CONTACT_REPOSITORY =
-    "notify.contact.repository";
+  public static final String PROPERTY_CONTACT_REPOSITORY = "notify.contact.repository";
+
+  public static final String PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS = "notify.use.author.as.from.address";
+  public static final String PROPERTY_EMAIL_PER_PUSH = "notify.email.per.push";
+  public static final String PROPERTY_MAX_DIFF_LINES = "notify.max.diff.lines";
 
   /** Field description */
   public static final String SEPARATOR_LIST = ";";
@@ -72,8 +75,11 @@ public class NotifyRepositoryConfiguration
    */
   public NotifyRepositoryConfiguration(PropertiesAware properties)
   {
-    sendToRepositoryContact = getBooleanProperty(properties,
-            PROPERTY_CONTACT_REPOSITORY);
+    sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY);
+    useAuthorAsFromAddress = getBooleanProperty(properties, PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS);
+    emailPerPush = getBooleanProperty(properties, PROPERTY_EMAIL_PER_PUSH);
+    sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY);
+    maxDiffLines = getBooleanProperty(properties, PROPERTY_MAX_DIFF_LINES);
     contactList = getListProperty(properties, PROPERTY_CONTACT_LIST);
   }
 
@@ -110,6 +116,16 @@ public class NotifyRepositoryConfiguration
   public boolean isSendToRepositoryContact()
   {
     return sendToRepositoryContact;
+  }
+
+  public boolean isUseAuthorAsFromAddress()
+  {
+    return useAuthorAsFromAddress;
+  }
+
+  public boolean isEmailPerPush()
+  {
+    return emailPerPush;
   }
 
   /**
@@ -175,4 +191,11 @@ public class NotifyRepositoryConfiguration
 
   /** Field description */
   private boolean sendToRepositoryContact;
+
+  private boolean useAuthorAsFromAddress;
+
+  private boolean emailPerPush;
+
+  private boolean maxDiffLines;
+
 }

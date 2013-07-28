@@ -43,9 +43,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Changeset;
@@ -59,7 +56,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,8 +110,7 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    * @throws IOException
    */
   @Override
-  public Content createContent(Repository repository,
-    Collection<Changeset> changesets)
+  public Content createContent(Repository repository, Changeset... changesets)
     throws IOException
   {
     RepositoryUrlProvider urlProvider =
@@ -133,9 +128,11 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("title", createSubject(repository));
+    env.put("title", createSubject(repository, changesets));
     env.put("repository", repository);
     env.put("changesets", wrapperList);
+
+    env.put("diff", createDiff(changesets));
 
     Template tpl = templateConfiguration.getTemplate(PATH_TEMPLATE, ENCODING);
     StringWriter writer = new StringWriter();
@@ -151,6 +148,15 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
     return new Content(writer.toString(), true);
   }
+
+
+  private String createDiff( Changeset... changesets ) {
+    // TODO: (See also TODO in content.ftl)
+    // TODO: Unified diff of the change, limited to NotifyRepositoryConfiguration.maxDiffLines lines
+    //
+    return "";
+  }
+
 
   /**
    * Method description

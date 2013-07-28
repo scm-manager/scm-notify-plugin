@@ -67,7 +67,7 @@ public class SimpleContentBuilder extends AbstractContentBuilder
    */
   @Override
   public Content createContent(Repository repository,
-    Collection<Changeset> changesets)
+    Changeset... changesets)
   {
     StringBuilder content = new StringBuilder();
 

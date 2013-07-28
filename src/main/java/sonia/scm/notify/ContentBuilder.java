@@ -58,16 +58,15 @@ public interface ContentBuilder
    *
    * @return
    */
-  public Content createContent(Repository repository,
-                               Collection<Changeset> changesets) throws IOException;
+  public Content createContent(Repository repository, Changeset... changesets) throws IOException;
 
   /**
    * Method description
    *
    *
    * @param repository
-   *
+   * @param changesets
    * @return
    */
-  public String createSubject(Repository repository);
+  public String createSubject(Repository repository, Changeset... changesets);
 }

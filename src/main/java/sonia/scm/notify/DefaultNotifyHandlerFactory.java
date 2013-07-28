@@ -73,8 +73,6 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
    * Method description
    *
    *
-   * @param configuration
-   *
    * @param mailService
    * @param repositoryConfiguration
    * @param repository
@@ -101,7 +99,7 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
     contacts.addAll(repositoryConfiguration.getContactList());
 
     return new DefaultNotifyHandler(contentBuilder, mailService, repository,
-      contacts);
+      contacts, repositoryConfiguration);
   }
 
   //~--- fields ---------------------------------------------------------------

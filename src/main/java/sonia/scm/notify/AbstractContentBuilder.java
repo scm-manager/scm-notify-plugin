@@ -34,11 +34,14 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -47,22 +50,51 @@ import java.text.MessageFormat;
 public abstract class AbstractContentBuilder implements ContentBuilder
 {
 
-  /** Field description */
-  public static final String PATTERN_SUBJECT = "Repository {0} has changed";
+  /**
+   * [repository][branches...] changeset IDs...
+   */
+  public static final String PATTERN_SUBJECT = "[{0}][{1}] {2}";
+
+  /**
+   * Limit the size of the subject.
+   */
+  public static final int MAX_BRANCHES_IN_SUBJECT = 5;
+  public static final int MAX_IDS_IN_SUBJECT = 5;
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
    * @param repository
-   *
+   * @param changesets
    * @return
    */
   @Override
-  public String createSubject(Repository repository)
+  public String createSubject(Repository repository, Changeset... changesets)
   {
-    return MessageFormat.format(PATTERN_SUBJECT, repository.getName());
+    StringBuilder branchString = new StringBuilder();
+    StringBuilder idString = new StringBuilder();
+
+    Set<String> branches = new HashSet<String>();
+    int versionsAdded = 0;
+    for (Changeset c : changesets) {
+      for (String branch : c.getBranches()) {
+        if (branches.add( branch )) {
+          if (branches.size() <= MAX_BRANCHES_IN_SUBJECT) {
+            if (branchString.length() > 0) { branchString.append(","); }
+            branchString.append(branch);
+          }
+        }
+      }
+
+      if (versionsAdded++ < MAX_IDS_IN_SUBJECT) {
+        if (idString.length() > 0) { idString.append(","); }
+        idString.append(c.getId());
+      }
+    }
+
+    return MessageFormat.format(PATTERN_SUBJECT, repository.getName(), branchString.toString(),
+        idString.toString());
   }
 }

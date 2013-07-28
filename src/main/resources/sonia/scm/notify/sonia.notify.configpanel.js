@@ -35,8 +35,14 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   
   titleText: 'Notification',
   notifyRepositoryContactText: 'Notify Repository Contact',
-  
+  notifyUseAuthorText: 'Use Author as From Address',
+  notifyEmailPerPushText: 'Email per Push',
+  notifyMaxDiffLinesText: 'Maximum Diff Lines',
+
   notifyRepositoryContactHelpText: 'Send notification to the contact address of this repository.',
+  notifyUseAuthorHelpText: 'Should the email of the author of the changeset be used as the from address?',
+  notifyEmailPerPushHelpText: 'Email per push, or email per changeset?',
+  notifyMaxDiffLinesHelpText: 'Maximum number of lines in the diff, to limit email size',
   contactGridHelpText: 'Additional contact addresses for notifications.',
   
   contactStore: null,
@@ -82,8 +88,33 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'notify-contact-repository',
         property: 'notify.contact.repository',
         inputValue: 'true',
+        width: '200px', // TODO:
         fieldLabel : this.notifyRepositoryContactText,
         helpText: this.notifyRepositoryContactHelpText  
+      },{
+        xtype: 'checkbox',
+        name: 'notify-use-author-as-from-address',
+        property: 'notify.use.author.as.from.address',
+        inputValue: 'true',
+        width: '200px', // TODO:
+        fieldLabel : this.notifyUseAuthorText,
+        helpText: this.notifyUseAuthorHelpText
+      },{
+        xtype: 'checkbox',
+        name: 'notify-mail-per-push',
+        property: 'notify.email.per.push',
+        inputValue: 'true',
+        width: '200px', // TODO:
+        fieldLabel : this.notifyEmailPerPushText,
+        helpText: this.notifyEmailPerPushHelpText
+      },{
+        xtype: 'checkbox',
+        name: 'notify-max-diff-lines',
+        property: 'notify.max.diff.lines',
+        inputValue: 'true',
+        width: '200px', // TODO:
+        fieldLabel : this.notifyMaxDiffLinesText,
+        helpText: this.notifyMaxDiffLinesHelpText
       },{
         id: 'contactGrid',
         xtype: 'editorgrid',

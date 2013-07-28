@@ -36,24 +36,21 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.codemonkey.simplejavamail.Email;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.mail.api.MailService;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
 import java.io.IOException;
-
 import java.util.Collection;
 import java.util.Set;
 
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -76,18 +73,21 @@ public class DefaultNotifyHandler implements NotifyHandler
    *
    *
    * @param contentBuilder
-   * @param configuration
    * @param mailService
    * @param repository
    * @param contacts
+   * @param repositoryConfiguration
    */
-  public DefaultNotifyHandler(ContentBuilder contentBuilder,
-    MailService mailService, Repository repository, Set<String> contacts)
+  public DefaultNotifyHandler(ContentBuilder contentBuilder, MailService mailService, Repository repository, Set<String> contacts,
+      NotifyRepositoryConfiguration repositoryConfiguration)
   {
     this.contentBuilder = contentBuilder;
     this.mailService = mailService;
     this.repository = repository;
     this.contacts = contacts;
+
+    this.emailPerPush = repositoryConfiguration.isEmailPerPush();
+    this.useAuthorAsFromAddress = repositoryConfiguration.isUseAuthorAsFromAddress();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -110,9 +110,20 @@ public class DefaultNotifyHandler implements NotifyHandler
 
       try
       {
-        Email mail = createMessage(changesets);
+        Changeset[] changesetArray = changesets.toArray(new Changeset[changesets.size()]);
 
-        mailService.send(mail);
+        if (this.emailPerPush) {
+          Email mail = createMessage(changesetArray);
+          if (null != mail) {
+            mailService.send(mail);
+          }
+        }
+        else for (Changeset c : changesets) {
+          Email mail = createMessage(c);
+          if (null != mail) {
+            mailService.send(mail);
+          }
+        }
       }
       catch (Exception ex)
       {
@@ -129,7 +140,6 @@ public class DefaultNotifyHandler implements NotifyHandler
    * Method description
    *
    *
-   * @param session
    * @param changesets
    *
    * @return
@@ -138,7 +148,7 @@ public class DefaultNotifyHandler implements NotifyHandler
    * @throws IOException
    * @throws MessagingException
    */
-  private Email createMessage(Collection<Changeset> changesets)
+  private Email createMessage(Changeset... changesets)
     throws MessagingException, IOException
   {
     Email msg = new Email();
@@ -148,7 +158,15 @@ public class DefaultNotifyHandler implements NotifyHandler
       msg.addRecipient(null, c, RecipientType.BCC);
     }
 
-    msg.setSubject(contentBuilder.createSubject(repository));
+    msg.setSubject(contentBuilder.createSubject(repository, changesets));
+
+    if (this.useAuthorAsFromAddress && changesets.length > 0)
+    {
+      // Assume same author for all changesets, just use the first one.
+      Person author = changesets[0].getAuthor();
+
+      msg.setFromAddress( author.getName(), author.getMail() );
+    }
 
     Content content = contentBuilder.createContent(repository, changesets);
 
@@ -164,6 +182,7 @@ public class DefaultNotifyHandler implements NotifyHandler
     return msg;
   }
 
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -177,4 +196,8 @@ public class DefaultNotifyHandler implements NotifyHandler
 
   /** Field description */
   private Repository repository;
+
+  private boolean emailPerPush;
+
+  private boolean useAuthorAsFromAddress;
 }

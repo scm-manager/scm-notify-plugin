@@ -45,13 +45,38 @@
     <h1>Changesets:</h1>
     <table>
       <#list changesets as changeset>
-      <tr>
-        <td><a href="${changeset.link}" target="_blank">${changeset.shortId}</a></td>
-        <td>${changeset.author.name}</td>
-        <td>${changeset.description}</td>
-      </tr>
+        <tr>
+          <td><a href="${changeset.link}" target="_blank">${changeset.shortId}</a></td>
+          <td>${changeset.branches}</td>
+          <td>${changeset.author.name}</td>
+          <td>${changeset.description}</td>
+        </tr>
+        <#list changesets.modifications.added as added>
+          <tr>
+            <td>Added</td>
+            <td>${added}</td>
+          </tr>
+        </#list>
+        <#list changesets.modifications.removed as removed>
+            <tr>
+                <td>Removed</td>
+                <td>${removed}</td>
+            </tr>
+        </#list>
+        <#list changesets.modifications.modified as modified>
+            <tr>
+                <td>Modified</td>
+                <td>${modified}</td>
+            </tr>
+        </#list>
+
       </#list>
     </table>
+
+    <h1>Diffs:</h1>
+    <pre>
+        ${diff} <!-- TODO:  Is this the proper syntax here?  (See TODO in FreemarkContentBuilder) -->
+    </pre>
   </body>
 </html>
 
