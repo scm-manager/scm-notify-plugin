@@ -58,8 +58,10 @@ public abstract class AbstractContentBuilder implements ContentBuilder
   /**
    * Limit the size of the subject.
    */
-  public static final int MAX_BRANCHES_IN_SUBJECT = 5;
-  public static final int MAX_IDS_IN_SUBJECT = 5;
+  public static final int MAX_BRANCHES_IN_SUBJECT = 3;
+  public static final int MAX_SUBJECT_LENGTH = 100;
+
+  private static final char SEP = ',';
 
   //~--- methods --------------------------------------------------------------
 
@@ -76,25 +78,40 @@ public abstract class AbstractContentBuilder implements ContentBuilder
     StringBuilder branchString = new StringBuilder();
     StringBuilder idString = new StringBuilder();
 
+    boolean branchesElided = false;
     Set<String> branches = new HashSet<String>();
-    int versionsAdded = 0;
     for (Changeset c : changesets) {
       for (String branch : c.getBranches()) {
         if (branches.add( branch )) {
           if (branches.size() <= MAX_BRANCHES_IN_SUBJECT) {
-            if (branchString.length() > 0) { branchString.append(","); }
+            // Restrict the # of branches displayed in the subject.
+            if (branchString.length() > 0) { branchString.append(SEP); }
             branchString.append(branch);
+          }
+          else if (!branchesElided) {
+            branchString.append("...");
           }
         }
       }
 
-      if (versionsAdded++ < MAX_IDS_IN_SUBJECT) {
-        if (idString.length() > 0) { idString.append(","); }
-        idString.append(c.getId());
-      }
+      if (idString.length() > 0) { idString.append(SEP); }
+      idString.append(c.getId());
     }
 
-    return MessageFormat.format(PATTERN_SUBJECT, repository.getName(), branchString.toString(),
-        idString.toString());
+    String result = MessageFormat.format(PATTERN_SUBJECT,  repository.getName(),
+        branchString.toString(), idString.toString());
+    if (result.length() > MAX_SUBJECT_LENGTH) {
+      // Exceeded the max length, find the last ID separator before that length.
+      int lastSep = result.lastIndexOf(SEP, MAX_SUBJECT_LENGTH - 3);
+      // Chop & elide the rest of the subject
+      result = result.substring(0, lastSep) + "...";
+    }
+
+    // Will look something like:
+    //  [repo][branch]  42,63,73
+    //  [repo][branch1,branch2]  42,63,73
+    //  [repo][branch1,branch2,branch3...]  42,63,73,82...
+
+    return result;
   }
 }
