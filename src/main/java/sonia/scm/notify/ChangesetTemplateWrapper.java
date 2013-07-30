@@ -88,6 +88,23 @@ public class ChangesetTemplateWrapper
     return changeset.getBranches();
   }
 
+
+  public String getBranchesAsString()
+  {
+    StringBuilder ret = new StringBuilder();
+
+    for (String branch : changeset.getBranches()) {
+      if (ret.length() > 0) { ret.append(","); }
+      ret.append( branch );
+    }
+
+    if (ret.length() == 0) {
+      ret.append( AbstractContentBuilder.getDefaultBranchName() );
+    }
+
+    return ret.toString();
+  }
+
   /**
    * Method description
    *

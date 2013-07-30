@@ -35,6 +35,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 
 import freemarker.cache.ClassTemplateLoader;
@@ -47,6 +48,9 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.url.RepositoryUrlProvider;
 import sonia.scm.url.UrlProviderFactory;
 
@@ -88,9 +92,10 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    */
   @Inject
   public FreemarkerContentBuilder(SCMContextProvider context,
-    ScmConfiguration configuration)
+    ScmConfiguration configuration, RepositoryServiceFactory repositoryServiceFactory)
   {
     this.configuration = configuration;
+    this.repositoryServiceFactory = repositoryServiceFactory;
     this.templateConfiguration = new Configuration();
     this.templateConfiguration.setTemplateLoader(
       new ClassTemplateLoader(FreemarkerContentBuilder.class, PATH_BASE));
@@ -102,19 +107,21 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    * Method description
    *
    *
-   * @param repository
-   * @param changesets
    *
-   * @return
+   * @param repository
+   * @param configuration
+   *@param changesets
+   *  @return
    *
    * @throws IOException
    */
   @Override
-  public Content createContent(Repository repository, Changeset... changesets)
+  public Content createContent(Repository repository, NotifyRepositoryConfiguration configuration,
+      Changeset... changesets)
     throws IOException
   {
     RepositoryUrlProvider urlProvider =
-      UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
+      UrlProviderFactory.createUrlProvider(this.configuration.getBaseUrl(),
         UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
     List<ChangesetTemplateWrapper> wrapperList =
       new ArrayList<ChangesetTemplateWrapper>();
@@ -132,7 +139,9 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
     env.put("repository", repository);
     env.put("changesets", wrapperList);
 
-    env.put("diff", createDiff(changesets));
+    if (configuration.maxDiffLines() > 0) {
+      env.put("diff", createDiff(repository, configuration, changesets));
+    }
 
     Template tpl = templateConfiguration.getTemplate(PATH_TEMPLATE, ENCODING);
     StringWriter writer = new StringWriter();
@@ -150,11 +159,49 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
   }
 
 
-  private String createDiff( Changeset... changesets ) {
-    // TODO: (See also TODO in content.ftl)
-    // TODO: Unified diff of the change, limited to NotifyRepositoryConfiguration.maxDiffLines lines
+  private String createDiff(Repository repository, NotifyRepositoryConfiguration notifyConfiguration,
+      Changeset... changesets)
+      throws ContentBuilderException {
     //
-    return "";
+    StringBuilder ret = new StringBuilder();
+    int numberOfLinesSoFar = 0;
+
+    RepositoryService service = null;
+    try {
+      service = repositoryServiceFactory.create(repository);
+
+      for (Changeset c : changesets) {
+        String diff = service.getDiffCommand().setRevision(c.getId()).getContent();
+
+        String[] diffLines = diff.split( System.getProperty("line.separator") );
+
+        for (int i=0; i < diffLines.length &&
+            numberOfLinesSoFar++ < notifyConfiguration.maxDiffLines();
+             i++) {
+          ret.append(diffLines[i]).append( System.getProperty("line.separator") );
+        }
+
+        ret.append(System.getProperty("line.separator")); // add a newline between each diff.
+
+        if (numberOfLinesSoFar >= notifyConfiguration.maxDiffLines()) {
+          ret.insert(0, " * Diff limit reached (max: "+ notifyConfiguration.maxDiffLines() +" lines)");
+          ret.append(System.getProperty("line.separator"));
+          ret.append(System.getProperty("line.separator"));
+          break; // Out of the changeset for loop
+        }
+      } // for (each changeset)
+    }
+    catch (RepositoryException e) {
+      throw new ContentBuilderException("could not create content", e);
+    }
+    catch (IOException e) {
+      throw new ContentBuilderException("could not create content", e);
+    }
+    finally {
+      Closeables.closeQuietly(service);
+    }
+
+    return ret.toString();
   }
 
 
@@ -178,6 +225,8 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  private final RepositoryServiceFactory repositoryServiceFactory;
 
   /** Field description */
   private Configuration templateConfiguration;

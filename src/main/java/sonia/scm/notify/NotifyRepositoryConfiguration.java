@@ -38,12 +38,12 @@ package sonia.scm.notify;
 import sonia.scm.PropertiesAware;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -79,7 +79,7 @@ public class NotifyRepositoryConfiguration
     useAuthorAsFromAddress = getBooleanProperty(properties, PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS);
     emailPerPush = getBooleanProperty(properties, PROPERTY_EMAIL_PER_PUSH);
     sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY);
-    maxDiffLines = getBooleanProperty(properties, PROPERTY_MAX_DIFF_LINES);
+    maxDiffLines = getIntegerFieldProperty(properties, PROPERTY_MAX_DIFF_LINES);
     contactList = getListProperty(properties, PROPERTY_CONTACT_LIST);
   }
 
@@ -128,6 +128,11 @@ public class NotifyRepositoryConfiguration
     return emailPerPush;
   }
 
+  public int maxDiffLines()
+  {
+    return maxDiffLines;
+  }
+
   /**
    * Method description
    *
@@ -145,6 +150,20 @@ public class NotifyRepositoryConfiguration
     if (Util.isNotEmpty(value))
     {
       result = Boolean.parseBoolean(value);
+    }
+
+    return result;
+  }
+
+
+  private int getIntegerFieldProperty(PropertiesAware properties, String name)
+  {
+    int result = 0;
+    String value = properties.getProperty(name);
+
+    if (Util.isNotEmpty(value))
+    {
+      result = Integer.parseInt(value);
     }
 
     return result;
@@ -196,6 +215,6 @@ public class NotifyRepositoryConfiguration
 
   private boolean emailPerPush;
 
-  private boolean maxDiffLines;
+  private int maxDiffLines;
 
 }

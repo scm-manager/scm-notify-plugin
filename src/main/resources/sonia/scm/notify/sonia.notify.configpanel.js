@@ -88,7 +88,6 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'notify-contact-repository',
         property: 'notify.contact.repository',
         inputValue: 'true',
-        width: '200px', // TODO:
         fieldLabel : this.notifyRepositoryContactText,
         helpText: this.notifyRepositoryContactHelpText  
       },{
@@ -96,7 +95,7 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'notify-use-author-as-from-address',
         property: 'notify.use.author.as.from.address',
         inputValue: 'true',
-        width: '200px', // TODO:
+        checked: 'true',
         fieldLabel : this.notifyUseAuthorText,
         helpText: this.notifyUseAuthorHelpText
       },{
@@ -104,15 +103,13 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'notify-mail-per-push',
         property: 'notify.email.per.push',
         inputValue: 'true',
-        width: '200px', // TODO:
         fieldLabel : this.notifyEmailPerPushText,
         helpText: this.notifyEmailPerPushHelpText
       },{
-        xtype: 'checkbox',
+        xtype: 'textfield',
         name: 'notify-max-diff-lines',
         property: 'notify.max.diff.lines',
-        inputValue: 'true',
-        width: '200px', // TODO:
+        emptyText: '0 (no diff included)',
         fieldLabel : this.notifyMaxDiffLinesText,
         helpText: this.notifyMaxDiffLinesHelpText
       },{

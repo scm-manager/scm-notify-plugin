@@ -53,12 +53,14 @@ public interface ContentBuilder
    * Method description
    *
    *
-   * @param repository
-   * @param changesets
    *
-   * @return
+   * @param repository
+   * @param configuration
+   *@param changesets
+   *  @return
    */
-  public Content createContent(Repository repository, Changeset... changesets) throws IOException;
+  public Content createContent(Repository repository, NotifyRepositoryConfiguration configuration,
+      Changeset... changesets) throws IOException;
 
   /**
    * Method description

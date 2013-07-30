@@ -36,11 +36,13 @@ package sonia.scm.notify;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
+import sonia.scm.url.UrlUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -75,31 +77,22 @@ public abstract class AbstractContentBuilder implements ContentBuilder
   @Override
   public String createSubject(Repository repository, Changeset... changesets)
   {
-    StringBuilder branchString = new StringBuilder();
-    StringBuilder idString = new StringBuilder();
+    final StringBuilder branchString = new StringBuilder();
+    final Set<String> branches = new HashSet<String>();
+
+    final StringBuilder idString = new StringBuilder();
 
     boolean branchesElided = false;
-    Set<String> branches = new HashSet<String>();
     for (Changeset c : changesets) {
-      for (String branch : c.getBranches()) {
-        if (branches.add( branch )) {
-          if (branches.size() <= MAX_BRANCHES_IN_SUBJECT) {
-            // Restrict the # of branches displayed in the subject.
-            if (branchString.length() > 0) { branchString.append(SEP); }
-            branchString.append(branch);
-          }
-          else if (!branchesElided) {
-            branchString.append("...");
-          }
-        }
-      }
+      branchesElided = updateBranchString(branchString, c, branchesElided, branches);
 
-      if (idString.length() > 0) { idString.append(SEP); }
-      idString.append(c.getId());
+      updateChangesetIdString(idString, c);
     }
 
-    String result = MessageFormat.format(PATTERN_SUBJECT,  repository.getName(),
-        branchString.toString(), idString.toString());
+    String result = MessageFormat.format(PATTERN_SUBJECT,
+        repository.getName(),
+        branchString.toString(),
+        idString.toString());
     if (result.length() > MAX_SUBJECT_LENGTH) {
       // Exceeded the max length, find the last ID separator before that length.
       int lastSep = result.lastIndexOf(SEP, MAX_SUBJECT_LENGTH - 3);
@@ -113,5 +106,63 @@ public abstract class AbstractContentBuilder implements ContentBuilder
     //  [repo][branch1,branch2,branch3...]  42,63,73,82...
 
     return result;
+  }
+
+
+  private void updateChangesetIdString(StringBuilder idString, Changeset c) {
+    if (idString.length() > 0) { idString.append(SEP); }
+    idString.append( shortenId(c.getId()) );
+    if (isMerge(c)) {
+      idString.append(" (merge)");
+    }
+  }
+
+
+  private boolean updateBranchString(StringBuilder branchString, Changeset c, boolean branchesElided,
+      Set<String> branches) {
+
+    List<String> cBranches = c.getBranches();
+    if (cBranches.isEmpty()) {
+      cBranches.add( getDefaultBranchName() ); // No branch?  That means "default"
+    }
+
+    // Iterate through each branch in the changeset.
+    for (String branch : cBranches) {
+      if (branches.add( branch )) {
+        // We haven't seen this one before, so add it to the String.
+
+        if (branches.size() <= MAX_BRANCHES_IN_SUBJECT) {
+          // Still within the maximum, add it (conditionally a separator)
+          if (branchString.length() > 0) { branchString.append(SEP); }
+          branchString.append(branch);
+        }
+        else if (!branchesElided) {
+          // Oops, over the maximum.  Add some indicator ...
+          branchString.append("...");
+          branchesElided = true;
+        }
+      }
+    }
+
+    return branchesElided;
+  }
+
+
+  public static boolean isMerge(Changeset changeset){
+    return changeset.getParents().size() > 1;
+  }
+
+
+  public static String shortenId(String id) {
+    id = UrlUtil.fixRevision( id );
+    if (id.length() > 8) {
+      id = id.substring(0,8);
+    }
+    return id;
+  }
+
+
+  public static String getDefaultBranchName() {
+    return "default";// TODO: Mercurial-specific - is there a better way ?
   }
 }

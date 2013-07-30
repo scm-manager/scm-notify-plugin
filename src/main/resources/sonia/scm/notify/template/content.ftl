@@ -44,39 +44,43 @@
   <body>
     <h1>Changesets:</h1>
     <table>
+      <tr style="text-align: center; font: bold">
+          <th></th>
+          <th>Branch</th>
+          <th>Author</th>
+          <th style="text-align: left;">Description</th>
+      </tr>
       <#list changesets as changeset>
         <tr>
-          <td><a href="${changeset.link}" target="_blank">${changeset.shortId}</a></td>
-          <td>${changeset.branches}</td>
-          <td>${changeset.author.name}</td>
-          <td>${changeset.description}</td>
+          <td style="width: 10%"><a href="${changeset.link}" target="_blank">${changeset.shortId}</a></td>
+          <td style="width: 10%">${changeset.branchesAsString}</td>
+          <td style="min-width: 100px; width: 10%">${changeset.author.name}</td>
+          <td style="width: 70%"><pre>${changeset.description}</pre></td>
         </tr>
-        <#list changesets.modifications.added as added>
+        <#list changeset.modifications.added as added>
           <tr>
-            <td>Added</td>
-            <td>${added}</td>
+            <td colspan="4">+ ${added}</td>
           </tr>
         </#list>
-        <#list changesets.modifications.removed as removed>
-            <tr>
-                <td>Removed</td>
-                <td>${removed}</td>
-            </tr>
+        <#list changeset.modifications.removed as removed>
+          <tr>
+            <td colspan="4">- ${removed}</td>
+          </tr>
         </#list>
-        <#list changesets.modifications.modified as modified>
-            <tr>
-                <td>Modified</td>
-                <td>${modified}</td>
-            </tr>
+        <#list changeset.modifications.modified as modified>
+          <tr>
+            <td colspan="4">M ${modified}</td>
+          </tr>
         </#list>
-
       </#list>
     </table>
 
-    <h1>Diffs:</h1>
-    <pre>
-        ${diff} <!-- TODO:  Is this the proper syntax here?  (See TODO in FreemarkContentBuilder) -->
-    </pre>
+    <#if diff?has_content>
+      <h1>Diffs:</h1>
+      <pre>
+${diff}
+      </pre>
+    </#if>
   </body>
 </html>
 

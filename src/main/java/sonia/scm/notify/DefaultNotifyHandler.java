@@ -76,18 +76,16 @@ public class DefaultNotifyHandler implements NotifyHandler
    * @param mailService
    * @param repository
    * @param contacts
-   * @param repositoryConfiguration
+   * @param notifyConfiguration
    */
   public DefaultNotifyHandler(ContentBuilder contentBuilder, MailService mailService, Repository repository, Set<String> contacts,
-      NotifyRepositoryConfiguration repositoryConfiguration)
+      NotifyRepositoryConfiguration notifyConfiguration)
   {
     this.contentBuilder = contentBuilder;
     this.mailService = mailService;
     this.repository = repository;
     this.contacts = contacts;
-
-    this.emailPerPush = repositoryConfiguration.isEmailPerPush();
-    this.useAuthorAsFromAddress = repositoryConfiguration.isUseAuthorAsFromAddress();
+    this.notifyConfiguration = notifyConfiguration;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -112,7 +110,7 @@ public class DefaultNotifyHandler implements NotifyHandler
       {
         Changeset[] changesetArray = changesets.toArray(new Changeset[changesets.size()]);
 
-        if (this.emailPerPush) {
+        if (notifyConfiguration.isEmailPerPush()) {
           Email mail = createMessage(changesetArray);
           if (null != mail) {
             mailService.send(mail);
@@ -160,7 +158,7 @@ public class DefaultNotifyHandler implements NotifyHandler
 
     msg.setSubject(contentBuilder.createSubject(repository, changesets));
 
-    if (this.useAuthorAsFromAddress && changesets.length > 0)
+    if (notifyConfiguration.isUseAuthorAsFromAddress() && changesets.length > 0)
     {
       // Assume same author for all changesets, just use the first one.
       Person author = changesets[0].getAuthor();
@@ -168,7 +166,7 @@ public class DefaultNotifyHandler implements NotifyHandler
       msg.setFromAddress( author.getName(), author.getMail() );
     }
 
-    Content content = contentBuilder.createContent(repository, changesets);
+    Content content = contentBuilder.createContent(repository, notifyConfiguration, changesets);
 
     if (content.isHtml())
     {
@@ -188,6 +186,8 @@ public class DefaultNotifyHandler implements NotifyHandler
   /** Field description */
   private Set<String> contacts;
 
+  private final NotifyRepositoryConfiguration notifyConfiguration;
+
   /** Field description */
   private ContentBuilder contentBuilder;
 
@@ -196,8 +196,4 @@ public class DefaultNotifyHandler implements NotifyHandler
 
   /** Field description */
   private Repository repository;
-
-  private boolean emailPerPush;
-
-  private boolean useAuthorAsFromAddress;
 }

@@ -42,8 +42,6 @@ import sonia.scm.repository.Repository;
 
 import java.text.MessageFormat;
 
-import java.util.Collection;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -60,14 +58,15 @@ public class SimpleContentBuilder extends AbstractContentBuilder
    * Method description
    *
    *
-   * @param repository
-   * @param changesets
    *
-   * @return
+   * @param repository
+   * @param configuration
+   *@param changesets
+   *  @return
    */
   @Override
-  public Content createContent(Repository repository,
-    Changeset... changesets)
+  public Content createContent(Repository repository, NotifyRepositoryConfiguration configuration,
+      Changeset... changesets)
   {
     StringBuilder content = new StringBuilder();
 
