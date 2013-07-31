@@ -77,7 +77,7 @@ public class NotifyRepositoryConfiguration
   {
     sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY, false);
     useAuthorAsFromAddress = getBooleanProperty(properties, PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS, false);
-    emailPerPush = getBooleanProperty(properties, PROPERTY_EMAIL_PER_PUSH, false);
+    emailPerPush = getBooleanProperty(properties, PROPERTY_EMAIL_PER_PUSH, true);
     maxDiffLines = getIntegerFieldProperty(properties, PROPERTY_MAX_DIFF_LINES, 0);
     contactList = getListProperty(properties, PROPERTY_CONTACT_LIST);
   }

@@ -105,6 +105,7 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'notify-mail-per-push',
         property: 'notify.email.per.push',
         inputValue: 'true',
+        checked: true,
         fieldLabel : this.notifyEmailPerPushText,
         helpText: this.notifyEmailPerPushHelpText
       },{
