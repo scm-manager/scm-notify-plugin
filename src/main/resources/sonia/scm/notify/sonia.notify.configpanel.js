@@ -191,7 +191,7 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
       repository.properties = [];
     }
     Ext.each(repository.properties, function(prop){
-      if ( prop.key == 'notify.contact.list' ){
+      if ( prop.key === 'notify.contact.list' ){
         var value = prop.value;
         this.parseContacts(store, value);
       }
@@ -216,7 +216,7 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
     
     // delete old contacts
     Ext.each(repository.properties, function(prop, index){
-      if ( prop.key == 'notify.contact.list' ){
+      if ( prop.key === 'notify.contact.list' ){
         delete repository.properties[index];
       }
     });
