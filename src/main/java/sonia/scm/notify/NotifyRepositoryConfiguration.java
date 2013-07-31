@@ -75,11 +75,10 @@ public class NotifyRepositoryConfiguration
    */
   public NotifyRepositoryConfiguration(PropertiesAware properties)
   {
-    sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY);
-    useAuthorAsFromAddress = getBooleanProperty(properties, PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS);
-    emailPerPush = getBooleanProperty(properties, PROPERTY_EMAIL_PER_PUSH);
-    sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY);
-    maxDiffLines = getIntegerFieldProperty(properties, PROPERTY_MAX_DIFF_LINES);
+    sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY, false);
+    useAuthorAsFromAddress = getBooleanProperty(properties, PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS, false);
+    emailPerPush = getBooleanProperty(properties, PROPERTY_EMAIL_PER_PUSH, false);
+    maxDiffLines = getIntegerFieldProperty(properties, PROPERTY_MAX_DIFF_LINES, 0);
     contactList = getListProperty(properties, PROPERTY_CONTACT_LIST);
   }
 
@@ -142,9 +141,9 @@ public class NotifyRepositoryConfiguration
    *
    * @return
    */
-  private boolean getBooleanProperty(PropertiesAware properties, String name)
+  private boolean getBooleanProperty(PropertiesAware properties, String name, boolean defaultValue)
   {
-    boolean result = false;
+    boolean result = defaultValue;
     String value = properties.getProperty(name);
 
     if (Util.isNotEmpty(value))
@@ -156,9 +155,9 @@ public class NotifyRepositoryConfiguration
   }
 
 
-  private int getIntegerFieldProperty(PropertiesAware properties, String name)
+  private int getIntegerFieldProperty(PropertiesAware properties, String name, int defaultValue)
   {
-    int result = 0;
+    int result = defaultValue;
     String value = properties.getProperty(name);
 
     if (Util.isNotEmpty(value))

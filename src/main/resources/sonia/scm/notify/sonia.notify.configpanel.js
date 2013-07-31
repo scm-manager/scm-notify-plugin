@@ -98,7 +98,6 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         name: 'notify-use-author-as-from-address',
         property: 'notify.use.author.as.from.address',
         inputValue: 'true',
-        checked: 'true',
         fieldLabel : this.notifyUseAuthorText,
         helpText: this.notifyUseAuthorHelpText
       },{
