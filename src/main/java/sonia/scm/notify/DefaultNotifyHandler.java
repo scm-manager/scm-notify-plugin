@@ -35,12 +35,12 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import org.codemonkey.simplejavamail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.mail.api.MailService;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.Util;
 
@@ -49,6 +49,10 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import sonia.scm.security.Role;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -148,7 +152,7 @@ public class DefaultNotifyHandler implements NotifyHandler
    */
   private Email createMessage(Changeset... changesets)
     throws MessagingException, IOException
-  {
+  { 
     Email msg = new Email();
 
     for (String c : contacts)
@@ -159,11 +163,27 @@ public class DefaultNotifyHandler implements NotifyHandler
     msg.setSubject(contentBuilder.createSubject(repository, changesets));
 
     if (notifyConfiguration.isUseAuthorAsFromAddress() && changesets.length > 0)
-    {
-      // Assume same author for all changesets, just use the first one.
-      Person author = changesets[0].getAuthor();
+    {      
+      // use mail address of current user
+      Subject subject = SecurityUtils.getSubject();
+      subject.checkRole( Role.USER );
+      User user = subject.getPrincipals().oneByType(User.class);
 
-      msg.setFromAddress( author.getName(), author.getMail() );
+      String mail = user.getMail();
+      
+      if (!Strings.isNullOrEmpty(mail))
+      {
+        String displayName = user.getDisplayName();
+        if ( Strings.isNullOrEmpty(displayName) )
+        {
+          displayName = user.getName();
+        }
+        msg.setFromAddress(displayName, mail);
+      } 
+      else 
+      {
+        logger.warn("user {} has no mail address, use default address", user.getName());
+      }
     }
 
     Content content = contentBuilder.createContent(repository, notifyConfiguration, changesets);
