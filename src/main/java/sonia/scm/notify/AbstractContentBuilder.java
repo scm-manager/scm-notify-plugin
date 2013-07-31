@@ -44,6 +44,8 @@ import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -67,6 +69,12 @@ public abstract class AbstractContentBuilder implements ContentBuilder
 
   //~--- methods --------------------------------------------------------------
 
+  /**
+   * the logger for AbstractContentBuilder
+   */
+  private static final Logger logger = LoggerFactory.getLogger(
+    AbstractContentBuilder.class);
+  
   /**
    * Method description
    *
@@ -94,6 +102,7 @@ public abstract class AbstractContentBuilder implements ContentBuilder
         branchString.toString(),
         idString.toString());
     if (result.length() > MAX_SUBJECT_LENGTH) {
+      logger.trace("notification subject exceeded maximum length");
       // Exceeded the max length, find the last ID separator before that length.
       int lastSep = result.lastIndexOf(SEP, MAX_SUBJECT_LENGTH - 3);
       // Chop & elide the rest of the subject
@@ -113,6 +122,7 @@ public abstract class AbstractContentBuilder implements ContentBuilder
     if (idString.length() > 0) { idString.append(SEP); }
     idString.append( shortenId(c.getId()) );
     if (isMerge(c)) {
+      logger.trace("mark changeset {} as merge", c.getId());
       idString.append(" (merge)");
     }
   }
@@ -123,6 +133,7 @@ public abstract class AbstractContentBuilder implements ContentBuilder
 
     List<String> cBranches = c.getBranches();
     if (cBranches.isEmpty()) {
+      logger.trace("empty list of branches. Mercurial default branch?");
       cBranches.add( getDefaultBranchName() ); // No branch?  That means "default"
     }
 
@@ -138,6 +149,7 @@ public abstract class AbstractContentBuilder implements ContentBuilder
         }
         else if (!branchesElided) {
           // Oops, over the maximum.  Add some indicator ...
+          logger.trace("exceeded maximum branch length");
           branchString.append("...");
           branchesElided = true;
         }

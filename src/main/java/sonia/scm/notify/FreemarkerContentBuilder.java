@@ -64,6 +64,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.EscapeUtil;
 
 /**
@@ -81,7 +83,15 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
   /** Field description */
   public static final String PATH_TEMPLATE = "content.ftl";
+  
+  private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+  /**
+   * the logger for FreemarkerContentBuilder
+   */
+  private static final Logger logger = LoggerFactory.getLogger(
+    FreemarkerContentBuilder.class);
+  
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -176,20 +186,21 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
         String diff = service.getDiffCommand().setRevision(c.getId()).getContent();
         diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
 
-        String[] diffLines = diff.split( System.getProperty("line.separator") );
+        String[] diffLines = diff.split( LINE_SEPARATOR );
 
         for (int i=0; i < diffLines.length &&
             numberOfLinesSoFar++ < notifyConfiguration.maxDiffLines();
              i++) {
-          ret.append(diffLines[i]).append( System.getProperty("line.separator") );
+          ret.append(diffLines[i]).append( LINE_SEPARATOR );
         }
 
-        ret.append(System.getProperty("line.separator")); // add a newline between each diff.
+        ret.append(LINE_SEPARATOR); // add a newline between each diff.
 
         if (numberOfLinesSoFar >= notifyConfiguration.maxDiffLines()) {
+          logger.trace("diff exceed maximum number of lines");
           ret.insert(0, " * Diff limit reached (max: "+ notifyConfiguration.maxDiffLines() +" lines)");
-          ret.append(System.getProperty("line.separator"));
-          ret.append(System.getProperty("line.separator"));
+          ret.append(LINE_SEPARATOR);
+          ret.append(LINE_SEPARATOR);
           break; // Out of the changeset for loop
         }
       } // for (each changeset)

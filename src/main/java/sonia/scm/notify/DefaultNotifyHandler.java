@@ -163,7 +163,7 @@ public class DefaultNotifyHandler implements NotifyHandler
     msg.setSubject(contentBuilder.createSubject(repository, changesets));
 
     if (notifyConfiguration.isUseAuthorAsFromAddress() && changesets.length > 0)
-    {      
+    {
       // use mail address of current user
       Subject subject = SecurityUtils.getSubject();
       subject.checkRole( Role.USER );
@@ -178,6 +178,7 @@ public class DefaultNotifyHandler implements NotifyHandler
         {
           displayName = user.getName();
         }
+        logger.debug("user \"{} <{}>\" as from address", displayName, mail);
         msg.setFromAddress(displayName, mail);
       } 
       else 
