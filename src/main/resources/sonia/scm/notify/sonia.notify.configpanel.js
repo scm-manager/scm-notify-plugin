@@ -83,6 +83,9 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
     
     var config = {
       title: this.titleText,
+      labelWidth: 180,
+      labelPad: 8,
+      layout: 'form',
       items: [{
         xtype: 'checkbox',
         name: 'notify-contact-repository',
@@ -106,7 +109,7 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         fieldLabel : this.notifyEmailPerPushText,
         helpText: this.notifyEmailPerPushHelpText
       },{
-        xtype: 'textfield',
+        xtype: 'numberfield',
         name: 'notify-max-diff-lines',
         property: 'notify.max.diff.lines',
         emptyText: '0 (no diff included)',
@@ -162,8 +165,10 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
       }]
     };
     
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Ext.apply(this, Ext.apply(config, this.initialConfig));
     Sonia.notify.ConfigPanel.superclass.initComponent.apply(this, arguments);
+    // workaround to overide labelWidth of rest panel
+    this.labelWidth = 180;
   },
   
   afterRender: function(){
