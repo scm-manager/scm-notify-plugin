@@ -35,6 +35,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 
@@ -63,6 +64,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import sonia.scm.repository.EscapeUtil;
 
 /**
  *
@@ -172,6 +174,7 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
       for (Changeset c : changesets) {
         String diff = service.getDiffCommand().setRevision(c.getId()).getContent();
+        diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
 
         String[] diffLines = diff.split( System.getProperty("line.separator") );
 
