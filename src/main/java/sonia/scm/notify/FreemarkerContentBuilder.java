@@ -75,6 +75,9 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
   /** Field description */
   public static final String PATH_TEMPLATE = "content.ftl";
 
+  /** Field description */
+  private static final String TPYE_SVN = "svn";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -117,14 +120,14 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
     NotifyRepositoryConfiguration configuration, Changeset... changesets)
     throws IOException
   {
-    List<ChangesetTemplateWrapper> wrapperList = null;
+    List<BranchTemplateWrapper> branches = null;
     ChangesetTemplateWrapperHelper helper = null;
 
     try
     {
       helper = new ChangesetTemplateWrapperHelper(this.configuration,
         repositoryServiceFactory, configuration, repository);
-      wrapperList = helper.wrap(changesets);
+      branches = helper.wrapAndSortByBranch(changesets);
     }
     finally
     {
@@ -135,7 +138,8 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
     env.put("title", createSubject(repository, changesets));
     env.put("repository", repository);
-    env.put("changesets", wrapperList);
+    env.put("branches", branches);
+    env.put("supportNamedBranches", isNamedBranchesSupported(repository));
 
     Template tpl = templateConfiguration.getTemplate(PATH_TEMPLATE, ENCODING);
     StringWriter writer = new StringWriter();
@@ -150,6 +154,23 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
     }
 
     return new Content(writer.toString(), true);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  private boolean isNamedBranchesSupported(Repository repository)
+  {
+
+    // TODO find a better way
+    return !TPYE_SVN.equalsIgnoreCase(repository.getType());
   }
 
   //~--- fields ---------------------------------------------------------------

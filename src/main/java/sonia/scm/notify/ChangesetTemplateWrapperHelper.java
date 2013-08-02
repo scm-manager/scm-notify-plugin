@@ -34,8 +34,11 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.google.common.io.Closeables;
 
 import org.slf4j.Logger;
@@ -130,16 +133,16 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    *
    * @return
    */
-  public List<ChangesetTemplateWrapper> wrap(Changeset[] changesets)
+  private List<ChangesetTemplateWrapper> wrap(Changeset[] changesets)
   {
-    Builder<ChangesetTemplateWrapper> builder = ImmutableList.builder();
+    List<ChangesetTemplateWrapper> wrapperList = Lists.newArrayList();
 
     for (Changeset c : changesets)
     {
-      builder.add(wrap(c));
+      wrapperList.add(wrap(c));
     }
 
-    return builder.build();
+    return wrapperList;
   }
 
   /**
@@ -150,7 +153,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    *
    * @return
    */
-  public ChangesetTemplateWrapper wrap(Changeset changeset)
+  private ChangesetTemplateWrapper wrap(Changeset changeset)
   {
     String link = createLink(urlProvider, repository, changeset);
     String diff = null;
@@ -165,6 +168,59 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     }
 
     return new ChangesetTemplateWrapper(changeset, link, diff);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param changesets
+   *
+   * @return
+   */
+  public List<BranchTemplateWrapper> wrapAndSortByBranch(Changeset[] changesets)
+  {
+    Builder<BranchTemplateWrapper> builder = ImmutableList.builder();
+
+    List<ChangesetTemplateWrapper> wrapped = wrap(changesets);
+
+    Ordering<ChangesetTemplateWrapper> order =
+      new ChangesetTemplateWrapperOrder();
+
+    wrapped = order.immutableSortedCopy(wrapped);
+
+    String branch = null;
+    Builder<ChangesetTemplateWrapper> changesetBuilder =
+      ImmutableList.builder();
+
+    for (ChangesetTemplateWrapper c : wrapped)
+    {
+      if (branch == null)
+      {
+        branch = c.getBranchesAsString();
+        changesetBuilder.add(c);
+      }
+      else if (branch.equals(c.getBranchesAsString()))
+      {
+        changesetBuilder.add(c);
+      }
+      else
+      {
+        builder.add(new BranchTemplateWrapper(branch,
+          changesetBuilder.build()));
+        changesetBuilder = ImmutableList.builder();
+        branch = c.getBranchesAsString();
+      }
+    }
+
+    wrapped = changesetBuilder.build();
+
+    if (!wrapped.isEmpty())
+    {
+      builder.add(new BranchTemplateWrapper(branch, changesetBuilder.build()));
+    }
+
+    return builder.build();
   }
 
   /**
@@ -239,6 +295,43 @@ public class ChangesetTemplateWrapperHelper implements Closeable
   {
     return urlProvider.getChangesetUrl(repository.getId(), c.getId());
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/08/02
+   * @author         Enter your name here...    
+   */
+  private static class ChangesetTemplateWrapperOrder
+    extends Ordering<ChangesetTemplateWrapper>
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param left
+     * @param right
+     *
+     * @return
+     */
+    @Override
+    public int compare(ChangesetTemplateWrapper left,
+      ChangesetTemplateWrapper right)
+    {
+      //J-
+        return ComparisonChain
+          .start()
+          .compare(left.getBranchesAsString(), right.getBranchesAsString())
+          .compare(left.getDate(), right.getDate())
+          .result();
+        //J+
+    }
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
