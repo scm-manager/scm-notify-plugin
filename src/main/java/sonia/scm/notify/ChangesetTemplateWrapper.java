@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -60,8 +61,22 @@ public class ChangesetTemplateWrapper
    */
   public ChangesetTemplateWrapper(Changeset changeset, String link)
   {
+    this(changeset, link, null);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param changeset
+   * @param link
+   * @param diff
+   */
+  public ChangesetTemplateWrapper(Changeset changeset, String link, String diff)
+  {
     this.changeset = changeset;
     this.link = link;
+    this.diff = diff;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -88,18 +103,29 @@ public class ChangesetTemplateWrapper
     return changeset.getBranches();
   }
 
-
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getBranchesAsString()
   {
     StringBuilder ret = new StringBuilder();
 
-    for (String branch : changeset.getBranches()) {
-      if (ret.length() > 0) { ret.append(","); }
-      ret.append( branch );
+    for (String branch : changeset.getBranches())
+    {
+      if (ret.length() > 0)
+      {
+        ret.append(",");
+      }
+
+      ret.append(branch);
     }
 
-    if (ret.length() == 0) {
-      ret.append( AbstractContentBuilder.getDefaultBranchName() );
+    if (ret.length() == 0)
+    {
+      ret.append(AbstractContentBuilder.getDefaultBranchName());
     }
 
     return ret.toString();
@@ -133,6 +159,17 @@ public class ChangesetTemplateWrapper
   public String getDescription()
   {
     return changeset.getDescription();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getDiff()
+  {
+    return diff;
   }
 
   /**
@@ -212,6 +249,9 @@ public class ChangesetTemplateWrapper
 
   /** Field description */
   private Changeset changeset;
+
+  /** Field description */
+  private String diff;
 
   /** Field description */
   private String link;

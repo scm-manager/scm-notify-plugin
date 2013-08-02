@@ -28,11 +28,15 @@
         padding: 20px;
         width: 100%;
       }
+      tr {
+        border: 0;
+      }
       td {
         padding: 3px;
         vertical-align: top;
         border: 1px solid #CCCCCC;
         text-align: left;
+        border: 0;
       }
       a {
         color: #045491;
@@ -42,45 +46,51 @@
     </style>
   </head>
   <body>
-    <h1>Changesets:</h1>
+    <h1>Repository ${repository.name} has changed</h1>
+    
     <table>
-      <tr style="text-align: center; font: bold">
-          <th></th>
-          <th>Branch</th>
-          <th>Author</th>
-          <th style="text-align: left;">Description</th>
-      </tr>
       <#list changesets as changeset>
         <tr>
-          <td style="width: 10%"><a href="${changeset.link}" target="_blank">${changeset.shortId}</a></td>
-          <td style="width: 10%">${changeset.branchesAsString}</td>
-          <td style="min-width: 100px; width: 10%">${changeset.author.name}</td>
-          <td style="width: 70%"><pre>${changeset.description}</pre></td>
+          <td style="width: 60px;">
+            <a href="${changeset.link}" target="_blank">
+              ${changeset.shortId}
+            </a>
+          </td>
+          <td style="width: 150px;">
+            ${changeset.date?string("yyyy-MM-dd HH:mm:ss")}
+          </td>
+          <td>
+            ${changeset.author.name}
+          </td>
         </tr>
-        <#list changeset.modifications.added as added>
-          <tr>
-            <td colspan="4">+ ${added}</td>
-          </tr>
-        </#list>
-        <#list changeset.modifications.removed as removed>
-          <tr>
-            <td colspan="4">- ${removed}</td>
-          </tr>
-        </#list>
-        <#list changeset.modifications.modified as modified>
-          <tr>
-            <td colspan="4">M ${modified}</td>
-          </tr>
-        </#list>
+        <tr>
+          <td colspan="3">
+            ${changeset.description}
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3">
+            <#list changeset.modifications.added as added>
+            <span>A ${added}</span><br />
+            </#list>
+            <#list changeset.modifications.modified as modified>
+            <span>M ${modified}</span><br />
+            </#list>
+            <#list changeset.modifications.removed as removed>
+            <span>R ${removed}</span><br />
+            </#list>
+          </td>
+        </tr>
+        <#if changeset.diff?has_content>
+        <tr>
+          <td colspan="3">
+            <pre>${changeset.diff}</pre>
+          </td>
+        </tr>
+        </#if>
       </#list>
     </table>
 
-    <#if diff?has_content>
-      <h1>Diffs:</h1>
-      <pre>
-${diff}
-      </pre>
-    </#if>
   </body>
 </html>
 

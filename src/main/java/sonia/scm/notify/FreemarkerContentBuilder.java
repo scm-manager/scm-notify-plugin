@@ -35,7 +35,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 
@@ -49,24 +49,15 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.url.RepositoryUrlProvider;
-import sonia.scm.url.UrlProviderFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.StringWriter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import sonia.scm.repository.EscapeUtil;
 
 /**
  *
@@ -83,15 +74,7 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
 
   /** Field description */
   public static final String PATH_TEMPLATE = "content.ftl";
-  
-  private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
-  /**
-   * the logger for FreemarkerContentBuilder
-   */
-  private static final Logger logger = LoggerFactory.getLogger(
-    FreemarkerContentBuilder.class);
-  
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -101,10 +84,12 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    *
    * @param context
    * @param configuration
+   * @param repositoryServiceFactory
    */
   @Inject
   public FreemarkerContentBuilder(SCMContextProvider context,
-    ScmConfiguration configuration, RepositoryServiceFactory repositoryServiceFactory)
+    ScmConfiguration configuration,
+    RepositoryServiceFactory repositoryServiceFactory)
   {
     this.configuration = configuration;
     this.repositoryServiceFactory = repositoryServiceFactory;
@@ -122,38 +107,35 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    *
    * @param repository
    * @param configuration
-   *@param changesets
+   * @param changesets
    *  @return
    *
    * @throws IOException
    */
   @Override
-  public Content createContent(Repository repository, NotifyRepositoryConfiguration configuration,
-      Changeset... changesets)
+  public Content createContent(Repository repository,
+    NotifyRepositoryConfiguration configuration, Changeset... changesets)
     throws IOException
   {
-    RepositoryUrlProvider urlProvider =
-      UrlProviderFactory.createUrlProvider(this.configuration.getBaseUrl(),
-        UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
-    List<ChangesetTemplateWrapper> wrapperList =
-      new ArrayList<ChangesetTemplateWrapper>();
+    List<ChangesetTemplateWrapper> wrapperList = null;
+    ChangesetTemplateWrapperHelper helper = null;
 
-    for (Changeset c : changesets)
+    try
     {
-      String link = createLink(urlProvider, repository, c);
-
-      wrapperList.add(new ChangesetTemplateWrapper(c, link));
+      helper = new ChangesetTemplateWrapperHelper(this.configuration,
+        repositoryServiceFactory, configuration, repository);
+      wrapperList = helper.wrap(changesets);
+    }
+    finally
+    {
+      Closeables.close(helper, true);
     }
 
-    Map<String, Object> env = new HashMap<String, Object>();
+    Map<String, Object> env = Maps.newHashMap();
 
     env.put("title", createSubject(repository, changesets));
     env.put("repository", repository);
     env.put("changesets", wrapperList);
-
-    if (configuration.maxDiffLines() > 0) {
-      env.put("diff", createDiff(repository, configuration, changesets));
-    }
 
     Template tpl = templateConfiguration.getTemplate(PATH_TEMPLATE, ENCODING);
     StringWriter writer = new StringWriter();
@@ -170,77 +152,13 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
     return new Content(writer.toString(), true);
   }
 
-
-  private String createDiff(Repository repository, NotifyRepositoryConfiguration notifyConfiguration,
-      Changeset... changesets)
-      throws ContentBuilderException {
-    //
-    StringBuilder ret = new StringBuilder();
-    int numberOfLinesSoFar = 0;
-
-    RepositoryService service = null;
-    try {
-      service = repositoryServiceFactory.create(repository);
-
-      for (Changeset c : changesets) {
-        String diff = service.getDiffCommand().setRevision(c.getId()).getContent();
-        diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
-
-        String[] diffLines = diff.split( LINE_SEPARATOR );
-
-        for (int i=0; i < diffLines.length &&
-            numberOfLinesSoFar++ < notifyConfiguration.maxDiffLines();
-             i++) {
-          ret.append(diffLines[i]).append( LINE_SEPARATOR );
-        }
-
-        ret.append(LINE_SEPARATOR); // add a newline between each diff.
-
-        if (numberOfLinesSoFar >= notifyConfiguration.maxDiffLines()) {
-          logger.trace("diff exceed maximum number of lines");
-          ret.insert(0, " * Diff limit reached (max: "+ notifyConfiguration.maxDiffLines() +" lines)");
-          ret.append(LINE_SEPARATOR);
-          ret.append(LINE_SEPARATOR);
-          break; // Out of the changeset for loop
-        }
-      } // for (each changeset)
-    }
-    catch (RepositoryException e) {
-      throw new ContentBuilderException("could not create content", e);
-    }
-    catch (IOException e) {
-      throw new ContentBuilderException("could not create content", e);
-    }
-    finally {
-      Closeables.closeQuietly(service);
-    }
-
-    return ret.toString();
-  }
-
-
-  /**
-   * Method description
-   *
-   *
-   * @param urlProvider
-   * @param repository
-   * @param c
-   *
-   * @return
-   */
-  private String createLink(RepositoryUrlProvider urlProvider,
-    Repository repository, Changeset c)
-  {
-    return urlProvider.getChangesetUrl(repository.getId(), c.getId());
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ScmConfiguration configuration;
-
   private final RepositoryServiceFactory repositoryServiceFactory;
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private Configuration templateConfiguration;
