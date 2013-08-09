@@ -76,7 +76,7 @@
           </tr>
           <tr>
             <td colspan="3">
-              ${changeset.description}
+              <pre>${changeset.description}</pre>
             </td>
           </tr>
           <tr>
