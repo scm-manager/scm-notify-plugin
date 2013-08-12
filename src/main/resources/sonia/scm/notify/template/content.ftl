@@ -52,8 +52,6 @@
     </style>
   </head>
   <body>
-    <h1>Repository ${repository.name} has changed</h1>
-    
     <#list branches as branch>
       <#if supportNamedBranches>
       <h2>Branch: ${branch.name}</h2>
