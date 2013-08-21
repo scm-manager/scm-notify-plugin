@@ -36,6 +36,7 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import org.codemonkey.simplejavamail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,9 +49,11 @@ import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import sonia.scm.mail.api.MailSendBatchException;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 
@@ -117,13 +120,13 @@ public class DefaultNotifyHandler implements NotifyHandler
         if (notifyConfiguration.isEmailPerPush()) {
           Email mail = createMessage(changesetArray);
           if (null != mail) {
-            mailService.send(mail);
+            sendMessage(mail);
           }
         }
         else for (Changeset c : changesets) {
           Email mail = createMessage(c);
           if (null != mail) {
-            mailService.send(mail);
+            sendMessage(mail);
           }
         }
       }
@@ -136,6 +139,20 @@ public class DefaultNotifyHandler implements NotifyHandler
     {
       logger.debug("no contacts found");
     }
+  }
+  
+  private void sendMessage( Email email ) throws MailSendBatchException
+  {
+    List<Email> emails = Lists.newArrayList();
+    NotifyEmail notification = new NotifyEmail(email);
+    for ( String c : contacts )
+    {
+      NotifyEmail ne = notification.copy();
+      ne.addRecipient(null, c, RecipientType.TO);
+      emails.add(ne);
+    }
+    
+    mailService.send(emails);
   }
 
   /**
@@ -154,11 +171,6 @@ public class DefaultNotifyHandler implements NotifyHandler
     throws MessagingException, IOException
   { 
     Email msg = new Email();
-
-    for (String c : contacts)
-    {
-      msg.addRecipient(null, c, RecipientType.BCC);
-    }
 
     msg.setSubject(contentBuilder.createSubject(repository, changesets));
 
