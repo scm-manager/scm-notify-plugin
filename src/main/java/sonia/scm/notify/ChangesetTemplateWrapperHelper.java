@@ -48,6 +48,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.EscapeUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.url.RepositoryUrlProvider;
@@ -133,51 +134,6 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    *
    * @return
    */
-  private List<ChangesetTemplateWrapper> wrap(Changeset[] changesets)
-  {
-    List<ChangesetTemplateWrapper> wrapperList = Lists.newArrayList();
-
-    for (Changeset c : changesets)
-    {
-      wrapperList.add(wrap(c));
-    }
-
-    return wrapperList;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param changeset
-   *
-   * @return
-   */
-  private ChangesetTemplateWrapper wrap(Changeset changeset)
-  {
-    String link = createLink(urlProvider, repository, changeset);
-    String diff = null;
-
-    if (appendDiffLines())
-    {
-      diff = createDiff(changeset);
-    }
-    else if (maxDiffLines != 0)
-    {
-      diff = reachedDiffLimitMessage;
-    }
-
-    return new ChangesetTemplateWrapper(changeset, link, diff);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param changesets
-   *
-   * @return
-   */
   public List<BranchTemplateWrapper> wrapAndSortByBranch(Changeset[] changesets)
   {
     Builder<BranchTemplateWrapper> builder = ImmutableList.builder();
@@ -248,8 +204,8 @@ public class ChangesetTemplateWrapperHelper implements Closeable
 
     try
     {
-      diff = repositoryService.getDiffCommand().setRevision(
-        changeset.getId()).getContent();
+      diff = repositoryService.getDiffCommand().setFormat(
+        DiffFormat.NATIVE).setRevision(changeset.getId()).getContent();
       diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
 
       String[] diffLines = diff.split(LINE_SEPARATOR);
@@ -296,6 +252,51 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     return urlProvider.getChangesetUrl(repository.getId(), c.getId());
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param changesets
+   *
+   * @return
+   */
+  private List<ChangesetTemplateWrapper> wrap(Changeset[] changesets)
+  {
+    List<ChangesetTemplateWrapper> wrapperList = Lists.newArrayList();
+
+    for (Changeset c : changesets)
+    {
+      wrapperList.add(wrap(c));
+    }
+
+    return wrapperList;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param changeset
+   *
+   * @return
+   */
+  private ChangesetTemplateWrapper wrap(Changeset changeset)
+  {
+    String link = createLink(urlProvider, repository, changeset);
+    String diff = null;
+
+    if (appendDiffLines())
+    {
+      diff = createDiff(changeset);
+    }
+    else if (maxDiffLines != 0)
+    {
+      diff = reachedDiffLimitMessage;
+    }
+
+    return new ChangesetTemplateWrapper(changeset, link, diff);
+  }
+
   //~--- inner classes --------------------------------------------------------
 
   /**
@@ -303,7 +304,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    *
    *
    * @version        Enter version here..., 13/08/02
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class ChangesetTemplateWrapperOrder
     extends Ordering<ChangesetTemplateWrapper>
