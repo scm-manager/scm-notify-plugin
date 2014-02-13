@@ -72,7 +72,7 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
       columns: [{
         id: 'contact',
         dataIndex: 'contact',
-        header: this.colNameText,
+        header: 'E-Mail',
         editor: Ext.form.TextField
       }]
     });
