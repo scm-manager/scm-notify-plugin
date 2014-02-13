@@ -64,6 +64,16 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
     
     this.loadContacts(this.contactStore, this.item);
     
+    var searchStore = new Ext.data.JsonStore({
+      root: 'results',
+      idProperty: 'mail',
+      fields: ['mail','label'],
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'plugins/notify/search.json',
+        method: 'GET'
+      })
+    });
+    
     var contactColModel = new Ext.grid.ColumnModel({
       defaults: {
         sortable: true,
@@ -73,7 +83,17 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         id: 'contact',
         dataIndex: 'contact',
         header: 'E-Mail',
-        editor: Ext.form.TextField
+        editor: new Ext.form.ComboBox({
+          store: searchStore,
+          displayField: 'label',
+          valueField: 'mail',
+          typeAhead: true,
+          mode: 'remote',
+          queryParam: 'query',
+          hideTrigger: true,
+          selectOnFocus:true,
+          width: 250
+        })
       }]
     });
     
