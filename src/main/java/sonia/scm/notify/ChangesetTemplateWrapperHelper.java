@@ -33,8 +33,11 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-import com.google.common.collect.*;
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.google.common.io.Closeables;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -49,26 +52,25 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.url.RepositoryUrlProvider;
 import sonia.scm.url.UrlProviderFactory;
 
+//~--- JDK imports ------------------------------------------------------------
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
 /**
+ *
  * @author Sebastian Sdorra
  */
-public class ChangesetTemplateWrapperHelper implements Closeable {
+public class ChangesetTemplateWrapperHelper implements Closeable
+{
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private static final String LINE_SEPARATOR =
             System.getProperty("line.separator");
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private static final String MSG_REACHEDDIFFLIMIT =
             " ** Diff limit reached (max: %d lines) **";
 
@@ -83,6 +85,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
     /**
      * Constructs ...
      *
+     *
      * @param configuration
      * @param repositoryServiceFactory
      * @param notifyConfiguration
@@ -90,14 +93,16 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
      */
     public ChangesetTemplateWrapperHelper(ScmConfiguration configuration,
                                           RepositoryServiceFactory repositoryServiceFactory,
-                                          NotifyRepositoryConfiguration notifyConfiguration, Repository repository) {
+                                          NotifyRepositoryConfiguration notifyConfiguration, Repository repository)
+    {
         urlProvider =
                 UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
                         UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
 
         maxDiffLines = notifyConfiguration.maxDiffLines();
 
-        if (appendDiffLines()) {
+        if (appendDiffLines())
+        {
             repositoryService = repositoryServiceFactory.create(repository);
         }
 
@@ -110,20 +115,25 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
     /**
      * Method description
      *
+     *
      * @throws IOException
      */
     @Override
-    public void close() throws IOException {
+    public void close() throws IOException
+    {
         Closeables.close(repositoryService, false);
     }
 
     /**
      * Method description
      *
+     *
      * @param changesets
+     *
      * @return
      */
-    public List<BranchTemplateWrapper> wrapAndSortByBranch(Changeset[] changesets) {
+    public List<BranchTemplateWrapper> wrapAndSortByBranch(Changeset[] changesets)
+    {
         Builder<BranchTemplateWrapper> builder = ImmutableList.builder();
 
         List<ChangesetTemplateWrapper> wrapped = wrap(changesets);
@@ -137,13 +147,19 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
         Builder<ChangesetTemplateWrapper> changesetBuilder =
                 ImmutableList.builder();
 
-        for (ChangesetTemplateWrapper c : wrapped) {
-            if (branch == null) {
+        for (ChangesetTemplateWrapper c : wrapped)
+        {
+            if (branch == null)
+            {
                 branch = c.getBranchesAsString();
                 changesetBuilder.add(c);
-            } else if (branch.equals(c.getBranchesAsString())) {
+            }
+            else if (branch.equals(c.getBranchesAsString()))
+            {
                 changesetBuilder.add(c);
-            } else {
+            }
+            else
+            {
                 builder.add(new BranchTemplateWrapper(branch,
                         changesetBuilder.build()));
                 changesetBuilder = ImmutableList.builder();
@@ -153,7 +169,8 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
 
         wrapped = changesetBuilder.build();
 
-        if (!wrapped.isEmpty()) {
+        if (!wrapped.isEmpty())
+        {
             builder.add(new BranchTemplateWrapper(branch, changesetBuilder.build()));
         }
 
@@ -163,11 +180,14 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
     /**
      * Method description
      *
+     *
      * @return
      */
-    private boolean appendDiffLines() {
+    private boolean appendDiffLines()
+    {
         return (maxDiffLines == -1) || (diffLineCount < maxDiffLines);
     }
+
 
     /**
      * Method description
@@ -214,26 +234,33 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
     /**
      * Method description
      *
+     *
      * @param urlProvider
      * @param repository
      * @param c
+     *
      * @return
      */
     private String createLink(RepositoryUrlProvider urlProvider,
-                              Repository repository, Changeset c) {
+                              Repository repository, Changeset c)
+    {
         return urlProvider.getChangesetUrl(repository.getId(), c.getId());
     }
 
     /**
      * Method description
      *
+     *
      * @param changesets
+     *
      * @return
      */
-    private List<ChangesetTemplateWrapper> wrap(Changeset[] changesets) {
+    private List<ChangesetTemplateWrapper> wrap(Changeset[] changesets)
+    {
         List<ChangesetTemplateWrapper> wrapperList = Lists.newArrayList();
 
-        for (Changeset c : changesets) {
+        for (Changeset c : changesets)
+        {
             wrapperList.add(wrap(c));
         }
 
@@ -243,17 +270,22 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
     /**
      * Method description
      *
+     *
      * @param changeset
+     *
      * @return
      */
-    private ChangesetTemplateWrapper wrap(Changeset changeset) {
+    private ChangesetTemplateWrapper wrap(Changeset changeset)
+    {
         String link = createLink(urlProvider, repository, changeset);
         String diff = null;
 
-
-        if (appendDiffLines()) {
+        if (appendDiffLines())
+        {
             diff = createDiff(changeset);
-        } else if (maxDiffLines != 0) {
+        }
+        else if (maxDiffLines != 0)
+        {
             diff = reachedDiffLimitMessage;
         }
 
@@ -265,22 +297,27 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
     /**
      * Class description
      *
-     * @author Enter your name here...
-     * @version Enter version here..., 13/08/02
+     *
+     * @version        Enter version here..., 13/08/02
+     * @author         Enter your name here...
      */
     private static class ChangesetTemplateWrapperOrder
-            extends Ordering<ChangesetTemplateWrapper> {
+            extends Ordering<ChangesetTemplateWrapper>
+    {
 
         /**
          * Method description
          *
+         *
          * @param left
          * @param right
+         *
          * @return
          */
         @Override
         public int compare(ChangesetTemplateWrapper left,
-                           ChangesetTemplateWrapper right) {
+                           ChangesetTemplateWrapper right)
+        {
             //J-
             return ComparisonChain
                     .start()
@@ -294,33 +331,21 @@ public class ChangesetTemplateWrapperHelper implements Closeable {
 
     //~--- fields ---------------------------------------------------------------
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private int diffLineCount = 0;
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private int maxDiffLines;
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private String reachedDiffLimitMessage;
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private Repository repository;
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private RepositoryService repositoryService;
 
-    /**
-     * Field description
-     */
+    /** Field description */
     private RepositoryUrlProvider urlProvider;
 }
