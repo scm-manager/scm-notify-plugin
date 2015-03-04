@@ -66,11 +66,18 @@ public class DiffWrapper
         diffClass = "context";
       }
 
+      String diffStyleAttribute = diffStyleAttributes.get(diffClass);
+
+      if (diffStyleAttribute == null)
+      {
+        diffStyleAttribute = "";
+      }
+
       builder.append("<pre class = \"")
           .append(diffClass)
           .append("\" style=\"")
           .append(diffStyleAttributes.get("pre"))
-          .append(diffStyleAttributes.get(diffClass))
+          .append(diffStyleAttribute)
           .append("\">")
           .append(line)
           .append("</pre>");
