@@ -52,7 +52,7 @@
       body {
           text-align: center;
       }
-      #wrapper {
+      .wrapper {
           display: inline-block;
           margin-top: 1em;
           min-width: 800px;
@@ -103,34 +103,34 @@
     </style>
     </style>
   </head>
-  <body>
+  <body style="background-color: #ffffff;margin: 10px;color: #202020;font-family: Verdana,Helvetica,Arial,sans-serif;font-size: 75%;">
     <#list branches as branch>
       <#if supportNamedBranches>
-      <h2>Branch: ${branch.name}</h2>
+      <h2 style="font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;border-bottom: 0;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: center;">Branch: ${branch.name}</h2>
       </#if>
     
-      <table>
+      <table style="border: 0 none;border-collapse: collapse;font-size: 100%;margin: 20px 0;padding: 20px;width: 100%;">
         <#list branch.changesets as changeset>
-          <tr>
-            <td style="width: 60px;">
-              <a href="${changeset.link}" target="_blank">
+          <tr style="border: 0;">
+            <td style="width: 60px;padding: 3px;vertical-align: top;border: 0;text-align: left;">
+              <a href="${changeset.link}" target="_blank" style="color: #045491;font-weight: bold;text-decoration: none;">
                 ${changeset.shortId}
               </a>
             </td>
-            <td style="width: 150px;">
+            <td style="width: 150px;padding: 3px;vertical-align: top;border: 0;text-align: left;">
               ${changeset.date?string("yyyy-MM-dd HH:mm:ss")}
             </td>
-            <td>
+            <td style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
               ${changeset.author.name}
             </td>
           </tr>
-          <tr>
-            <td colspan="3">
-              <pre>${changeset.description}</pre>
+          <tr style="border: 0;">
+            <td colspan="3" style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
+              <pre style="margin: 0;font-family: &quot;Bitstream Vera Sans Mono&quot;, Courier, monospace;font-size: 12px;line-height: 1.4em;text-indent: 0.5em;">${changeset.description}</pre>
             </td>
           </tr>
-          <tr>
-            <td colspan="3">
+          <tr style="border: 0;">
+            <td colspan="3" style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
               <#list changeset.modifications.added as added>
               <span>A ${added}</span><br />
               </#list>
@@ -143,9 +143,9 @@
             </td>
           </tr>
           <#if changeset.diff?has_content>
-          <tr>
+          <tr style="border: 0;">
             <td colspan="3">
-              <div id="wrapper">${changeset.diff}</div>
+              <div class="wrapper" style="display: inline-block;margin-top: 1em;min-width: 800px;text-align: left;">${changeset.diff}</div>
             </td>
           </tr>
           </#if>
