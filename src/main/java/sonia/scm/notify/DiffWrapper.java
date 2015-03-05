@@ -1,5 +1,6 @@
 package sonia.scm.notify;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Arrays;
@@ -16,7 +17,7 @@ public class DiffWrapper
       .put(" ", "context").build();
 
   private final static ImmutableMap<String, String> diffStyleAttributes = new ImmutableMap.Builder<String, String>()
-      .put("h2", "font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;border-bottom: 0;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: center;")
+      .put("h2", "font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;border-bottom: 0;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: left;")
       .put("file-diff", "border: 1px solid #d8d8d8;margin-bottom: 1em;overflow: auto;padding: 0.5em 0;")
       .put("file", "color: #aaa;")
       .put("info", "color: #a0b;")
@@ -29,7 +30,7 @@ public class DiffWrapper
   {
     lines = Arrays.copyOf(lines, lines.length);
 
-    boolean firstFileFound = false;
+    boolean firstFile = true;
 
     for (int i = 0; i < lines.length; i++)
     {
@@ -37,17 +38,29 @@ public class DiffWrapper
 
       StringBuilder builder = new StringBuilder();
 
-      if (line.startsWith("diff "))
+      if (line.startsWith("diff ")||line.startsWith("Index: "))
       {
-        if (!firstFileFound)
+        if (!firstFile)
         {
           builder.append("</div>");
-          firstFileFound = true;
         }
-        String filename = line.substring(
-            line.indexOf("a/") + 2,
-            line.indexOf("b/") - 1
-        ).trim();
+
+        firstFile = false;
+
+        String filename = "";
+        if (line.contains("--git")) {
+          if (line.contains("a/") && (line.contains("b/"))) {
+            filename = line.substring(
+                line.indexOf("a/") + 2,
+                line.indexOf("b/") - 1
+            ).trim();
+          }
+        } else {
+          String[] diffLineParts = line.split("\\s+");
+          if (diffLineParts.length > 0) {
+            filename = diffLineParts[diffLineParts.length - 1];
+          }
+        }
         builder.append("<div class=\"file-diff\" ")
             .append("style=\"")
             .append(diffStyleAttributes.get("file-diff"))
@@ -59,19 +72,13 @@ public class DiffWrapper
             .append("</h2>");
       }
 
-      String diffClass = diffClasses.get(String.valueOf(line.charAt(0)));
-
-      if (diffClass == null)
-      {
-        diffClass = "context";
+      String firstLineChar = "";
+      if (line.length() > 0) {
+        firstLineChar = String.valueOf(line.charAt(0));
       }
+      String diffClass = Strings.nullToEmpty(diffClasses.get(firstLineChar));
 
-      String diffStyleAttribute = diffStyleAttributes.get(diffClass);
-
-      if (diffStyleAttribute == null)
-      {
-        diffStyleAttribute = "";
-      }
+      String diffStyleAttribute = Strings.nullToEmpty(diffStyleAttributes.get(diffClass));
 
       builder.append("<pre class = \"")
           .append(diffClass)

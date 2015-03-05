@@ -101,7 +101,6 @@
           color: #a0b;
       }
     </style>
-    </style>
   </head>
   <body style="background-color: #ffffff;margin: 10px;color: #202020;font-family: Verdana,Helvetica,Arial,sans-serif;font-size: 75%;">
     <#list branches as branch>
