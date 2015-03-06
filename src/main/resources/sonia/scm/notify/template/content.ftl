@@ -63,8 +63,7 @@
           background: -moz-linear-gradient(#fafafa, #eaeaea);
           background: -webkit-linear-gradient(#fafafa, #eaeaea);
           -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
-          border: 1px solid #d8d8d8;
-          border-bottom: 0;
+          border-bottom: 1px solid #d8d8d8;
           color: #555;
           font: 14px sans-serif;
           overflow: hidden;
@@ -72,11 +71,14 @@
           text-shadow: 0 1px 0 white;
           margin: 0;
       }
+      h2.branch {
+          border: 1px solid #d8d8d8;
+      }
       .file-diff {
           border: 1px solid #d8d8d8;
           margin-bottom: 1em;
           overflow: auto;
-          padding: 0.5em 0;
+          padding: 0 0;
       }
       .file-diff > div {
           width: 100%:
@@ -105,7 +107,7 @@
   <body style="background-color: #ffffff;margin: 10px;color: #202020;font-family: Verdana,Helvetica,Arial,sans-serif;font-size: 75%;">
     <#list branches as branch>
       <#if supportNamedBranches>
-      <h2 style="font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;border-bottom: 0;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: center;">Branch: ${branch.name}</h2>
+      <h2 class="branch" style="font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: center;">Branch: ${branch.name}</h2>
       </#if>
     
       <table style="border: 0 none;border-collapse: collapse;font-size: 100%;margin: 20px 0;padding: 20px;width: 100%;">
