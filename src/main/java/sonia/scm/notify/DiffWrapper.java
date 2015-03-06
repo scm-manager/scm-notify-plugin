@@ -17,13 +17,35 @@ public class DiffWrapper
       .put(" ", "context").build();
 
   private final static ImmutableMap<String, String> diffStyleAttributes = new ImmutableMap.Builder<String, String>()
-      .put("h2", "font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;border-bottom: 0;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: left;")
-      .put("file-diff", "border: 1px solid #d8d8d8;margin-bottom: 1em;overflow: auto;padding: 0.5em 0;")
+      .put("h2",
+          "font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;" +
+          "font-weight: bold;" +
+          "color: #555;" +
+          "padding: 10px 6px;" +
+          "font-size: 14px;" +
+          "margin: 0;" +
+          "background: -webkit-linear-gradient(#fafafa, #eaeaea);" +
+          "-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;" +
+          "border: 0px solid #d8d8d8;" +
+          "border-bottom: 1px solid #d8d8d8;" +
+          "font: 14px sans-serif;" +
+          "overflow: hidden;" +
+          "text-shadow: 0 1px 0 white;" +
+          "text-align: left;")
+      .put("file-diff",
+          "border: 1px solid #d8d8d8;" +
+          "margin-bottom: 1em;" +
+          "overflow: auto;" +
+          "padding: 0 0;")
       .put("file", "color: #aaa;")
       .put("info", "color: #a0b;")
       .put("delete", "background-color: #fdd;")
       .put("insert", "background-color: #dfd;")
-      .put("pre", "margin: 0;font-family: &quot;Bitstream Vera Sans Mono&quot;, Courier, monospace;font-size: 12px;line-height: 1.4em;text-indent: 0.5em;")
+      .put("pre", "margin: 0;" +
+          "font-family: &quot;Bitstream Vera Sans Mono&quot;, Courier, monospace;" +
+          "font-size: 12px;" +
+          "line-height: 1.4em;" +
+          "text-indent: 0.5em;")
       .build();
 
   public static String[] wrap(String[] lines)
