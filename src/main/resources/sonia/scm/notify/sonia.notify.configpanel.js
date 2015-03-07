@@ -38,11 +38,13 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
   notifyUseAuthorText: 'Use Author as From Address',
   notifyEmailPerPushText: 'Email per Push',
   notifyMaxDiffLinesText: 'Maximum Diff Lines',
+  notifyUsePrettyDiffText: 'Use Styled Diffs',
 
   notifyRepositoryContactHelpText: 'Send notification to the contact address of this repository.',
   notifyUseAuthorHelpText: 'Should the email of the author of the changeset be used as the from address?',
   notifyEmailPerPushHelpText: 'Email per push, or email per changeset?',
   notifyMaxDiffLinesHelpText: 'Maximum number of lines in the diff, to limit email size',
+  notifyUsePrettyDiffHelpText: 'Use css-styled Diffs, instead of plain text',
   contactGridHelpText: 'Additional contact addresses for notifications.',
   
   contactStore: null,
@@ -128,6 +130,13 @@ Sonia.notify.ConfigPanel = Ext.extend(Sonia.repository.PropertiesFormPanel, {
         checked: true,
         fieldLabel : this.notifyEmailPerPushText,
         helpText: this.notifyEmailPerPushHelpText
+      },{
+          xtype: 'checkbox',
+          name: 'notify-use-pretty-diff',
+          property: 'notify.use.pretty.diff',
+          inputValue: 'true',
+          fieldLabel : this.notifyUsePrettyDiffText,
+          helpText: this.notifyUsePrettyDiffHelpText
       },{
         xtype: 'numberfield',
         name: 'notify-max-diff-lines',

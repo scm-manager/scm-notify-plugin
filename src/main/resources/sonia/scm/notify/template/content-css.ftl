@@ -57,9 +57,10 @@
           margin-top: 1em;
           min-width: 800px;
           text-align: left;
+          line-height: 1.5;
       }
       h2 {
-          background: #fafafa;
+          background: #eaeaea;
           background: -moz-linear-gradient(#fafafa, #eaeaea);
           background: -webkit-linear-gradient(#fafafa, #eaeaea);
           -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')";
@@ -79,6 +80,7 @@
           margin-bottom: 1em;
           overflow: auto;
           padding: 0 0;
+          line-height: 1.4em;
       }
       .file-diff > div {
           width: 100%:

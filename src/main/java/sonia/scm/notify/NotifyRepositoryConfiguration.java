@@ -61,11 +61,12 @@ public class NotifyRepositoryConfiguration
   public static final String PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS = "notify.use.author.as.from.address";
   public static final String PROPERTY_EMAIL_PER_PUSH = "notify.email.per.push";
   public static final String PROPERTY_MAX_DIFF_LINES = "notify.max.diff.lines";
+  public static final String PROPERTY_USE_PRETTY_DIFF = "notify.use.pretty.diff";
 
-  /** Field description */
+    /** Field description */
   public static final String SEPARATOR_LIST = ";";
 
-  //~--- constructors ---------------------------------------------------------
+    //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -78,8 +79,10 @@ public class NotifyRepositoryConfiguration
     sendToRepositoryContact = getBooleanProperty(properties, PROPERTY_CONTACT_REPOSITORY, false);
     useAuthorAsFromAddress = getBooleanProperty(properties, PROPERTY_USE_AUTHOR_AS_FROM_ADDRESS, false);
     emailPerPush = getBooleanProperty(properties, PROPERTY_EMAIL_PER_PUSH, true);
+    usePrettyDiff = getBooleanProperty(properties, PROPERTY_USE_PRETTY_DIFF, true);
     maxDiffLines = getIntegerFieldProperty(properties, PROPERTY_MAX_DIFF_LINES, 0);
     contactList = getListProperty(properties, PROPERTY_CONTACT_LIST);
+
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -125,6 +128,11 @@ public class NotifyRepositoryConfiguration
   public boolean isEmailPerPush()
   {
     return emailPerPush;
+  }
+
+  public boolean isUsePrettyDiff()
+  {
+      return usePrettyDiff;
   }
 
   public int maxDiffLines()
@@ -211,6 +219,8 @@ public class NotifyRepositoryConfiguration
   private boolean sendToRepositoryContact;
 
   private boolean useAuthorAsFromAddress;
+
+  private boolean usePrettyDiff;
 
   private boolean emailPerPush;
 

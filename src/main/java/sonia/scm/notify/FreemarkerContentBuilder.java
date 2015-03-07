@@ -76,6 +76,9 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
   public static final String PATH_TEMPLATE = "content.ftl";
 
   /** Field description */
+  public static final String PATH_STYLED_TEMPLATE = "content-css.ftl";
+
+  /** Field description */
   private static final String TPYE_SVN = "svn";
 
   //~--- constructors ---------------------------------------------------------
@@ -141,7 +144,15 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
     env.put("branches", branches);
     env.put("supportNamedBranches", isNamedBranchesSupported(repository));
 
-    Template tpl = templateConfiguration.getTemplate(PATH_TEMPLATE, ENCODING);
+
+    Template tpl;
+    if (configuration.isUsePrettyDiff())
+    {
+      tpl = templateConfiguration.getTemplate(PATH_STYLED_TEMPLATE, ENCODING);
+    } else
+    {
+      tpl = templateConfiguration.getTemplate(PATH_TEMPLATE, ENCODING);
+    }
     StringWriter writer = new StringWriter();
 
     try
