@@ -36,6 +36,7 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.mail.api.MailService;
@@ -59,12 +60,12 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
    * Constructs ...
    *
    *
-   * @param contentBuilder
+   * @param contentBuilderProvider
    */
   @Inject
-  public DefaultNotifyHandlerFactory(ContentBuilder contentBuilder)
+  public DefaultNotifyHandlerFactory(Provider<ContentBuilder> contentBuilderProvider)
   {
-    this.contentBuilder = contentBuilder;
+    this.contentBuilderProvider = contentBuilderProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -98,12 +99,12 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
 
     contacts.addAll(repositoryConfiguration.getContactList());
 
-    return new DefaultNotifyHandler(contentBuilder, mailService, repository,
+    return new DefaultNotifyHandler(contentBuilderProvider.get(), mailService, repository,
       contacts, repositoryConfiguration);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ContentBuilder contentBuilder;
+  private Provider<ContentBuilder> contentBuilderProvider;
 }
