@@ -57,7 +57,7 @@ public class NotifyRepositoryConfigurationServiceTest {
 
   @Test
   @SubjectAware(username = "notify", password = "secret")
-  public void shouldStorePermissionForOwner() {
+  public void shouldStoreConfigsForPrivilegedUser() {
     NotifyRepositoryConfiguration configuration = new NotifyRepositoryConfiguration();
     configuration.setContactList(Lists.newArrayList("user1", "user2"));
     configuration.setEmailPerPush(true);
@@ -75,7 +75,7 @@ public class NotifyRepositoryConfigurationServiceTest {
   }
 
   @Test
-  public void shouldFailOnStoringPermissionForNotAdminOrOwnerUsers() {
+  public void shouldFailOnStoringConfigsForNotAdminOrOwnerUsers() {
     NotifyRepositoryConfiguration configuration = new NotifyRepositoryConfiguration();
     configuration.setContactList(Lists.newArrayList("user1", "user2"));
     configuration.setEmailPerPush(true);
