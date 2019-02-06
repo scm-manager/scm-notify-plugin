@@ -44,6 +44,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -116,7 +117,7 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    */
   @Override
   public Content createContent(Repository repository,
-    NotifyRepositoryConfiguration configuration, Changeset... changesets)
+                               NotifyRepositoryConfiguration configuration, Changeset... changesets)
     throws IOException
   {
     List<BranchTemplateWrapper> branches = null;

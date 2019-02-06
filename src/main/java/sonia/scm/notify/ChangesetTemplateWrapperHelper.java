@@ -42,6 +42,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFormat;
@@ -98,7 +99,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
 //        UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
 //            UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
 
-    maxDiffLines = notifyConfiguration.maxDiffLines();
+    maxDiffLines = notifyConfiguration.getMaxDiffLines();
     usePrettyDiff = notifyConfiguration.isUsePrettyDiff();
 
     if (appendDiffLines()) {

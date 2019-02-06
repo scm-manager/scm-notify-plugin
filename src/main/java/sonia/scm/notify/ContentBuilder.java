@@ -35,6 +35,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 
@@ -62,7 +63,7 @@ public interface ContentBuilder
    * @throws IOException
    */
   public Content createContent(Repository repository,
-    NotifyRepositoryConfiguration configuration, Changeset... changesets)
+                               NotifyRepositoryConfiguration configuration, Changeset... changesets)
     throws IOException;
 
   /**
