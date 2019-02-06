@@ -38,12 +38,16 @@ package sonia.scm.notify;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -51,6 +55,9 @@ import java.util.Map;
  */
 public class ChangesetTemplateWrapper
 {
+
+  // fixme init factory
+  private RepositoryServiceFactory serviceFactory;
 
   /**
    * Constructs ...
@@ -202,7 +209,19 @@ public class ChangesetTemplateWrapper
    */
   public Modifications getModifications()
   {
-    return changeset.getModifications();
+    // fixme the modifications are not more in the changeset object
+//    return changeset.getModifications();
+    // fixme here is how to get modifications. but the repo must be retrieved
+    Repository repository = null;
+    try (RepositoryService repositoryService = serviceFactory.create(repository)) {
+      Modifications modifications = repositoryService.getModificationsCommand()
+        .revision(changeset.getId())
+        .getModifications();
+      return modifications;
+    } catch (IOException e) {
+      // handle
+    }
+    return null;
   }
 
   /**

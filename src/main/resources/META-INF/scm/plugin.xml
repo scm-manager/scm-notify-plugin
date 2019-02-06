@@ -35,20 +35,9 @@
 <plugin>
 
   <information>
+    <scm-version>2</scm-version>
     <author>Sebastian Sdorra</author>
+    <url>https://bitbucket.org/scm-manager/scm-notify-plugin</url>
   </information>
-
-  <conditions>
-    <min-version>${project.parent.version}</min-version>
-  </conditions>
-
-  <packages>
-    <package>sonia.scm.notify</package>
-  </packages>
-
-  <resources>
-    <script>/sonia/scm/notify/sonia.notify.js</script>
-    <script>/sonia/scm/notify/sonia.notify.configpanel.js</script>
-  </resources>
 
 </plugin>

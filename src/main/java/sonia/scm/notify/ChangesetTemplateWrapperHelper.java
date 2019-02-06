@@ -32,7 +32,6 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -44,19 +43,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.EscapeUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.url.RepositoryUrlProvider;
-import sonia.scm.url.UrlProviderFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 
 /**
@@ -97,9 +93,10 @@ public class ChangesetTemplateWrapperHelper implements Closeable
                                         RepositoryServiceFactory repositoryServiceFactory,
                                         NotifyRepositoryConfiguration notifyConfiguration, Repository repository)
   {
-    urlProvider =
-        UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
-            UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
+    // fixme
+    //    urlProvider =
+//        UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
+//            UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
 
     maxDiffLines = notifyConfiguration.maxDiffLines();
     usePrettyDiff = notifyConfiguration.isUsePrettyDiff();
@@ -193,7 +190,8 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     try {
       diff = repositoryService.getDiffCommand().setFormat(
           DiffFormat.NATIVE).setRevision(changeset.getId()).getContent();
-      diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
+      // fixme
+      //      diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
 
       logger.trace("diff:{}", diff);
 
@@ -234,11 +232,12 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    * @param c
    * @return
    */
-  private String createLink(RepositoryUrlProvider urlProvider,
-                            Repository repository, Changeset c)
-  {
-    return urlProvider.getChangesetUrl(repository.getId(), c.getId());
-  }
+  // fixme
+//  private String createLink(RepositoryUrlProvider urlProvider,
+//                            Repository repository, Changeset c)
+//  {
+//    return urlProvider.getChangesetUrl(repository.getId(), c.getId());
+//  }
 
   /**
    * Method description
@@ -265,16 +264,18 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    */
   private ChangesetTemplateWrapper wrap(Changeset changeset)
   {
-    String link = createLink(urlProvider, repository, changeset);
-    String diff = null;
-
-    if (appendDiffLines()) {
-      diff = createDiff(changeset);
-    } else if (maxDiffLines != 0) {
-      diff = reachedDiffLimitMessage;
-    }
-
-    return new ChangesetTemplateWrapper(changeset, link, diff);
+    return null;
+    // fixme
+//    String link = createLink(urlProvider, repository, changeset);
+//    String diff = null;
+//
+//    if (appendDiffLines()) {
+//      diff = createDiff(changeset);
+//    } else if (maxDiffLines != 0) {
+//      diff = reachedDiffLimitMessage;
+//    }
+//
+//    return new ChangesetTemplateWrapper(changeset, link, diff);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -332,5 +333,5 @@ public class ChangesetTemplateWrapperHelper implements Closeable
   private RepositoryService repositoryService;
 
   /** Field description */
-  private RepositoryUrlProvider urlProvider;
+//  private RepositoryUrlProvider urlProvider;
 }

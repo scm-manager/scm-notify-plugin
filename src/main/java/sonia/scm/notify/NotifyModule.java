@@ -36,11 +36,10 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.AbstractModule;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.plugin.Extension;
 
-import sonia.scm.plugin.ext.Extension;
 
 /**
  *

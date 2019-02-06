@@ -35,31 +35,28 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.legman.Subscribe;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import sonia.scm.EagerSingleton;
 import sonia.scm.mail.api.MailService;
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.PostReceiveRepositoryHook;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.util.Util;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookFeature;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Extension
-@Singleton
-public class NotifyRepositoryHook extends PostReceiveRepositoryHook
+@EagerSingleton
+public class NotifyRepositoryHook
 {
 
   /**
@@ -74,7 +71,6 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
    * Constructs ...
    *
    *
-   * @param context
    *
    * @param mailService
    * @param handlerFactory
@@ -95,8 +91,8 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
    *
    * @param event
    */
-  @Override
-  public void onEvent(RepositoryHookEvent event)
+  @Subscribe
+  public void onEvent(PostReceiveRepositoryHookEvent event)
   {
     if (mailService.isConfigured())
     {
@@ -108,29 +104,16 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param configuration
-   * @param event
-   */
-  private void handleEvent(RepositoryHookEvent event)
+  private void handleEvent(PostReceiveRepositoryHookEvent event)
   {
     Repository repository = event.getRepository();
+    HookContext context = event.getContext();
 
-    if (repository != null)
+    if (repository != null  && context.isFeatureSupported(HookFeature.CHANGESET_PROVIDER))
     {
-      Collection<Changeset> changesets = event.getChangesets();
+      Iterable<Changeset> changesets = context.getChangesetProvider().getChangesets();
 
-      if (Util.isNotEmpty(changesets))
-      {
         handleEvent(repository, changesets);
-      }
-      else
-      {
-        logger.error("received hook without changesets");
-      }
     }
     else
     {
@@ -142,13 +125,11 @@ public class NotifyRepositoryHook extends PostReceiveRepositoryHook
    * Method description
    *
    *
-   *
-   * @param configuration
    * @param repository
    * @param changesets
    */
   private void handleEvent(Repository repository,
-    Collection<Changeset> changesets)
+                           Iterable<Changeset> changesets)
   {
     if (logger.isTraceEnabled())
     {

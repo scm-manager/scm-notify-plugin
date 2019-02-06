@@ -38,8 +38,6 @@ import sonia.scm.repository.Changeset;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -53,5 +51,5 @@ public interface NotifyHandler
    *
    * @param changesets
    */
-  public void send(Collection<Changeset> changesets);
+  public void send(Iterable<Changeset> changesets);
 }

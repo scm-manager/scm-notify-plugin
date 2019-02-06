@@ -38,26 +38,22 @@ package sonia.scm.notify;
 import com.google.common.collect.Maps;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-
 import freemarker.cache.ClassTemplateLoader;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
 import java.io.StringWriter;
-
 import java.util.List;
 import java.util.Map;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

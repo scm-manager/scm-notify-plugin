@@ -38,9 +38,9 @@ package sonia.scm.notify;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.text.MessageFormat;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

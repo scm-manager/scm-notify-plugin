@@ -37,25 +37,25 @@ package sonia.scm.notify;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.codemonkey.simplejavamail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.mail.api.MailSendBatchException;
 import sonia.scm.mail.api.MailService;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.Role;
+import sonia.scm.user.User;
 import sonia.scm.util.Util;
 
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import sonia.scm.mail.api.MailSendBatchException;
-import sonia.scm.security.Role;
-import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -104,7 +104,7 @@ public class DefaultNotifyHandler implements NotifyHandler
    * @param changesets
    */
   @Override
-  public void send(Collection<Changeset> changesets)
+  public void send(Iterable<Changeset> changesets)
   {
     if (Util.isNotEmpty(contacts))
     {
@@ -115,10 +115,11 @@ public class DefaultNotifyHandler implements NotifyHandler
 
       try
       {
-        Changeset[] changesetArray = changesets.toArray(new Changeset[changesets.size()]);
+        List<Changeset> list = new ArrayList<>();
+        changesets.forEach(list::add);
 
         if (notifyConfiguration.isEmailPerPush()) {
-          Email mail = createMessage(changesetArray);
+          Email mail = createMessage(list.toArray(new Changeset[0]));
           if (null != mail) {
             sendMessage(mail);
           }
