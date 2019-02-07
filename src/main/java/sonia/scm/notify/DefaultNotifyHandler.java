@@ -147,7 +147,7 @@ public class DefaultNotifyHandler implements NotifyHandler {
    * @throws MessagingException
    */
   private Email createMessage(Changeset... changesets)
-    throws MessagingException, IOException {
+    throws IOException {
     Email msg = new Email();
 
     msg.setSubject(contentBuilder.createSubject(repository, changesets));
