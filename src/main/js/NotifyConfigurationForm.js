@@ -7,6 +7,7 @@ import InputField from "@scm-manager/ui-components/src/forms/InputField";
 import LabelWithHelpIcon from "@scm-manager/ui-components/src/forms/LabelWithHelpIcon";
 import MemberNameTable from "@scm-manager/ui-components/src/forms/MemberNameTable";
 import AddEntryToTableField from "@scm-manager/ui-components/src/forms/AddEntryToTableField";
+import * as validator from "@scm-manager/ui-components/src/validation";
 
 type Props = {
   initialConfiguration: NotifyConfigurations,
@@ -25,14 +26,18 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
   }
 
 
-  // the configurations are valid if there is at minimum one receiver
   isValid() {
     const { sendToRepositoryContact, contactList } = this.state;
+  // the configurations are valid if there is at minimum one receiver
+    if (contactList.length === 0 && !sendToRepositoryContact){
+      return false
+    }
     let valid = true;
     contactList.map(contact => {
-      valid = valid && contact.trim() !== "" ;
+      valid = valid && validator.isMailValid(contact) ;
     });
-    return valid || sendToRepositoryContact;
+    valid = valid && validator.isNumberValid(this.state.maxDiffLines);
+    return valid ;
   }
 
   configChangeHandler = (value: string, name: string) => {
@@ -88,9 +93,10 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
         />
         <AddEntryToTableField
           addEntry={this.addContact}
-          disabled={readOnly}
+          disabled={readOnly }
+          validateEntry={validator.isMailValid}
           buttonLabel={t("scm-notify-plugin.form.contactListAdd")}
-          errorMessage={t("scm-notify-plugin.form.contactListError")}
+          errorMessage={t("scm-notify-plugin.form.error.contactList")}
         />
 
         {fields}
@@ -101,6 +107,8 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
           value={this.state.maxDiffLines}
           helpText={t("scm-notify-plugin.formHelpText.maxDiffLines")}
           onChange={this.configChangeHandler}
+          validationError={!validator.isNumberValid(this.state.maxDiffLines)}
+          errorMessage={t("scm-notify-plugin.form.error.maxDiffLines")}
         />
       </>
     );
