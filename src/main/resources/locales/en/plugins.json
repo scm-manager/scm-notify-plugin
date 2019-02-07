@@ -1,0 +1,27 @@
+{
+  "scm-notify-plugin": {
+    "form": {
+      "header": "Edit Email Notification configurations",
+      "contactList" : "E-Mails",
+      "contactListAdd" : "Add E-Mail",
+      "contactListError" : "The E-Mail in not valid",
+      "sendToRepositoryContact" :  "Send to Repository Contact",
+      "useAuthorAsFromAddress" : "Use Author as from Address",
+      "usePrettyDiff" : "Use Pretty Diff",
+      "emailPerPush" : "E-Mail per Push",
+      "maxDiffLines" : "Maximum Diff Lines"
+    },
+    "formHelpText": {
+      "header": "Edit Email Notification configurations",
+      "contactList" : "E-Mails",
+      "sendToRepositoryContact" :  "Send to Repository Contact",
+      "useAuthorAsFromAddress" : "Use Author as from Address",
+      "usePrettyDiff" : "Use Pretty Diff",
+      "emailPerPush" : "E-Mail per Push",
+      "maxDiffLines" : "Maximum Diff Lines"
+    },
+    "navLink": "Email Notification"
+  }
+}
+
+
