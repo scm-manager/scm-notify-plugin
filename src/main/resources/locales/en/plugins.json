@@ -3,9 +3,9 @@
     "form": {
       "error": {
         "contactList" : "The E-Mail in not valid",
-        "maxDiffLines" : "Plean enter a number format"
+        "maxDiffLines" : "Please enter a number format"
       },
-      "header": "Edit Email Notification configurations",
+      "header": "Edit E-Mail Notification configurations",
       "contactList" : "E-Mails",
       "contactListAdd" : "Add E-Mail",
       "sendToRepositoryContact" :  "Send to Repository Contact",
@@ -15,7 +15,6 @@
       "maxDiffLines" : "Maximum Diff Lines"
     },
     "formHelpText": {
-      "header": "Edit Email Notification configurations",
       "contactList" : "E-Mails",
       "sendToRepositoryContact" :  "Send to Repository Contact",
       "useAuthorAsFromAddress" : "Use Author as from Address",
@@ -23,7 +22,7 @@
       "emailPerPush" : "E-Mail per Push",
       "maxDiffLines" : "Maximum Diff Lines"
     },
-    "navLink": "Email Notification",
+    "navLink": "E-Mail Notification",
     "permissions" : {
       "repository": {
         "notify": {
