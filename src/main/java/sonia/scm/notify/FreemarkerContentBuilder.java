@@ -85,12 +85,11 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    *
    *
    *
-   * @param context
    * @param configuration
    * @param repositoryServiceFactory
    */
   @Inject
-  public FreemarkerContentBuilder(SCMContextProvider context,
+  public FreemarkerContentBuilder(
     ScmConfiguration configuration,
     RepositoryServiceFactory repositoryServiceFactory)
   {

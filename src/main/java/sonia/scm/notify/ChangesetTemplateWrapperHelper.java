@@ -32,6 +32,7 @@ package sonia.scm.notify;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -95,16 +96,14 @@ public class ChangesetTemplateWrapperHelper implements Closeable
                                         NotifyRepositoryConfiguration notifyConfiguration, Repository repository)
   {
     // fixme
-    //    urlProvider =
+//        urlProvider =
 //        UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
 //            UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
 
     maxDiffLines = notifyConfiguration.getMaxDiffLines();
     usePrettyDiff = notifyConfiguration.isUsePrettyDiff();
 
-    if (appendDiffLines()) {
-      repositoryService = repositoryServiceFactory.create(repository);
-    }
+    repositoryService = repositoryServiceFactory.create(repository);
 
     this.repository = repository;
     reachedDiffLimitMessage = String.format(MSG_REACHEDDIFFLIMIT, maxDiffLines);
@@ -191,8 +190,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     try {
       diff = repositoryService.getDiffCommand().setFormat(
           DiffFormat.NATIVE).setRevision(changeset.getId()).getContent();
-      // fixme
-      //      diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
+            diff = Strings.nullToEmpty(diff); // fixme EscapeUtil.escape(Strings.nullToEmpty(diff));
 
       logger.trace("diff:{}", diff);
 
@@ -228,17 +226,15 @@ public class ChangesetTemplateWrapperHelper implements Closeable
   /**
    * Method description
    *
-   * @param urlProvider
    * @param repository
    * @param c
    * @return
    */
-  // fixme
-//  private String createLink(RepositoryUrlProvider urlProvider,
-//                            Repository repository, Changeset c)
-//  {
-//    return urlProvider.getChangesetUrl(repository.getId(), c.getId());
-//  }
+  private String createLink(
+                            Repository repository, Changeset c)
+  {
+    return "http://fixme.org/scm"; // fixme urlProvider.getChangesetUrl(repository.getId(), c.getId());
+  }
 
   /**
    * Method description
@@ -265,18 +261,16 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    */
   private ChangesetTemplateWrapper wrap(Changeset changeset)
   {
-    return null;
-    // fixme
-//    String link = createLink(urlProvider, repository, changeset);
-//    String diff = null;
-//
-//    if (appendDiffLines()) {
-//      diff = createDiff(changeset);
-//    } else if (maxDiffLines != 0) {
-//      diff = reachedDiffLimitMessage;
-//    }
-//
-//    return new ChangesetTemplateWrapper(changeset, link, diff);
+    String link = createLink(repository, changeset);
+    String diff = null;
+
+    if (appendDiffLines()) {
+      diff = createDiff(changeset);
+    } else if (maxDiffLines != 0) {
+      diff = reachedDiffLimitMessage;
+    }
+
+    return new ChangesetTemplateWrapper(repositoryService, changeset, link, diff);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -331,7 +325,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
   private Repository repository;
 
   /** Field description */
-  private RepositoryService repositoryService;
+  private final RepositoryService repositoryService;
 
   /** Field description */
 //  private RepositoryUrlProvider urlProvider;
