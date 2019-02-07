@@ -5,7 +5,7 @@
         "contactList" : "Die E-Mail Adresse ist ungültig",
         "maxDiffLines" : "Bitte geben Sie einen Zahl ein."
       },
-      "header": "E-Mail Benachrichtigung konfigurieren",
+      "header": "E-Mail-Benachrichtigung konfigurieren",
       "contactList" : "E-Mails",
       "contactListAdd" : "E-Mail hinzufügen",
       "sendToRepositoryContact" :  "Sende an dem Repository Kontakt",

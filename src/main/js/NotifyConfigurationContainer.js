@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { Configuration, Title } from "@scm-manager/ui-components";
+import { Configuration, Subtitle } from "@scm-manager/ui-components";
 import { translate } from "react-i18next";
 import type { Repository } from "@scm-manager/ui-types";
 import NotifyConfigurationForm from "./NotifyConfigurationForm";
@@ -20,7 +20,7 @@ class NotifyConfigurationContainer extends React.Component<Props> {
     const { t, link} = this.props;
     return (
       <>
-        <Title title={t("scm-notify-plugin.form.header")} />
+        <Subtitle subtitle={t("scm-notify-plugin.form.header")} />
         <br />
         <Configuration
           link={link}
