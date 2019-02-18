@@ -56,8 +56,7 @@ import java.util.Map;
 public class ChangesetTemplateWrapper
 {
 
-  // fixme init factory
-  private RepositoryServiceFactory serviceFactory;
+  private final RepositoryService service;
 
   /**
    * Constructs ...
@@ -66,9 +65,9 @@ public class ChangesetTemplateWrapper
    * @param changeset
    * @param link
    */
-  public ChangesetTemplateWrapper(Changeset changeset, String link)
+  public ChangesetTemplateWrapper(RepositoryService service, Changeset changeset, String link)
   {
-    this(changeset, link, null);
+    this(service, changeset, link, null);
   }
 
   /**
@@ -79,8 +78,9 @@ public class ChangesetTemplateWrapper
    * @param link
    * @param diff
    */
-  public ChangesetTemplateWrapper(Changeset changeset, String link, String diff)
+  public ChangesetTemplateWrapper(RepositoryService service, Changeset changeset, String link, String diff)
   {
+    this.service = service;
     this.changeset = changeset;
     this.link = link;
     this.diff = diff;
@@ -209,19 +209,14 @@ public class ChangesetTemplateWrapper
    */
   public Modifications getModifications()
   {
-    // fixme the modifications are not more in the changeset object
-//    return changeset.getModifications();
-    // fixme here is how to get modifications. but the repo must be retrieved
-    Repository repository = null;
-    try (RepositoryService repositoryService = serviceFactory.create(repository)) {
-      Modifications modifications = repositoryService.getModificationsCommand()
+    try {
+      return service.getModificationsCommand()
         .revision(changeset.getId())
         .getModifications();
-      return modifications;
     } catch (IOException e) {
-      // handle
+      //fixme
+      return null;
     }
-    return null;
   }
 
   /**
