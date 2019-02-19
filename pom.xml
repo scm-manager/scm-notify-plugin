@@ -18,7 +18,7 @@
   <name>scm-notify-plugin</name>
   <description>This plugin sends email notifications to a list of subscribed addresses whenever a repo has changes.</description>
   <properties>
-    <freemarker.version>2.3.19</freemarker.version>
+    <mustache.version>0.8.17</mustache.version>
   </properties>
 
   <dependencies>
@@ -29,9 +29,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
-      <version>${freemarker.version}</version>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
+      <version>${mustache.version}</version>
     </dependency>
 
   </dependencies>

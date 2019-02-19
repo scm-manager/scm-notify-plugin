@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <!--
 
     Copyright (c) 2010, Sebastian Sdorra
@@ -25,20 +25,15 @@
     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
     ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
     (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.dd7s
+    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     http://bitbucket.org/sdorra/scm-manager
 
 
 -->
 
-<permissions>
-
-  <permission>
-    <value>repository:notify</value>
-  </permission>
-  <permission>
-    <value>repository:notify:*</value>
-  </permission>
-
-</permissions>
+<repository-permissions>
+  <verbs>
+    <verb>notify</verb>
+  </verbs>
+</repository-permissions>

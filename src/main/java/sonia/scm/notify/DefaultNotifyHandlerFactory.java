@@ -85,7 +85,7 @@ public class DefaultNotifyHandlerFactory implements NotifyHandlerFactory
     NotifyRepositoryConfiguration repositoryConfiguration,
     Repository repository)
   {
-    Set<String> contacts = new HashSet<String>();
+    Set<String> contacts = new HashSet<>();
 
     if (repositoryConfiguration.isSendToRepositoryContact())
     {

@@ -52,6 +52,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -80,6 +81,8 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    */
   private static final Logger logger =
       LoggerFactory.getLogger(ChangesetTemplateWrapperHelper.class);
+  public static final String SCM_CHANGESET_URL_PATTERN = "{0}/repo/{1}/{2}/changeset/{3}";
+  private final String baseUrl;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -95,10 +98,8 @@ public class ChangesetTemplateWrapperHelper implements Closeable
                                         RepositoryServiceFactory repositoryServiceFactory,
                                         NotifyRepositoryConfiguration notifyConfiguration, Repository repository)
   {
-    // fixme
-//        urlProvider =
-//        UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
-//            UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
+
+    baseUrl = configuration.getBaseUrl();
 
     maxDiffLines = notifyConfiguration.getMaxDiffLines();
     usePrettyDiff = notifyConfiguration.isUsePrettyDiff();
@@ -190,7 +191,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     try {
       diff = repositoryService.getDiffCommand().setFormat(
           DiffFormat.NATIVE).setRevision(changeset.getId()).getContent();
-            diff = Strings.nullToEmpty(diff); // fixme EscapeUtil.escape(Strings.nullToEmpty(diff));
+      diff = Strings.nullToEmpty(diff);
 
       logger.trace("diff:{}", diff);
 
@@ -227,13 +228,12 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    * Method description
    *
    * @param repository
-   * @param c
+   * @param changeset
    * @return
    */
-  private String createLink(
-                            Repository repository, Changeset c)
+  private String createLink(Repository repository, Changeset changeset)
   {
-    return "http://fixme.org/scm"; // fixme urlProvider.getChangesetUrl(repository.getId(), c.getId());
+    return MessageFormat.format(SCM_CHANGESET_URL_PATTERN, baseUrl, repository.getNamespace(), repository.getName(), changeset.getId());
   }
 
   /**
@@ -327,6 +327,4 @@ public class ChangesetTemplateWrapperHelper implements Closeable
   /** Field description */
   private final RepositoryService repositoryService;
 
-  /** Field description */
-//  private RepositoryUrlProvider urlProvider;
 }

@@ -89,7 +89,11 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
         />
         <MemberNameTable
           members={this.state.contactList}
-          memberListChanged={(contactList) => {this.setState({contactList})}}
+          memberListChanged={(contactList) => {
+            this.setState({contactList},
+              () =>
+                this.props.onConfigurationChange({ ...this.state }, this.isValid()));
+          }}
         />
         <AddEntryToTableField
           addEntry={this.addContact}

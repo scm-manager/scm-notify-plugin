@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional //EN">
 <html>
   <head>
-    <title>${title}</title>
+    <title>{{title}}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <style type="text/css">
       body {
@@ -106,56 +106,58 @@
     </style>
   </head>
   <body style="background-color: #ffffff;margin: 10px;color: #202020;font-family: Verdana,Helvetica,Arial,sans-serif;font-size: 75%;">
-    <#list branches as branch>
-      <#if supportNamedBranches>
-      <h2 class="branch" style="font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: center;">Branch: ${branch.name}</h2>
-      </#if>
-    
-      <table style="border: 0 none;border-collapse: collapse;font-size: 100%;margin: 20px 0;padding: 20px;width: 100%;">
-        <#list branch.changesets as changeset>
-          <tr style="border: 0;">
-            <td style="width: 60px;padding: 3px;vertical-align: top;border: 0;text-align: left;">
-              <a href="${changeset.link}" target="_blank" style="color: #045491;font-weight: bold;text-decoration: none;">
-                ${changeset.shortId}
-              </a>
+  {{#branches}}
+      {{#supportNamedBranches}}
+      <h2 class="branch" style="font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;font-weight: bold;color: #555;padding: 10px 6px;font-size: 14px;margin: 0;background: -webkit-linear-gradient(#fafafa, #eaeaea);-ms-filter: &quot;progid:DXImageTransform.Microsoft.gradient(startColorstr='#fafafa',endColorstr='#eaeaea')&quot;;border: 1px solid #d8d8d8;font: 14px sans-serif;overflow: hidden;text-shadow: 0 1px 0 white;text-align: center;">Branch: {{name}}</h2>
+      {{/supportNamedBranches}}
+
+
+
+ <table style="border: 0 none;border-collapse: collapse;font-size: 100%;margin: 20px 0;padding: 20px;width: 100%;">
+    {{#changesets}}
+        <tr style="border: 0;">
+           <td style="width: 60px;padding: 3px;vertical-align: top;border: 0;text-align: left;">
+             <a href="{{link}}" target="_blank" style="color: #045491;font-weight: bold;text-decoration: none;">
+               {{shortId}}
+             </a>
             </td>
             <td style="width: 150px;padding: 3px;vertical-align: top;border: 0;text-align: left;">
-              ${changeset.date?string("yyyy-MM-dd HH:mm:ss")}
+                {{date?string("yyyy-MM-dd HH:mm:ss")}}
             </td>
-            <td style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
-              ${changeset.author.name}
-            </td>
-          </tr>
-          <tr style="border: 0;">
+             <td style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
+                  {{author.name}}
+              </td>
+        </tr>
+        <tr style="border: 0;">
+          <td colspan="3" style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
+            <pre style="margin: 0;font-family: &quot;Bitstream Vera Sans Mono&quot;, Courier, monospace;font-size: 12px;line-height: 1.4em;text-indent: 0.5em;">{{description}}</pre>
+          </td>
+        </tr>
+         <tr style="border: 0;">
             <td colspan="3" style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
-              <pre style="margin: 0;font-family: &quot;Bitstream Vera Sans Mono&quot;, Courier, monospace;font-size: 12px;line-height: 1.4em;text-indent: 0.5em;">${changeset.description}</pre>
+                {{#modifications.added}}
+                    <span>A {{.}}</span><br />
+                {{/modifications.added}}
+                {{#modifications.modified}}
+                    <span>M {{.}}</span><br />
+                {{/modifications.modified}}
+                {{#modifications.removed}}
+                    <span>R {{.}}</span><br />
+                {{/modifications.removed}}
             </td>
-          </tr>
-          <tr style="border: 0;">
-            <td colspan="3" style="padding: 3px;vertical-align: top;border: 0;text-align: left;">
-              <#list changeset.modifications.added as added>
-              <span>A ${added}</span><br />
-              </#list>
-              <#list changeset.modifications.modified as modified>
-              <span>M ${modified}</span><br />
-              </#list>
-              <#list changeset.modifications.removed as removed>
-              <span>R ${removed}</span><br />
-              </#list>
-            </td>
-          </tr>
-          <#if changeset.diff?has_content>
-          <tr style="border: 0;">
-            <td colspan="3">
-              <div class="wrapper" style="display: inline-block;margin-top: 1em;min-width: 800px;text-align: left;">${changeset.diff}</div>
-            </td>
-          </tr>
-          </#if>
-        </#list>
-      </table>
-      
-    </#list>
-
-  </body>
+        </tr>
+        {{#diff}}
+           <tr style="border: 0;">
+                <td colspan="3">
+                  <div class="wrapper" style="display: inline-block;margin-top: 1em;min-width: 800px;text-align: left;">
+                    {{{.}}}
+                  </div>
+                </td>
+            </tr>
+        {{/diff}}
+    {{/changesets}}
+</table>
+{{/branches}}
+</body>
 </html>
 

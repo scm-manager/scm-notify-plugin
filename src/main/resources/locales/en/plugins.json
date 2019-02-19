@@ -1,8 +1,27 @@
 {
+  "permissions" : {
+    "repository": {
+      "notify": {
+        "*": {
+          "displayName": "E-Mail notification",
+          "description": "May configure the E-Mail notification configuration"
+        }
+      }
+    }
+  },
+  "verbs" : {
+    "repository": {
+      "notify": {
+          "displayName": "E-Mail notification",
+          "description": "May configure the E-Mail notification configuration"
+        }
+    }
+  },
   "scm-notify-plugin": {
+    "navLink": "E-Mail Notification",
     "form": {
       "error": {
-        "contactList" : "The E-Mail in not valid",
+        "contactList" : "The E-Mail is not valid",
         "maxDiffLines" : "Please enter a number format"
       },
       "header": "Edit E-Mail Notification configurations",
@@ -21,20 +40,7 @@
       "usePrettyDiff" : "Use Pretty Diff",
       "emailPerPush" : "E-Mail per Push",
       "maxDiffLines" : "Maximum Diff Lines"
-    },
-    "navLink": "E-Mail Notification",
-    "permissions" : {
-      "repository": {
-        "notify": {
-          "*": {
-            "displayName": "Repository E-Mail notification",
-            "description": "May configure the E-Mail notification configuration for all Repositories"
-          },
-          "displayName": "Specific Repository E-Mail notification",
-          "description": "May configure the E-Mail notification configuration for a specific Repositories"
-        }
       }
-    }
   }
 }
 
