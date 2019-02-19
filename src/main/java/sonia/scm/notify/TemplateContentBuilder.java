@@ -158,7 +158,6 @@ public class TemplateContentBuilder extends AbstractContentBuilder
   private boolean isNamedBranchesSupported(Repository repository)
   {
 
-    // TODO find a better way
     return !TPYE_SVN.equalsIgnoreCase(repository.getType());
   }
 

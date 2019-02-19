@@ -38,9 +38,7 @@ package sonia.scm.notify;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryService;
-import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import java.io.IOException;
 import java.util.Date;
@@ -214,7 +212,6 @@ public class ChangesetTemplateWrapper
         .revision(changeset.getId())
         .getModifications();
     } catch (IOException e) {
-      //fixme
       return null;
     }
   }
