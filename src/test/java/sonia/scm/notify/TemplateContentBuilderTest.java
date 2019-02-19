@@ -434,7 +434,7 @@ class TemplateContentBuilderTest {
 
     Content content = templateContentBuilder.createContent(REPOSITORY, configuration, changeset);
 
-    assertThat(content.getContent()).isEqualTo(NOT_PRETTY_OUTPUT);
+    assertThat(content.getContent().trim()).isEqualTo(NOT_PRETTY_OUTPUT.trim());
   }
 
   @Test
@@ -445,7 +445,7 @@ class TemplateContentBuilderTest {
 
     Content content = templateContentBuilder.createContent(REPOSITORY, configuration, changeset);
 
-    assertThat(content.getContent()).isEqualTo(NOT_PRETTY_OUTPUT_WITHOUT_DIFF);
+    assertThat(content.getContent().trim()).isEqualTo(NOT_PRETTY_OUTPUT_WITHOUT_DIFF.trim());
   }
 
   @Test
@@ -459,7 +459,7 @@ class TemplateContentBuilderTest {
 
     Content content = templateContentBuilder.createContent(REPOSITORY, configuration, changeset);
 
-    assertThat(content.getContent()).isEqualTo(PRETTY_OUTPUT);
+    assertThat(content.getContent().trim()).isEqualTo(PRETTY_OUTPUT.trim());
   }
 
   private TemplateEngine createEngine() {
