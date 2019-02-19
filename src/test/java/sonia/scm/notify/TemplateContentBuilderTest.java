@@ -2,8 +2,8 @@ package sonia.scm.notify;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
-import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -425,7 +425,7 @@ class TemplateContentBuilderTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   void shouldGenerateNonPrettyEmail() throws IOException {
     when(repositoryService.getDiffCommand()).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.getContent()).thenReturn(DIFF);
@@ -440,7 +440,7 @@ class TemplateContentBuilderTest {
   }
 
   @Test
-  @Ignore
+  @Disabled
   void shouldGenerateNonPrettyEmailWithoutDiff() throws IOException {
     NotifyRepositoryConfiguration configuration = new NotifyRepositoryConfiguration();
     configuration.setUsePrettyDiff(false);
