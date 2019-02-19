@@ -152,7 +152,7 @@ class TemplateContentBuilderTest {
     "\n" +
     "\n" +
     "</body>\n" +
-    "</html>\n";
+    "</html>";
 
   private final static String NOT_PRETTY_OUTPUT = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional //EN\">\n" +
     "<html>\n" +
@@ -247,7 +247,7 @@ class TemplateContentBuilderTest {
     "\n" +
     "\n" +
     "</body>\n" +
-    "</html>\n";
+    "</html>";
 
 
   private final static String PRETTY_OUTPUT = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional //EN\">\n" +
