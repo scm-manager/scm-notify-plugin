@@ -3,8 +3,8 @@
     "repository": {
       "notify": {
         "*": {
-          "displayName": "E-Mail Benachrichtigung",
-          "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigung"
+          "displayName": "E-Mail Benachrichtigungen",
+          "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
         }
       }
     }
@@ -12,34 +12,34 @@
   "verbs" : {
     "repository": {
       "notify": {
-        "displayName": "E-Mail Benachrichtigung",
-        "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigung"
+        "displayName": "E-Mail Benachrichtigungen",
+        "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
       }
     }
   },
   "scm-notify-plugin": {
-    "navLink": "E-Mail Benachrichtigung",
+    "navLink": "E-Mail Benachrichtigungen",
     "form": {
       "error": {
         "contactList" : "Die E-Mail Adresse ist ungültig",
-        "maxDiffLines" : "Bitte geben Sie einen Zahl ein."
+        "maxDiffLines" : "Bitte geben Sie eine Zahl ein."
       },
-      "header": "E-Mail-Benachrichtigung konfigurieren",
+      "header": "E-Mail-Benachrichtigungen konfigurieren",
       "contactList" : "E-Mails",
-      "contactListAdd" : "E-Mail hinzufügen",
-      "sendToRepositoryContact" :  "Sende an dem Repository Kontakt",
+      "contactListAdd" : "E-Mail-Adresse hinzufügen",
+      "sendToRepositoryContact" :  "Sende an den Repository Kontakt",
       "useAuthorAsFromAddress" : "Author als Absender",
       "usePrettyDiff" : "Diff formatieren",
       "emailPerPush" : "E-Mail pro Push",
-      "maxDiffLines" : "Maximaler Zeilenanzahl für Diff "
+      "maxDiffLines" : "Maximale Zeilenanzahl für Diff "
     },
     "formHelpText": {
-      "contactList" : "Liste der E-Mails an dem die Benechrichtigungen geschickt werden",
-      "sendToRepositoryContact" :  "Die Benachrichtigung wird an dem Repository Kontakt geschickt",
+      "contactList" : "Liste der E-Mail-Adressen an welche die Benachrichtigungen geschickt werden",
+      "sendToRepositoryContact" :  "Die Benachrichtigung wird an den Repository Kontakt geschickt",
       "useAuthorAsFromAddress" : "Der Repository Author ist der Absender der Benachrichtigung",
       "usePrettyDiff" : "Das Diff wird formatiert",
-      "emailPerPush" : "Es wird ein E-Mail pro Push geschickt",
-      "maxDiffLines" : "Der maximaler Anzahl von Zeilen im Diff"
+      "emailPerPush" : "Es wird eine E-Mail pro Push geschickt",
+      "maxDiffLines" : "Die maximale Zeilenanzahl für das Diff"
     }
   }
 }
