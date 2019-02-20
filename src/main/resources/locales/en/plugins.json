@@ -3,8 +3,8 @@
     "repository": {
       "notify": {
         "*": {
-          "displayName": "E-Mail notification",
-          "description": "May configure the E-Mail notification configuration"
+          "displayName": "Email notification",
+          "description": "May configure the Email notification configuration"
         }
       }
     }
@@ -12,34 +12,34 @@
   "verbs" : {
     "repository": {
       "notify": {
-          "displayName": "E-Mail notification",
-          "description": "May configure the E-Mail notification configuration"
+          "displayName": "Email notification",
+          "description": "May configure the Email notification configuration"
         }
     }
   },
   "scm-notify-plugin": {
-    "navLink": "E-Mail Notification",
+    "navLink": "Email Notification",
     "form": {
       "error": {
-        "contactList" : "The E-Mail is not valid",
+        "contactList" : "The Email is not valid",
         "maxDiffLines" : "Please enter a number format"
       },
-      "header": "Edit E-Mail Notification configurations",
-      "contactList" : "E-Mails",
-      "contactListAdd" : "Add E-Mail",
+      "header": "Edit Email Notification configurations",
+      "contactList" : "Emails",
+      "contactListAdd" : "Add Email",
       "sendToRepositoryContact" :  "Send to Repository Contact",
       "useAuthorAsFromAddress" : "Use Author as from Address",
       "usePrettyDiff" : "Use Pretty Diff",
-      "emailPerPush" : "E-Mail per Push",
+      "emailPerPush" : "Email per Push",
       "maxDiffLines" : "Maximum Diff Lines"
     },
     "formHelpText": {
-      "contactList" : "E-Mails",
-      "sendToRepositoryContact" :  "Send to Repository Contact",
-      "useAuthorAsFromAddress" : "Use Author as from Address",
-      "usePrettyDiff" : "Use Pretty Diff",
-      "emailPerPush" : "E-Mail per Push",
-      "maxDiffLines" : "Maximum Diff Lines"
+      "contactList" : "The list of Emails receiving the notifications",
+      "sendToRepositoryContact" :  "Send the Email to the Repository Contact",
+      "useAuthorAsFromAddress" : "Use the Author Email as the from Email",
+      "usePrettyDiff" : "send the Diffs in pretty format",
+      "emailPerPush" : "send an Email per Push",
+      "maxDiffLines" : "The maximum number of Diff Lines included in the Email"
       }
   }
 }
