@@ -18,7 +18,6 @@
   <name>scm-notify-plugin</name>
   <description>This plugin sends email notifications to a list of subscribed addresses whenever a repo has changes.</description>
   <properties>
-    <!--<scm.home>scm-home</scm.home>-->
     <mustache.version>0.8.17</mustache.version>
   </properties>
 

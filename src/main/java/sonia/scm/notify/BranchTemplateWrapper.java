@@ -31,7 +31,6 @@
 
 package sonia.scm.notify;
 
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
 

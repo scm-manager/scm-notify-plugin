@@ -30,7 +30,6 @@
 
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
@@ -55,7 +54,6 @@ import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
 
 
 /**

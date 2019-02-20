@@ -33,7 +33,6 @@
 
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Modifications;
@@ -45,7 +44,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
