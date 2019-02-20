@@ -1,12 +1,8 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import type {PathWPs, PathWP, NotifyConfigurations} from "./NotifyConfigurations";
-import { Checkbox } from "@scm-manager/ui-components";
-import InputField from "@scm-manager/ui-components/src/forms/InputField";
-import LabelWithHelpIcon from "@scm-manager/ui-components/src/forms/LabelWithHelpIcon";
-import MemberNameTable from "@scm-manager/ui-components/src/forms/MemberNameTable";
-import AddEntryToTableField from "@scm-manager/ui-components/src/forms/AddEntryToTableField";
+import type {NotifyConfigurations} from "./NotifyConfigurations";
+import { AddEntryToTableField, Checkbox, InputField, LabelWithHelpIcon , MemberNameTable  } from "@scm-manager/ui-components";
 import * as validator from "@scm-manager/ui-components/src/validation";
 
 type Props = {
