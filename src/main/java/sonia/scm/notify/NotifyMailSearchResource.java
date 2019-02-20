@@ -38,18 +38,12 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-
 import sonia.scm.search.SearchRequest;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -58,10 +52,12 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collection;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

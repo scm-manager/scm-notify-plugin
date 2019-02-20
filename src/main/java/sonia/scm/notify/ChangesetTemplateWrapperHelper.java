@@ -30,7 +30,6 @@
 
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ComparisonChain;
@@ -43,20 +42,18 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.EscapeUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.url.RepositoryUrlProvider;
-import sonia.scm.url.UrlProviderFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.List;
+
 
 
 /**
@@ -82,6 +79,8 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    */
   private static final Logger logger =
       LoggerFactory.getLogger(ChangesetTemplateWrapperHelper.class);
+  public static final String SCM_CHANGESET_URL_PATTERN = "{0}/repo/{1}/{2}/changeset/{3}";
+  private final String baseUrl;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -97,16 +96,13 @@ public class ChangesetTemplateWrapperHelper implements Closeable
                                         RepositoryServiceFactory repositoryServiceFactory,
                                         NotifyRepositoryConfiguration notifyConfiguration, Repository repository)
   {
-    urlProvider =
-        UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
-            UrlProviderFactory.TYPE_WUI).getRepositoryUrlProvider();
 
-    maxDiffLines = notifyConfiguration.maxDiffLines();
+    baseUrl = configuration.getBaseUrl();
+
+    maxDiffLines = notifyConfiguration.getMaxDiffLines();
     usePrettyDiff = notifyConfiguration.isUsePrettyDiff();
 
-    if (appendDiffLines()) {
-      repositoryService = repositoryServiceFactory.create(repository);
-    }
+    repositoryService = repositoryServiceFactory.create(repository);
 
     this.repository = repository;
     reachedDiffLimitMessage = String.format(MSG_REACHEDDIFFLIMIT, maxDiffLines);
@@ -193,7 +189,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     try {
       diff = repositoryService.getDiffCommand().setFormat(
           DiffFormat.NATIVE).setRevision(changeset.getId()).getContent();
-      diff = EscapeUtil.escape(Strings.nullToEmpty(diff));
+      diff = Strings.nullToEmpty(diff);
 
       logger.trace("diff:{}", diff);
 
@@ -229,15 +225,13 @@ public class ChangesetTemplateWrapperHelper implements Closeable
   /**
    * Method description
    *
-   * @param urlProvider
    * @param repository
-   * @param c
+   * @param changeset
    * @return
    */
-  private String createLink(RepositoryUrlProvider urlProvider,
-                            Repository repository, Changeset c)
+  private String createLink(Repository repository, Changeset changeset)
   {
-    return urlProvider.getChangesetUrl(repository.getId(), c.getId());
+    return MessageFormat.format(SCM_CHANGESET_URL_PATTERN, baseUrl, repository.getNamespace(), repository.getName(), changeset.getId());
   }
 
   /**
@@ -265,7 +259,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
    */
   private ChangesetTemplateWrapper wrap(Changeset changeset)
   {
-    String link = createLink(urlProvider, repository, changeset);
+    String link = createLink(repository, changeset);
     String diff = null;
 
     if (appendDiffLines()) {
@@ -274,7 +268,7 @@ public class ChangesetTemplateWrapperHelper implements Closeable
       diff = reachedDiffLimitMessage;
     }
 
-    return new ChangesetTemplateWrapper(changeset, link, diff);
+    return new ChangesetTemplateWrapper(repositoryService, changeset, link, diff);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -329,8 +323,6 @@ public class ChangesetTemplateWrapperHelper implements Closeable
   private Repository repository;
 
   /** Field description */
-  private RepositoryService repositoryService;
+  private final RepositoryService repositoryService;
 
-  /** Field description */
-  private RepositoryUrlProvider urlProvider;
 }

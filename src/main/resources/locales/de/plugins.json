@@ -1,0 +1,47 @@
+{
+  "permissions" : {
+    "repository": {
+      "notify": {
+        "*": {
+          "displayName": "E-Mail Benachrichtigungen",
+          "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
+        }
+      }
+    }
+  },
+  "verbs" : {
+    "repository": {
+      "notify": {
+        "displayName": "E-Mail Benachrichtigungen",
+        "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
+      }
+    }
+  },
+  "scm-notify-plugin": {
+    "navLink": "E-Mail Benachrichtigungen",
+    "form": {
+      "error": {
+        "contactList" : "Die E-Mail Adresse ist ungültig",
+        "maxDiffLines" : "Bitte geben Sie eine Zahl ein."
+      },
+      "header": "E-Mail-Benachrichtigungen konfigurieren",
+      "contactList" : "E-Mails",
+      "contactListAdd" : "E-Mail-Adresse hinzufügen",
+      "sendToRepositoryContact" :  "Sende an den Repository Kontakt",
+      "useAuthorAsFromAddress" : "Author als Absender",
+      "usePrettyDiff" : "Diff formatieren",
+      "emailPerPush" : "E-Mail pro Push",
+      "maxDiffLines" : "Maximale Zeilenanzahl für Diff "
+    },
+    "formHelpText": {
+      "contactList" : "Liste der E-Mail-Adressen an welche die Benachrichtigungen geschickt werden",
+      "sendToRepositoryContact" :  "Die Benachrichtigung wird an den Repository Kontakt geschickt",
+      "useAuthorAsFromAddress" : "Der Repository Author ist der Absender der Benachrichtigung",
+      "usePrettyDiff" : "Das Diff wird formatiert",
+      "emailPerPush" : "Es wird eine E-Mail pro Push geschickt",
+      "maxDiffLines" : "Die maximale Zeilenanzahl für das Diff"
+    }
+  }
+}
+
+

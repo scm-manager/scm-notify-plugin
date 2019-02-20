@@ -33,17 +33,17 @@
 
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.api.RepositoryService;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  *
@@ -52,6 +52,8 @@ import java.util.Map;
 public class ChangesetTemplateWrapper
 {
 
+  private final RepositoryService service;
+
   /**
    * Constructs ...
    *
@@ -59,9 +61,9 @@ public class ChangesetTemplateWrapper
    * @param changeset
    * @param link
    */
-  public ChangesetTemplateWrapper(Changeset changeset, String link)
+  public ChangesetTemplateWrapper(RepositoryService service, Changeset changeset, String link)
   {
-    this(changeset, link, null);
+    this(service, changeset, link, null);
   }
 
   /**
@@ -72,8 +74,9 @@ public class ChangesetTemplateWrapper
    * @param link
    * @param diff
    */
-  public ChangesetTemplateWrapper(Changeset changeset, String link, String diff)
+  public ChangesetTemplateWrapper(RepositoryService service, Changeset changeset, String link, String diff)
   {
+    this.service = service;
     this.changeset = changeset;
     this.link = link;
     this.diff = diff;
@@ -202,7 +205,13 @@ public class ChangesetTemplateWrapper
    */
   public Modifications getModifications()
   {
-    return changeset.getModifications();
+    try {
+      return service.getModificationsCommand()
+        .revision(changeset.getId())
+        .getModifications();
+    } catch (IOException e) {
+      return null;
+    }
   }
 
   /**

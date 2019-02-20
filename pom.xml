@@ -1,86 +1,81 @@
-<?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
+
 
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.45</version>
+    <version>2.0.0-SNAPSHOT</version>
   </parent>
+
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-notify-plugin</artifactId>
-  <version>1.7-SNAPSHOT</version>
+  <packaging>smp</packaging>
+  <version>2.0.0-SNAPSHOT</version>
   <name>scm-notify-plugin</name>
-  <url>https://bitbucket.org/sdorra/scm-notify-plugin</url>
-  <description>This plugin sends automated email notifications to a list of subscribed addresses whenever a repo has changes.</description>
-  
-  <scm>
-    <connection>scm:hg:https://bitbucket.org/sdorra/scm-notify-plugin</connection>
-    <developerConnection>scm:hg:https://bitbucket.org/sdorra/scm-notify-plugin</developerConnection>
-    <url>https://bitbucket.org/sdorra/scm-notify-plugin</url>
-    <tag>HEAD</tag>
-  </scm>
-  
-  <ciManagement>
-    <system>jenkins</system>
-    <url>https://scm-manager.ci.cloudbees.com/job/scm-notify-plugin</url>
-  </ciManagement>
+  <description>This plugin sends email notifications to a list of subscribed addresses whenever a repo has changes.</description>
+  <properties>
+    <mustache.version>0.8.17</mustache.version>
+  </properties>
 
   <dependencies>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-mail-plugin</artifactId>
-      <version>1.3</version>
+      <version>2.0.0-SNAPSHOT</version>
     </dependency>
 
     <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
-      <version>${freemarker.version}</version>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
+      <version>${mustache.version}</version>
     </dependency>
 
   </dependencies>
-  
-  <properties>
-    <freemarker.version>2.3.19</freemarker.version>
-  </properties>
-  
-  <build>
-    <plugins>
-      
-      <plugin>
-        <groupId>sonia.scm.maven</groupId>
-        <artifactId>scm-maven-plugin</artifactId>
-        <version>1.32</version>
-      </plugin>
-      
-    </plugins>
-  </build>
-  
   <repositories>
-    
+
     <repository>
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
 
-    <repository>
-      <id>maven.java.net</id>
-      <name>java.net repository</name>    
-      <url>https://maven.java.net/content/groups/public</url>
-    </repository>
-    
   </repositories>
 
+  <profiles>
+    <profile>
+      <!-- If enabled, explicitly disables other profiles (i.e. link-ui). -->
+      <id>ci</id>
+    </profile>
+
+    <profile>
+      <id>link-ui</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>sonia.scm.maven</groupId>
+            <artifactId>smp-maven-plugin</artifactId>
+            <version>1.0.0-alpha-3</version>
+            <extensions>true</extensions>
+            <configuration>
+              <links>
+                <link>@scm-manager/ui-types</link>
+                <link>@scm-manager/ui-components</link>
+              </links>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+  </profiles>
 </project>

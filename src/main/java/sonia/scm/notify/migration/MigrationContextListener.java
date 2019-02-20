@@ -36,13 +36,12 @@ package sonia.scm.notify.migration;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import sonia.scm.plugin.ext.Extension;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.plugin.Extension;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -56,7 +55,6 @@ public class MigrationContextListener implements ServletContextListener
    * Constructs ...
    *
    *
-   * @param handler
    *
    * @param migrationHandlerProvider
    */

@@ -32,12 +32,8 @@
 
 -->
 
-<plugin>
-
-  <information>
-    <scm-version>2</scm-version>
-    <author>Sebastian Sdorra</author>
-    <url>https://bitbucket.org/scm-manager/scm-notify-plugin</url>
-  </information>
-
-</plugin>
+<repository-permissions>
+  <verbs>
+    <verb>notify</verb>
+  </verbs>
+</repository-permissions>

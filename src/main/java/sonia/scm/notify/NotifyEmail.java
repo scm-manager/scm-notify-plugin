@@ -36,9 +36,9 @@ package sonia.scm.notify;
 import org.codemonkey.simplejavamail.Email;
 import org.codemonkey.simplejavamail.Recipient;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.Map.Entry;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

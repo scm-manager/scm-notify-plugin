@@ -36,50 +36,43 @@ package sonia.scm.notify;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-
-import freemarker.cache.ClassTemplateLoader;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
-import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.template.Template;
+import sonia.scm.template.TemplateEngine;
+import sonia.scm.template.TemplateEngineFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;
-
 import java.util.List;
 import java.util.Map;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class FreemarkerContentBuilder extends AbstractContentBuilder
+public class TemplateContentBuilder extends AbstractContentBuilder
 {
 
   /** Field description */
-  public static final String ENCODING = "UTF-8";
+  public static final String PATH_BASE = "sonia/scm/notify/template/";
 
   /** Field description */
-  public static final String PATH_BASE = "/sonia/scm/notify/template/";
+  public static final String PATH_TEMPLATE = "content.mustache";
 
   /** Field description */
-  public static final String PATH_TEMPLATE = "content.ftl";
-
-  /** Field description */
-  public static final String PATH_STYLED_TEMPLATE = "content-css.ftl";
+  public static final String PATH_STYLED_TEMPLATE = "content-css.mustache";
 
   /** Field description */
   private static final String TPYE_SVN = "svn";
+
+  private final TemplateEngineFactory templateEngineFactory;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -88,20 +81,18 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    *
    *
    *
-   * @param context
    * @param configuration
    * @param repositoryServiceFactory
    */
   @Inject
-  public FreemarkerContentBuilder(SCMContextProvider context,
+  public TemplateContentBuilder(
     ScmConfiguration configuration,
-    RepositoryServiceFactory repositoryServiceFactory)
+    RepositoryServiceFactory repositoryServiceFactory,
+    TemplateEngineFactory templateEngineFactory)
   {
     this.configuration = configuration;
     this.repositoryServiceFactory = repositoryServiceFactory;
-    this.templateConfiguration = new Configuration();
-    this.templateConfiguration.setTemplateLoader(
-      new ClassTemplateLoader(FreemarkerContentBuilder.class, PATH_BASE));
+    this.templateEngineFactory = templateEngineFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -120,21 +111,14 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
    */
   @Override
   public Content createContent(Repository repository,
-    NotifyRepositoryConfiguration configuration, Changeset... changesets)
+                               NotifyRepositoryConfiguration configuration, Changeset... changesets)
     throws IOException
   {
     List<BranchTemplateWrapper> branches = null;
-    ChangesetTemplateWrapperHelper helper = null;
 
-    try
+    try(ChangesetTemplateWrapperHelper helper = new ChangesetTemplateWrapperHelper(this.configuration,repositoryServiceFactory, configuration, repository))
     {
-      helper = new ChangesetTemplateWrapperHelper(this.configuration,
-        repositoryServiceFactory, configuration, repository);
       branches = helper.wrapAndSortByBranch(changesets);
-    }
-    finally
-    {
-      Closeables.close(helper, true);
     }
 
     Map<String, Object> env = Maps.newHashMap();
@@ -144,22 +128,16 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
     env.put("branches", branches);
     env.put("supportNamedBranches", isNamedBranchesSupported(repository));
 
-
-    Template tpl;
-    if (configuration.isUsePrettyDiff())
-    {
-      tpl = templateConfiguration.getTemplate(PATH_STYLED_TEMPLATE, ENCODING);
-    } else
-    {
-      tpl = templateConfiguration.getTemplate(PATH_TEMPLATE, ENCODING);
-    }
+    String path = PATH_BASE +( configuration.isUsePrettyDiff() ? PATH_STYLED_TEMPLATE : PATH_TEMPLATE );
+    TemplateEngine templateEngine = this.templateEngineFactory.getEngineByExtension(path);
+    Template template = templateEngine.getTemplate(path);
     StringWriter writer = new StringWriter();
 
     try
     {
-      tpl.process(env, writer);
+      template.execute( writer, env);
     }
-    catch (TemplateException ex)
+    catch (Exception ex)
     {
       throw new ContentBuilderException("could not create content", ex);
     }
@@ -180,7 +158,6 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
   private boolean isNamedBranchesSupported(Repository repository)
   {
 
-    // TODO find a better way
     return !TPYE_SVN.equalsIgnoreCase(repository.getType());
   }
 
@@ -192,6 +169,4 @@ public class FreemarkerContentBuilder extends AbstractContentBuilder
   /** Field description */
   private ScmConfiguration configuration;
 
-  /** Field description */
-  private Configuration templateConfiguration;
 }

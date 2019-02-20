@@ -38,12 +38,12 @@ package sonia.scm.notify.migration;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *

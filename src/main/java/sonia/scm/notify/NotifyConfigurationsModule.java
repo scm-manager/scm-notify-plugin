@@ -1,9 +1,9 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
- *
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer. 2. Redistributions in
  * binary form must reproduce the above copyright notice, this list of
@@ -11,7 +11,7 @@
  * materials provided with the distribution. 3. Neither the name of SCM-Manager;
  * nor the names of its contributors may be used to endorse or promote products
  * derived from this software without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -22,68 +22,22 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
-
 
 package sonia.scm.notify;
 
+import com.google.inject.AbstractModule;
+import org.mapstruct.factory.Mappers;
+import sonia.scm.notify.api.NotifyRepositoryConfigurationMapper;
+import sonia.scm.plugin.Extension;
 
-import java.util.List;
+@Extension
+public class NotifyConfigurationsModule extends AbstractModule {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class BranchTemplateWrapper
-{
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   * @param changesets
-   */
-  public BranchTemplateWrapper(String name,
-    List<ChangesetTemplateWrapper> changesets)
-  {
-    this.name = name;
-    this.changesets = changesets;
+  @Override
+  protected void configure() {
+    bind(NotifyRepositoryConfigurationMapper.class).to(Mappers.getMapper(NotifyRepositoryConfigurationMapper.class).getClass());
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<ChangesetTemplateWrapper> getChangesets()
-  {
-    return changesets;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private List<ChangesetTemplateWrapper> changesets;
-
-  /** Field description */
-  private String name;
 }

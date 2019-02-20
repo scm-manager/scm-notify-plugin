@@ -32,20 +32,17 @@
 
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
-import sonia.scm.url.UrlUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 /**
  *
@@ -166,7 +163,6 @@ public abstract class AbstractContentBuilder implements ContentBuilder
 
 
   public static String shortenId(String id) {
-    id = UrlUtil.fixRevision( id );
     if (id.length() > 8) {
       id = id.substring(0,8);
     }

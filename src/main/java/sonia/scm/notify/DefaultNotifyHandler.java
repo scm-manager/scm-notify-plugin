@@ -1,19 +1,19 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * <p>
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ * this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
  * 3. Neither the name of SCM-Manager; nor the names of its
- *    contributors may be used to endorse or promote products derived from this
- *    software without specific prior written permission.
- *
+ * contributors may be used to endorse or promote products derived from this
+ * software without specific prior written permission.
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,11 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * <p>
  * http://bitbucket.org/sdorra/scm-manager
- *
  */
-
 
 
 package sonia.scm.notify;
@@ -37,25 +35,26 @@ package sonia.scm.notify;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.codemonkey.simplejavamail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.mail.api.MailSendBatchException;
 import sonia.scm.mail.api.MailService;
+import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.Role;
+import sonia.scm.user.User;
 import sonia.scm.util.Util;
 
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import sonia.scm.mail.api.MailSendBatchException;
-import sonia.scm.security.Role;
-import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -63,8 +62,7 @@ import sonia.scm.user.User;
  *
  * @author Sebastian Sdorra
  */
-public class DefaultNotifyHandler implements NotifyHandler
-{
+public class DefaultNotifyHandler implements NotifyHandler {
 
   /**
    * the logger for DefaultNotifyHandler
@@ -86,8 +84,7 @@ public class DefaultNotifyHandler implements NotifyHandler
    * @param notifyConfiguration
    */
   public DefaultNotifyHandler(ContentBuilder contentBuilder, MailService mailService, Repository repository, Set<String> contacts,
-      NotifyRepositoryConfiguration notifyConfiguration)
-  {
+                              NotifyRepositoryConfiguration notifyConfiguration) {
     this.contentBuilder = contentBuilder;
     this.mailService = mailService;
     this.repository = repository;
@@ -104,54 +101,36 @@ public class DefaultNotifyHandler implements NotifyHandler
    * @param changesets
    */
   @Override
-  public void send(Collection<Changeset> changesets)
-  {
-    if (Util.isNotEmpty(contacts))
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("try to send notification to {}", contacts);
-      }
-
-      try
-      {
-        Changeset[] changesetArray = changesets.toArray(new Changeset[changesets.size()]);
+  public void send(Iterable<Changeset> changesets) {
+    if (Util.isNotEmpty(contacts)) {
+      logger.debug("try to send notification to {}", contacts);
+      try {
+        List<Changeset> list = new ArrayList<>();
+        changesets.forEach(list::add);
 
         if (notifyConfiguration.isEmailPerPush()) {
-          Email mail = createMessage(changesetArray);
-          if (null != mail) {
-            sendMessage(mail);
-          }
-        }
-        else for (Changeset c : changesets) {
+          Email mail = createMessage(list.toArray(new Changeset[0]));
+          sendMessage(mail);
+        } else for (Changeset c : changesets) {
           Email mail = createMessage(c);
-          if (null != mail) {
-            sendMessage(mail);
-          }
+          sendMessage(mail);
         }
-      }
-      catch (Exception ex)
-      {
+      } catch (Exception ex) {
         logger.error("could not send notification", ex);
       }
     }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("no contacts found");
-    }
+    logger.debug("no contacts found");
   }
-  
-  private void sendMessage( Email email ) throws MailSendBatchException
-  {
+
+  private void sendMessage(Email email) throws MailSendBatchException {
     List<Email> emails = Lists.newArrayList();
     NotifyEmail notification = new NotifyEmail(email);
-    for ( String c : contacts )
-    {
+    for (String c : contacts) {
       NotifyEmail ne = notification.copy();
       ne.addRecipient(null, c, RecipientType.TO);
       emails.add(ne);
     }
-    
+
     mailService.send(emails);
   }
 
@@ -168,45 +147,36 @@ public class DefaultNotifyHandler implements NotifyHandler
    * @throws MessagingException
    */
   private Email createMessage(Changeset... changesets)
-    throws MessagingException, IOException
-  { 
+    throws IOException {
     Email msg = new Email();
 
     msg.setSubject(contentBuilder.createSubject(repository, changesets));
 
-    if (notifyConfiguration.isUseAuthorAsFromAddress() && changesets.length > 0)
-    {
+    if (notifyConfiguration.isUseAuthorAsFromAddress() && changesets.length > 0) {
       // use mail address of current user
       Subject subject = SecurityUtils.getSubject();
-      subject.checkRole( Role.USER );
+      subject.checkRole(Role.USER);
       User user = subject.getPrincipals().oneByType(User.class);
 
       String mail = user.getMail();
-      
-      if (!Strings.isNullOrEmpty(mail))
-      {
+
+      if (!Strings.isNullOrEmpty(mail)) {
         String displayName = user.getDisplayName();
-        if ( Strings.isNullOrEmpty(displayName) )
-        {
+        if (Strings.isNullOrEmpty(displayName)) {
           displayName = user.getName();
         }
         logger.debug("user \"{} <{}>\" as from address", displayName, mail);
         msg.setFromAddress(displayName, mail);
-      } 
-      else 
-      {
+      } else {
         logger.warn("user {} has no mail address, use default address", user.getName());
       }
     }
 
     Content content = contentBuilder.createContent(repository, notifyConfiguration, changesets);
 
-    if (content.isHtml())
-    {
+    if (content.isHtml()) {
       msg.setTextHTML(content.getContent());
-    }
-    else
-    {
+    } else {
       msg.setText(content.getContent());
     }
 
