@@ -3,6 +3,7 @@ package sonia.scm.notify;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -64,7 +65,191 @@ class TemplateContentBuilderTest {
     "@@ -1 +1 @@\n" +
     "-old content\n" +
     "+new content";
- 
+  private final static String NOT_PRETTY_OUTPUT_WITHOUT_DIFF = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional //EN\">\n" +
+    "<html>\n" +
+    "<head>\n" +
+    "    <title>[X][default] 1</title>\n" +
+    "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+    "    <style type=\"text/css\">\n" +
+    "        body {\n" +
+    "            background-color: #ffffff;\n" +
+    "            margin: 10px;\n" +
+    "            color: #202020;\n" +
+    "            font-family: Verdana,Helvetica,Arial,sans-serif;\n" +
+    "            font-size: 75%;\n" +
+    "        }\n" +
+    "        h1, h2 {\n" +
+    "            font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;\n" +
+    "            font-weight: bold;\n" +
+    "            color: #D20005;\n" +
+    "            padding: 0;\n" +
+    "        }\n" +
+    "        h1 {\n" +
+    "            font-size: 18px;\n" +
+    "            border-bottom: 1px solid #AFAFAF;\n" +
+    "            margin: 0 0 5px 0;\n" +
+    "        }\n" +
+    "        h2 {\n" +
+    "            font-size: 14px;\n" +
+    "            margin: 0 0 2px 0;\n" +
+    "        }\n" +
+    "        table {\n" +
+    "            border: 0 none;\n" +
+    "            border-collapse: collapse;\n" +
+    "            font-size: 100%;\n" +
+    "            margin: 20px 0;\n" +
+    "            padding: 20px;\n" +
+    "            width: 100%;\n" +
+    "        }\n" +
+    "        tr {\n" +
+    "            border: 0;\n" +
+    "        }\n" +
+    "        td {\n" +
+    "            padding: 3px;\n" +
+    "            vertical-align: top;\n" +
+    "            text-align: left;\n" +
+    "            border: 0;\n" +
+    "        }\n" +
+    "        a {\n" +
+    "            color: #045491;\n" +
+    "            font-weight: bold;\n" +
+    "            text-decoration: none;\n" +
+    "        }\n" +
+    "    </style>\n" +
+    "</head>\n" +
+    "<body>\n" +
+    "    <h2>Branch: default</h2>\n" +
+    "\n" +
+    "<table>\n" +
+    "        <tr>\n" +
+    "            <td style=\"width: 60px;\">\n" +
+    "                <a href=\"http://localhost:8081/scm/repo/space/X/changeset/1\" target=\"_blank\">\n" +
+    "          1\n" +
+    "                </a>\n" +
+    "            </td>\n" +
+    "            <td style=\"width: 150px;\">\n" +
+    "            Wed Feb 06 17:06:51 CET 2019\n" +
+    "            </td>\n" +
+    "            <td>\n" +
+    "            Arthur Dent\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "        <tr>\n" +
+    "            <td colspan=\"3\">\n" +
+    "                <pre>Some changes</pre>\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "        <tr>\n" +
+    "            <td colspan=\"3\">\n" +
+    "                    <span>A addedFile_1.txt</span><br />\n" +
+    "                    <span>A addedFile_2.txt</span><br />\n" +
+    "                    <span>M modifiedFile_1.txt</span><br />\n" +
+    "                    <span>M modifiedFile_2.txt</span><br />\n" +
+    "                    <span>R deletedFile_1.txt</span><br />\n" +
+    "                    <span>R deletedFile_2.txt</span><br />\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "</table>\n" +
+    "\n" +
+    "\n" +
+    "</body>\n" +
+    "</html>";
+
+  private final static String NOT_PRETTY_OUTPUT = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional //EN\">\n" +
+    "<html>\n" +
+    "<head>\n" +
+    "    <title>[X][default] 1</title>\n" +
+    "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+    "    <style type=\"text/css\">\n" +
+    "        body {\n" +
+    "            background-color: #ffffff;\n" +
+    "            margin: 10px;\n" +
+    "            color: #202020;\n" +
+    "            font-family: Verdana,Helvetica,Arial,sans-serif;\n" +
+    "            font-size: 75%;\n" +
+    "        }\n" +
+    "        h1, h2 {\n" +
+    "            font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;\n" +
+    "            font-weight: bold;\n" +
+    "            color: #D20005;\n" +
+    "            padding: 0;\n" +
+    "        }\n" +
+    "        h1 {\n" +
+    "            font-size: 18px;\n" +
+    "            border-bottom: 1px solid #AFAFAF;\n" +
+    "            margin: 0 0 5px 0;\n" +
+    "        }\n" +
+    "        h2 {\n" +
+    "            font-size: 14px;\n" +
+    "            margin: 0 0 2px 0;\n" +
+    "        }\n" +
+    "        table {\n" +
+    "            border: 0 none;\n" +
+    "            border-collapse: collapse;\n" +
+    "            font-size: 100%;\n" +
+    "            margin: 20px 0;\n" +
+    "            padding: 20px;\n" +
+    "            width: 100%;\n" +
+    "        }\n" +
+    "        tr {\n" +
+    "            border: 0;\n" +
+    "        }\n" +
+    "        td {\n" +
+    "            padding: 3px;\n" +
+    "            vertical-align: top;\n" +
+    "            text-align: left;\n" +
+    "            border: 0;\n" +
+    "        }\n" +
+    "        a {\n" +
+    "            color: #045491;\n" +
+    "            font-weight: bold;\n" +
+    "            text-decoration: none;\n" +
+    "        }\n" +
+    "    </style>\n" +
+    "</head>\n" +
+    "<body>\n" +
+    "    <h2>Branch: default</h2>\n" +
+    "\n" +
+    "<table>\n" +
+    "        <tr>\n" +
+    "            <td style=\"width: 60px;\">\n" +
+    "                <a href=\"http://localhost:8081/scm/repo/space/X/changeset/1\" target=\"_blank\">\n" +
+    "          1\n" +
+    "                </a>\n" +
+    "            </td>\n" +
+    "            <td style=\"width: 150px;\">\n" +
+    "            Wed Feb 06 17:06:51 CET 2019\n" +
+    "            </td>\n" +
+    "            <td>\n" +
+    "            Arthur Dent\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "        <tr>\n" +
+    "            <td colspan=\"3\">\n" +
+    "                <pre>Some changes</pre>\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "        <tr>\n" +
+    "            <td colspan=\"3\">\n" +
+    "                    <span>A addedFile_1.txt</span><br />\n" +
+    "                    <span>A addedFile_2.txt</span><br />\n" +
+    "                    <span>M modifiedFile_1.txt</span><br />\n" +
+    "                    <span>M modifiedFile_2.txt</span><br />\n" +
+    "                    <span>R deletedFile_1.txt</span><br />\n" +
+    "                    <span>R deletedFile_2.txt</span><br />\n" +
+    "            </td>\n" +
+    "        </tr>\n" +
+    "            <tr>\n" +
+    "                <td colspan=\"3\">\n" +
+    "                    <pre>diff --git a/modifiedFile_1.txt b/modifiedFile_1.txt&#10;index 1 100644&#10;--- a/modifiedFile_1.txt&#10;+++ b/modifiedFile_1.txt&#10;@@ -1 +1 @@&#10;-old content&#10;+new content</pre>\n" +
+    "                </td>\n" +
+    "            </tr>\n" +
+    "</table>\n" +
+    "\n" +
+    "\n" +
+    "</body>\n" +
+    "</html>";
+
 
   private final static String PRETTY_OUTPUT = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional //EN\">\n" +
     "<html>\n" +
@@ -237,6 +422,31 @@ class TemplateContentBuilderTest {
     TemplateEngine engine = createEngine();
     when(engineFactory.getEngineByExtension(any())).thenReturn(engine);
     templateContentBuilder = new TemplateContentBuilder(scmConfiguration, repositoryServiceFactory, engineFactory);
+  }
+
+  @Test
+  void shouldGenerateNonPrettyEmail() throws IOException {
+    when(repositoryService.getDiffCommand()).thenReturn(diffCommandBuilder);
+    when(diffCommandBuilder.getContent()).thenReturn(DIFF);
+
+    NotifyRepositoryConfiguration configuration = new NotifyRepositoryConfiguration();
+    configuration.setUsePrettyDiff(false);
+    configuration.setMaxDiffLines(10);
+
+    Content content = templateContentBuilder.createContent(REPOSITORY, configuration, changeset);
+
+    assertThat(content.getContent().trim()).isEqualTo(NOT_PRETTY_OUTPUT.trim());
+  }
+
+  @Test
+  void shouldGenerateNonPrettyEmailWithoutDiff() throws IOException {
+    NotifyRepositoryConfiguration configuration = new NotifyRepositoryConfiguration();
+    configuration.setUsePrettyDiff(false);
+    configuration.setMaxDiffLines(0);
+
+    Content content = templateContentBuilder.createContent(REPOSITORY, configuration, changeset);
+
+    assertThat(content.getContent().trim()).isEqualTo(NOT_PRETTY_OUTPUT_WITHOUT_DIFF.trim());
   }
 
   @Test
