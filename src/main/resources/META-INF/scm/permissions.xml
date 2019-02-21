@@ -35,9 +35,6 @@
 <permissions>
 
   <permission>
-    <value>repository:notify</value>
-  </permission>
-  <permission>
     <value>repository:notify:*</value>
   </permission>
 
