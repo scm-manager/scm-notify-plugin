@@ -3,7 +3,7 @@
     "repository": {
       "notify": {
         "*": {
-          "displayName": "Email notification",
+          "displayName": "email notification",
           "description": "May configure the Email notification configuration"
         }
       }
