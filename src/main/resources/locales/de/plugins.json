@@ -28,7 +28,7 @@
       "contactList" : "E-Mails",
       "contactListAdd" : "E-Mail-Adresse hinzufügen",
       "sendToRepositoryContact" :  "Sende an den Repository Kontakt",
-      "useAuthorAsFromAddress" : "Author als Absender",
+      "useAuthorAsFromAddress" : "Autor als Absender",
       "usePrettyDiff" : "Diff formatieren",
       "emailPerPush" : "E-Mail pro Push",
       "maxDiffLines" : "Maximale Zeilenanzahl für Diff "
@@ -36,7 +36,7 @@
     "formHelpText": {
       "contactList" : "Liste der E-Mail-Adressen an welche die Benachrichtigungen geschickt werden",
       "sendToRepositoryContact" :  "Die Benachrichtigung wird an den Repository Kontakt geschickt",
-      "useAuthorAsFromAddress" : "Der Repository Author ist der Absender der Benachrichtigung",
+      "useAuthorAsFromAddress" : "Der Repository Autor ist der Absender der Benachrichtigung",
       "usePrettyDiff" : "Das Diff wird formatiert",
       "emailPerPush" : "Es wird eine E-Mail pro Push geschickt",
       "maxDiffLines" : "Die maximale Zeilenanzahl für das Diff"
