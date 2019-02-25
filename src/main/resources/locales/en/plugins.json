@@ -3,8 +3,8 @@
     "repository": {
       "notify": {
         "*": {
-          "displayName": "email notification",
-          "description": "May configure the Email notification configuration"
+          "displayName": "Modify email notifications",
+          "description": "May configure the email notification configuration for repositories"
         }
       }
     }
@@ -12,8 +12,8 @@
   "verbs" : {
     "repository": {
       "notify": {
-          "displayName": "Email notification",
-          "description": "May configure the Email notification configuration"
+          "displayName": "email notification",
+          "description": "May configure the email notification configuration"
         }
     }
   },
@@ -21,10 +21,10 @@
     "navLink": "Email Notification",
     "form": {
       "error": {
-        "contactList" : "The Email is not valid",
+        "contactList" : "The email is not valid",
         "maxDiffLines" : "Please enter a number format"
       },
-      "header": "Edit Email Notification configurations",
+      "header": "Edit email Notification configurations",
       "contactList" : "Emails",
       "contactListAdd" : "Add Email",
       "sendToRepositoryContact" :  "Send to Repository Contact",
@@ -34,12 +34,12 @@
       "maxDiffLines" : "Maximum Diff Lines"
     },
     "formHelpText": {
-      "contactList" : "The list of Emails receiving the notifications",
-      "sendToRepositoryContact" :  "Send the Email to the Repository Contact",
-      "useAuthorAsFromAddress" : "Use the Author Email as the from Email",
-      "usePrettyDiff" : "send the Diffs in pretty format",
-      "emailPerPush" : "send an Email per Push",
-      "maxDiffLines" : "The maximum number of Diff Lines included in the Email"
+      "contactList" : "The list of emails receiving the notifications",
+      "sendToRepositoryContact" :  "Send the email to the repository contact",
+      "useAuthorAsFromAddress" : "Use the author email address as the from field of the email",
+      "usePrettyDiff" : "Send the diffs in pretty format",
+      "emailPerPush" : "Send an email per push",
+      "maxDiffLines" : "The maximum number of diff lines included in the email"
       }
   }
 }

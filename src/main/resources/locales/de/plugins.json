@@ -3,7 +3,7 @@
     "repository": {
       "notify": {
         "*": {
-          "displayName": "E-Mail Benachrichtigungen",
+          "displayName": "E-Mail Benachrichtigungen ändern",
           "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
         }
       }
@@ -12,7 +12,7 @@
   "verbs" : {
     "repository": {
       "notify": {
-        "displayName": "E-Mail Benachrichtigungen",
+        "displayName": "E-Mail Benachrichtigungen ändern",
         "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
       }
     }
