@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.mail.api.MailSendBatchException;
 import sonia.scm.mail.api.MailService;
+import sonia.scm.mail.api.MailTemplateType;
 import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
@@ -105,15 +106,12 @@ public class DefaultNotifyHandler implements NotifyHandler {
     if (Util.isNotEmpty(contacts)) {
       logger.debug("try to send notification to {}", contacts);
       try {
-        List<Changeset> list = new ArrayList<>();
-        changesets.forEach(list::add);
+        List<Changeset> list = Lists.newArrayList(changesets);
 
         if (notifyConfiguration.isEmailPerPush()) {
-          Email mail = createMessage(list.toArray(new Changeset[0]));
-          sendMessage(mail);
+          sendMessage(list.toArray(new Changeset[0]));
         } else for (Changeset c : changesets) {
-          Email mail = createMessage(c);
-          sendMessage(mail);
+          sendMessage(c);
         }
       } catch (Exception ex) {
         logger.error("could not send notification", ex);
@@ -122,67 +120,19 @@ public class DefaultNotifyHandler implements NotifyHandler {
     logger.debug("no contacts found");
   }
 
-  private void sendMessage(Email email) throws MailSendBatchException {
-    List<Email> emails = Lists.newArrayList();
-    NotifyEmail notification = new NotifyEmail(email);
-    for (String c : contacts) {
-      NotifyEmail ne = notification.copy();
-      ne.addRecipient(null, c, RecipientType.TO);
-      emails.add(ne);
-    }
-
-    mailService.send(emails);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param changesets
-   *
-   * @return
-   *
-   *
-   * @throws IOException
-   * @throws MessagingException
-   */
-  private Email createMessage(Changeset... changesets)
-    throws IOException {
-    Email msg = new Email();
-
-    msg.setSubject(contentBuilder.createSubject(repository, changesets));
+  private void sendMessage(Changeset... changesets) throws MailSendBatchException, IOException {
+    MailService.EnvelopeBuilder envelopeBuilder = mailService.emailTemplateBuilder();
 
     if (notifyConfiguration.isUseAuthorAsFromAddress() && changesets.length > 0) {
-      // use mail address of current user
-      Subject subject = SecurityUtils.getSubject();
-      subject.checkRole(Role.USER);
-      User user = subject.getPrincipals().oneByType(User.class);
-
-      String mail = user.getMail();
-
-      if (!Strings.isNullOrEmpty(mail)) {
-        String displayName = user.getDisplayName();
-        if (Strings.isNullOrEmpty(displayName)) {
-          displayName = user.getName();
-        }
-        logger.debug("user \"{} <{}>\" as from address", displayName, mail);
-        msg.setFromAddress(displayName, mail);
-      } else {
-        logger.warn("user {} has no mail address, use default address", user.getName());
-      }
+      envelopeBuilder.fromCurrentUser();
     }
+    contacts.forEach(envelopeBuilder::toAddress);
 
-    Content content = contentBuilder.createContent(repository, notifyConfiguration, changesets);
-
-    if (content.isHtml()) {
-      msg.setTextHTML(content.getContent());
-    } else {
-      msg.setText(content.getContent());
-    }
-
-    return msg;
+    envelopeBuilder.withSubject(contentBuilder.createSubject(repository, changesets))
+      .withTemplate("/sonia/scm/notify/template/content.mustache", MailTemplateType.MARKDOWN_HTML)
+      .andModel(contentBuilder.createModel(repository, notifyConfiguration, changesets))
+      .send();
   }
-
 
   //~--- fields ---------------------------------------------------------------
 

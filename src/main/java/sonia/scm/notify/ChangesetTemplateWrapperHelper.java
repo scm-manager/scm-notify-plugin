@@ -100,8 +100,6 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     baseUrl = configuration.getBaseUrl();
 
     maxDiffLines = notifyConfiguration.getMaxDiffLines();
-    usePrettyDiff = notifyConfiguration.isUsePrettyDiff();
-
     repositoryService = repositoryServiceFactory.create(repository);
 
     this.repository = repository;
@@ -194,12 +192,6 @@ public class ChangesetTemplateWrapperHelper implements Closeable
       logger.trace("diff:{}", diff);
 
       String[] diffLines = diff.split("\r\n?|\n");
-
-      if (usePrettyDiff)
-      {
-          diffLines = DiffWrapper.wrap(diffLines);
-      }
-
       diff = StringUtils.join(diffLines, LINE_SEPARATOR);
 
       if (diffLineCount + diffLines.length > maxDiffLines) {
@@ -312,9 +304,6 @@ public class ChangesetTemplateWrapperHelper implements Closeable
 
   /** Field description */
   private int maxDiffLines;
-
-  /** Field description */
-  private boolean usePrettyDiff;
 
   /** Field description */
   private String reachedDiffLimitMessage;

@@ -23,8 +23,6 @@ public class NotifyRepositoryConfigurationDto extends HalRepresentation {
 
   private boolean useAuthorAsFromAddress;
 
-  private boolean usePrettyDiff;
-
   private boolean emailPerPush;
 
   private int maxDiffLines;
