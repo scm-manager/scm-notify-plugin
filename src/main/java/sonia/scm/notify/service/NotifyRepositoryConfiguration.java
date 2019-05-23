@@ -50,7 +50,6 @@ public class NotifyRepositoryConfiguration {
   private List<String> contactList = new ArrayList<>();
   private boolean sendToRepositoryContact;
   private boolean useAuthorAsFromAddress;
-  private boolean usePrettyDiff;
   private boolean emailPerPush;
   private int maxDiffLines;
 

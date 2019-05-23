@@ -64,7 +64,7 @@ public class NotifyModule extends AbstractModule
   @Override
   protected void configure()
   {
-    bind(ContentBuilder.class, TemplateContentBuilder.class);
+    bind(ContentBuilder.class, DefaultContentBuilder.class);
     bind(NotifyHandlerFactory.class, DefaultNotifyHandlerFactory.class);
   }
 

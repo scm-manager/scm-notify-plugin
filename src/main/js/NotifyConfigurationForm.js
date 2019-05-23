@@ -71,7 +71,6 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
     const fields = [
       "sendToRepositoryContact",
       "useAuthorAsFromAddress",
-      "usePrettyDiff",
       "emailPerPush"
     ].map(name => {
       return this.renderCheckboxField(name);

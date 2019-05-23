@@ -64,7 +64,6 @@ public class NotifyRepositoryConfigurationServiceTest {
     configuration.setMaxDiffLines(10);
     configuration.setSendToRepositoryContact(true);
     configuration.setUseAuthorAsFromAddress(true);
-    configuration.setUsePrettyDiff(true);
     service.setConfiguration(REPOSITORY, configuration);
 
     verify(store).set(argThat(repositoryConfiguration -> {
@@ -82,9 +81,6 @@ public class NotifyRepositoryConfigurationServiceTest {
     configuration.setMaxDiffLines(10);
     configuration.setSendToRepositoryContact(true);
     configuration.setUseAuthorAsFromAddress(true);
-    configuration.setUsePrettyDiff(true);
-
-
 
     assertThatThrownBy(() -> service.setConfiguration(REPOSITORY, configuration))
       .hasMessage("Subject does not have permission [repository:notify:id-1]");

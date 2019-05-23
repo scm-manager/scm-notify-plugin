@@ -62,7 +62,7 @@ public interface ContentBuilder
    *
    * @throws IOException
    */
-  public Content createContent(Repository repository,
+  Object createModel(Repository repository,
                                NotifyRepositoryConfiguration configuration, Changeset... changesets)
     throws IOException;
 
@@ -74,5 +74,5 @@ public interface ContentBuilder
    * @param changesets
    * @return
    */
-  public String createSubject(Repository repository, Changeset... changesets);
+  String createSubject(Repository repository, Changeset... changesets);
 }

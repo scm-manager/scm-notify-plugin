@@ -31,7 +31,6 @@ public class NotifyRepositoryConfigurationResourceTest {
     "\"contactList\":[\"user1\",\"user2\"]," +
     "\"sendToRepositoryContact\":true," +
     "\"useAuthorAsFromAddress\":true," +
-    "\"usePrettyDiff\":true," +
     "\"emailPerPush\":true," +
     "\"maxDiffLines\":10," +
     "\"_links\":{" +
@@ -83,7 +82,6 @@ public class NotifyRepositoryConfigurationResourceTest {
     configuration.setMaxDiffLines(10);
     configuration.setSendToRepositoryContact(true);
     configuration.setUseAuthorAsFromAddress(true);
-    configuration.setUsePrettyDiff(true);
     return configuration;
   }
 

@@ -42,12 +42,8 @@ import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.template.Template;
-import sonia.scm.template.TemplateEngine;
-import sonia.scm.template.TemplateEngineFactory;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -57,22 +53,11 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-public class TemplateContentBuilder extends AbstractContentBuilder
+public class DefaultContentBuilder extends AbstractContentBuilder
 {
 
-  /** Field description */
-  public static final String PATH_BASE = "sonia/scm/notify/template/";
-
-  /** Field description */
-  public static final String PATH_TEMPLATE = "content.mustache";
-
-  /** Field description */
-  public static final String PATH_STYLED_TEMPLATE = "content-css.mustache";
-
-  /** Field description */
+   /** Field description */
   private static final String TPYE_SVN = "svn";
-
-  private final TemplateEngineFactory templateEngineFactory;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -85,14 +70,12 @@ public class TemplateContentBuilder extends AbstractContentBuilder
    * @param repositoryServiceFactory
    */
   @Inject
-  public TemplateContentBuilder(
+  public DefaultContentBuilder(
     ScmConfiguration configuration,
-    RepositoryServiceFactory repositoryServiceFactory,
-    TemplateEngineFactory templateEngineFactory)
+    RepositoryServiceFactory repositoryServiceFactory)
   {
     this.configuration = configuration;
     this.repositoryServiceFactory = repositoryServiceFactory;
-    this.templateEngineFactory = templateEngineFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -110,11 +93,11 @@ public class TemplateContentBuilder extends AbstractContentBuilder
    * @throws IOException
    */
   @Override
-  public Content createContent(Repository repository,
+  public Object createModel(Repository repository,
                                NotifyRepositoryConfiguration configuration, Changeset... changesets)
     throws IOException
   {
-    List<BranchTemplateWrapper> branches = null;
+    List<BranchTemplateWrapper> branches;
 
     try(ChangesetTemplateWrapperHelper helper = new ChangesetTemplateWrapperHelper(this.configuration,repositoryServiceFactory, configuration, repository))
     {
@@ -128,21 +111,7 @@ public class TemplateContentBuilder extends AbstractContentBuilder
     env.put("branches", branches);
     env.put("supportNamedBranches", isNamedBranchesSupported(repository));
 
-    String path = PATH_BASE +( configuration.isUsePrettyDiff() ? PATH_STYLED_TEMPLATE : PATH_TEMPLATE );
-    TemplateEngine templateEngine = this.templateEngineFactory.getEngineByExtension(path);
-    Template template = templateEngine.getTemplate(path);
-    StringWriter writer = new StringWriter();
-
-    try
-    {
-      template.execute( writer, env);
-    }
-    catch (Exception ex)
-    {
-      throw new ContentBuilderException("could not create content", ex);
-    }
-
-    return new Content(writer.toString(), true);
+    return env;
   }
 
   //~--- get methods ----------------------------------------------------------

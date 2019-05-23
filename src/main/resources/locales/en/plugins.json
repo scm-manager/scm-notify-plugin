@@ -29,7 +29,6 @@
       "contactListAdd" : "Add Email",
       "sendToRepositoryContact" :  "Send to Repository Contact",
       "useAuthorAsFromAddress" : "Use Author as from Address",
-      "usePrettyDiff" : "Use Pretty Diff",
       "emailPerPush" : "Email per Push",
       "maxDiffLines" : "Maximum Diff Lines"
     },
@@ -37,7 +36,6 @@
       "contactList" : "The list of emails receiving the notifications",
       "sendToRepositoryContact" :  "Send the email to the repository contact",
       "useAuthorAsFromAddress" : "Use the author email address as the from field of the email",
-      "usePrettyDiff" : "Send the diffs in pretty format",
       "emailPerPush" : "Send an email per push",
       "maxDiffLines" : "The maximum number of diff lines included in the email"
       }

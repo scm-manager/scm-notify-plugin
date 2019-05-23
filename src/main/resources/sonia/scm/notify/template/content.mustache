@@ -1,105 +1,31 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional //EN">
-<html>
-<head>
-    <title>{{title}}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <style type="text/css">
-        body {
-            background-color: #ffffff;
-            margin: 10px;
-            color: #202020;
-            font-family: Verdana,Helvetica,Arial,sans-serif;
-            font-size: 75%;
-        }
-        h1, h2 {
-            font-family: Arial,'Arial CE','Lucida Grande CE',lucida,'Helvetica CE',sans-serif;
-            font-weight: bold;
-            color: #D20005;
-            padding: 0;
-        }
-        h1 {
-            font-size: 18px;
-            border-bottom: 1px solid #AFAFAF;
-            margin: 0 0 5px 0;
-        }
-        h2 {
-            font-size: 14px;
-            margin: 0 0 2px 0;
-        }
-        table {
-            border: 0 none;
-            border-collapse: collapse;
-            font-size: 100%;
-            margin: 20px 0;
-            padding: 20px;
-            width: 100%;
-        }
-        tr {
-            border: 0;
-        }
-        td {
-            padding: 3px;
-            vertical-align: top;
-            text-align: left;
-            border: 0;
-        }
-        a {
-            color: #045491;
-            font-weight: bold;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-{{#branches}}
-    {{#supportNamedBranches}}
-    <h2>Branch: {{name}}</h2>
-    {{/supportNamedBranches}}
+# {{title}}
 
-<table>
-    {{#changesets}}
-        <tr>
-            <td style="width: 60px;">
-                <a href="{{link}}" target="_blank">
-          {{shortId}}
-                </a>
-            </td>
-            <td style="width: 150px;">
-            {{date}}
-            </td>
-            <td>
-            {{author.name}}
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                <pre>{{description}}</pre>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="3">
-                {{#modifications.added}}
-                    <span>A {{.}}</span><br />
-                {{/modifications.added}}
-                {{#modifications.modified}}
-                    <span>M {{.}}</span><br />
-                {{/modifications.modified}}
-                {{#modifications.removed}}
-                    <span>R {{.}}</span><br />
-                {{/modifications.removed}}
-            </td>
-        </tr>
-        {{#diff}}
-            <tr>
-                <td colspan="3">
-                    <pre>{{.}}</pre>
-                </td>
-            </tr>
-        {{/diff}}
-    {{/changesets}}
-</table>
+{{#branches}}
+{{#supportNamedBranches}}
+## Branch: {{name}}
+{{/supportNamedBranches}}
+
+{{#changesets}}
+### [{{shortId}}]({{link}}) - {{date}} - {{author.name}}
+
+{{description}}
+
+{{#modifications.added}}
+* A {{.}}
+{{/modifications.added}}
+{{#modifications.modified}}
+* M {{.}}
+{{/modifications.modified}}
+{{#modifications.removed}}
+* R {{.}}
+{{/modifications.removed}}
+
+{{#diff}}
+```
+{{{.}}}
+```
+{{/diff}}
+
+{{/changesets}}
 
 {{/branches}}
-
-</body>
-</html>
