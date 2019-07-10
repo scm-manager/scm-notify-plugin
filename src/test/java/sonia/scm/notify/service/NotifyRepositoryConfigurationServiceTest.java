@@ -34,7 +34,7 @@ public class NotifyRepositoryConfigurationServiceTest {
   @Before
   public void init() {
     storeFactory = new InMemoryConfigurationStoreFactory();
-    store = storeFactory.withType(NotifyRepositoryConfiguration.class).withName("NotifyConfigurations").build();
+    store = storeFactory.withType(NotifyRepositoryConfiguration.class).withName("NotifyConfigurations").forRepository(REPOSITORY).build();
     service = new NotifyRepositoryConfigurationService(storeFactory, null);
   }
 
