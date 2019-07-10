@@ -12,10 +12,9 @@ import sonia.scm.update.V1Properties;
 import sonia.scm.update.V1PropertyDAO;
 import sonia.scm.version.Version;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static sonia.scm.update.V1PropertyReader.REPOSITORY_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
@@ -26,8 +25,8 @@ public class NotifyV2RepositoryConfigMigrationUpdateStep implements UpdateStep {
   private static final Logger LOG = LoggerFactory.getLogger(NotifyV2RepositoryConfigMigrationUpdateStep.class);
 
 
-  V1PropertyDAO v1PropertyDAO;
-  ConfigurationStoreFactory storeFactory;
+  private final V1PropertyDAO v1PropertyDAO;
+  private final ConfigurationStoreFactory storeFactory;
 
   private static final String STORE_NAME = "NotifyConfigurations";
 
@@ -44,7 +43,7 @@ public class NotifyV2RepositoryConfigMigrationUpdateStep implements UpdateStep {
   }
 
   @Override
-  public void doUpdate() throws IOException {
+  public void doUpdate() {
     v1PropertyDAO
       .getProperties(REPOSITORY_PROPERTY_READER)
       .havingAnyOf(NOTIFY_REPOSITORY_CONTACT, NOTIFY_MAX_DIFF_LINES, NOTIFY_CONTACT_LIST, NOTIFY_EMAIL_PER_PUSH, NOTIFY_USE_AUTHOR)
@@ -57,10 +56,8 @@ public class NotifyV2RepositoryConfigMigrationUpdateStep implements UpdateStep {
     List<String> contactList = new ArrayList<>();
     String v1ContactList = properties.get(NOTIFY_CONTACT_LIST);
     if (v1ContactList != null && !v1ContactList.isEmpty()) {
-      String[] splittedContactList = v1ContactList.split(";");
-      for (String contact : splittedContactList) {
-        contactList.add(contact);
-      }
+      String[] splitContactList = v1ContactList.split(";");
+      contactList.addAll(Arrays.asList(splitContactList));
     }
 
     NotifyRepositoryConfiguration v2NotifyRepositoryConfiguration = new NotifyRepositoryConfiguration();

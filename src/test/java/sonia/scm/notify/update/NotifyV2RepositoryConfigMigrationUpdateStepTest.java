@@ -9,8 +9,6 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.update.V1PropertyDaoTestUtil;
 
-import java.io.IOException;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NotifyV2RepositoryConfigMigrationUpdateStepTest {
@@ -18,7 +16,7 @@ public class NotifyV2RepositoryConfigMigrationUpdateStepTest {
   private final static String REPO_NAME = "repo";
   private static final String STORE_NAME = "NotifyConfigurations";
 
-  V1PropertyDaoTestUtil testUtil = new V1PropertyDaoTestUtil();
+  private final V1PropertyDaoTestUtil testUtil = new V1PropertyDaoTestUtil();
 
   private final ConfigurationStoreFactory storeFactory = new InMemoryConfigurationStoreFactory();
 
@@ -30,7 +28,7 @@ public class NotifyV2RepositoryConfigMigrationUpdateStepTest {
   }
 
   @Test
-  public void shouldMigratingForRepository() throws IOException {
+  public void shouldMigratingForRepository() {
     ImmutableMap<String, String> mockedValues =
       ImmutableMap.of(
         "notify.contact.repository","true",
@@ -48,13 +46,13 @@ public class NotifyV2RepositoryConfigMigrationUpdateStepTest {
     assertThat(getConfigStore().get().isEmailPerPush()).isTrue();
     assertThat(getConfigStore().get().isSendToRepositoryContact()).isTrue();
     assertThat(getConfigStore().get().isUseAuthorAsFromAddress()).isFalse();
-    assertThat(getConfigStore().get().getContactList().contains("abc@def.de"));
-    assertThat(getConfigStore().get().getContactList().contains("echo@off.de"));
+    assertThat(getConfigStore().get().getContactList()).contains("abc@def.de");
+    assertThat(getConfigStore().get().getContactList()).contains("echo@off.de");
     assertThat(getConfigStore().get().getContactList().size()).isEqualTo(3);
   }
 
   @Test
-  public void shouldSkipRepositoriesIfPermissionsAreEmpty() throws IOException {
+  public void shouldSkipRepositoriesIfPermissionsAreEmpty() {
     ImmutableMap<String, String> mockedValues =
       ImmutableMap.of(
         "any", "value"
