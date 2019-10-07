@@ -78,10 +78,6 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
 
     return (
       <>
-        <LabelWithHelpIcon
-          label={t("scm-notify-plugin.form.contactList")}
-          helpText={t("scm-notify-plugin.formHelpText.contactList")}
-        />
         <MemberNameTagGroup
           members={this.state.contactList}
           memberListChanged={(contactList) => {
@@ -89,6 +85,8 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
               () =>
                 this.props.onConfigurationChange({ ...this.state }, this.isValid()));
           }}
+          label={t("scm-notify-plugin.form.contactList")}
+          helpText={t("scm-notify-plugin.formHelpText.contactList")}
         />
         <AddEntryToTableField
           addEntry={this.addContact}
