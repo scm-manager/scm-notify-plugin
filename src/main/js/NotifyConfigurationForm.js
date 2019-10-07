@@ -1,14 +1,20 @@
 //@flow
 import React from "react";
 import { translate } from "react-i18next";
-import type {NotifyConfigurations} from "./NotifyConfigurations";
-import { AddEntryToTableField, Checkbox, InputField, LabelWithHelpIcon , MemberNameTagGroup  } from "@scm-manager/ui-components";
-import * as validator from "@scm-manager/ui-components/src/validation";
+import type { NotifyConfigurations } from "./NotifyConfigurations";
+import {
+  validation as validator,
+  AddEntryToTableField,
+  Checkbox,
+  InputField,
+  MemberNameTagGroup
+} from "@scm-manager/ui-components";
 
 type Props = {
   initialConfiguration: NotifyConfigurations,
   readOnly: boolean,
   onConfigurationChange: (NotifyConfigurations, boolean) => void,
+
   // context prop
   t: string => string
 };
@@ -21,19 +27,18 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
     this.state = { ...props.initialConfiguration };
   }
 
-
   isValid() {
     const { sendToRepositoryContact, contactList } = this.state;
-  // the configurations are valid if there is at minimum one receiver
-    if (contactList.length === 0 && !sendToRepositoryContact){
-      return false
+    // the configurations are valid if there is at minimum one receiver
+    if (contactList.length === 0 && !sendToRepositoryContact) {
+      return false;
     }
     let valid = true;
     contactList.map(contact => {
-      valid = valid && validator.isMailValid(contact) ;
+      valid = valid && validator.isMailValid(contact);
     });
     valid = valid && validator.isNumberValid(this.state.maxDiffLines);
-    return valid ;
+    return valid;
   }
 
   configChangeHandler = (value: string, name: string) => {
@@ -41,19 +46,18 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
       {
         [name]: value
       },
-      () =>
-        this.props.onConfigurationChange({ ...this.state }, this.isValid())
+      () => this.props.onConfigurationChange({ ...this.state }, this.isValid())
     );
   };
 
-  addContact = (contact) => {
+  addContact = contact => {
     const contactList = this.state.contactList;
     contactList.push(contact);
     this.configChangeHandler(contactList, "contactList");
   };
 
   renderCheckboxField = (name: string) => {
-    const { t , readOnly} = this.props;
+    const { t, readOnly } = this.props;
     return (
       <Checkbox
         label={t("scm-notify-plugin.form." + name)}
@@ -67,7 +71,7 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
   };
 
   render() {
-    const { t , readOnly} = this.props;
+    const { t, readOnly } = this.props;
     const fields = [
       "sendToRepositoryContact",
       "useAuthorAsFromAddress",
@@ -80,17 +84,20 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
       <>
         <MemberNameTagGroup
           members={this.state.contactList}
-          memberListChanged={(contactList) => {
-            this.setState({contactList},
-              () =>
-                this.props.onConfigurationChange({ ...this.state }, this.isValid()));
+          memberListChanged={contactList => {
+            this.setState({ contactList }, () =>
+              this.props.onConfigurationChange(
+                { ...this.state },
+                this.isValid()
+              )
+            );
           }}
           label={t("scm-notify-plugin.form.contactList")}
           helpText={t("scm-notify-plugin.formHelpText.contactList")}
         />
         <AddEntryToTableField
           addEntry={this.addContact}
-          disabled={readOnly }
+          disabled={readOnly}
           validateEntry={validator.isMailValid}
           buttonLabel={t("scm-notify-plugin.form.contactListAdd")}
           errorMessage={t("scm-notify-plugin.form.error.contactList")}
@@ -99,7 +106,7 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
         {fields}
         <InputField
           name="maxDiffLines"
-          label={t("scm-notify-plugin.form.maxDiffLines" )}
+          label={t("scm-notify-plugin.form.maxDiffLines")}
           disabled={readOnly}
           value={this.state.maxDiffLines}
           helpText={t("scm-notify-plugin.formHelpText.maxDiffLines")}
