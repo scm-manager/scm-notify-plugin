@@ -2,7 +2,7 @@
 import React from "react";
 import { translate } from "react-i18next";
 import type {NotifyConfigurations} from "./NotifyConfigurations";
-import { AddEntryToTableField, Checkbox, InputField, LabelWithHelpIcon , MemberNameTable  } from "@scm-manager/ui-components";
+import { AddEntryToTableField, Checkbox, InputField, LabelWithHelpIcon , MemberNameTagGroup  } from "@scm-manager/ui-components";
 import * as validator from "@scm-manager/ui-components/src/validation";
 
 type Props = {
@@ -82,7 +82,7 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
           label={t("scm-notify-plugin.form.contactList")}
           helpText={t("scm-notify-plugin.formHelpText.contactList")}
         />
-        <MemberNameTable
+        <MemberNameTagGroup
           members={this.state.contactList}
           memberListChanged={(contactList) => {
             this.setState({contactList},
@@ -100,7 +100,7 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
 
         {fields}
         <InputField
-          name={"maxDiffLines"}
+          name="maxDiffLines"
           label={t("scm-notify-plugin.form.maxDiffLines" )}
           disabled={readOnly}
           value={this.state.maxDiffLines}
