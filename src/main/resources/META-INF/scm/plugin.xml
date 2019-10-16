@@ -43,4 +43,7 @@
     <category>Workflow</category>
   </information>
 
+  <resources>
+    <script>assets/scm-notify-plugin.bundle.js</script>
+  </resources>
 </plugin>
