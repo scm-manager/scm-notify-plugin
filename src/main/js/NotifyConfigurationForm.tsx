@@ -1,7 +1,6 @@
-//@flow
 import React from "react";
-import { translate } from "react-i18next";
-import type { NotifyConfigurations } from "./NotifyConfigurations";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { NotifyConfigurations } from "./NotifyConfigurations";
 import {
   validation as validator,
   AddEntryToTableField,
@@ -10,13 +9,10 @@ import {
   MemberNameTagGroup
 } from "@scm-manager/ui-components";
 
-type Props = {
-  initialConfiguration: NotifyConfigurations,
-  readOnly: boolean,
-  onConfigurationChange: (NotifyConfigurations, boolean) => void,
-
-  // context prop
-  t: string => string
+type Props = WithTranslation & {
+  initialConfiguration: NotifyConfigurations;
+  readOnly: boolean;
+  onConfigurationChange: (p1: NotifyConfigurations, p2: boolean) => void;
 };
 
 type State = NotifyConfigurations & {};
@@ -24,7 +20,9 @@ type State = NotifyConfigurations & {};
 class NotifyConfigurationForm extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { ...props.initialConfiguration };
+    this.state = {
+      ...props.initialConfiguration
+    };
   }
 
   isValid() {
@@ -46,7 +44,13 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
       {
         [name]: value
       },
-      () => this.props.onConfigurationChange({ ...this.state }, this.isValid())
+      () =>
+        this.props.onConfigurationChange(
+          {
+            ...this.state
+          },
+          this.isValid()
+        )
     );
   };
 
@@ -72,11 +76,7 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
 
   render() {
     const { t, readOnly } = this.props;
-    const fields = [
-      "sendToRepositoryContact",
-      "useAuthorAsFromAddress",
-      "emailPerPush"
-    ].map(name => {
+    const fields = ["sendToRepositoryContact", "useAuthorAsFromAddress", "emailPerPush"].map(name => {
       return this.renderCheckboxField(name);
     });
 
@@ -85,11 +85,17 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
         <MemberNameTagGroup
           members={this.state.contactList}
           memberListChanged={contactList => {
-            this.setState({ contactList }, () =>
-              this.props.onConfigurationChange(
-                { ...this.state },
-                this.isValid()
-              )
+            this.setState(
+              {
+                contactList
+              },
+              () =>
+                this.props.onConfigurationChange(
+                  {
+                    ...this.state
+                  },
+                  this.isValid()
+                )
             );
           }}
           label={t("scm-notify-plugin.form.contactList")}
@@ -119,4 +125,4 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
   }
 }
 
-export default translate("plugins")(NotifyConfigurationForm);
+export default withTranslation("plugins")(NotifyConfigurationForm);
