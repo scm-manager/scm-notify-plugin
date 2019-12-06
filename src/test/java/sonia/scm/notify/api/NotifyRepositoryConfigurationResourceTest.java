@@ -1,8 +1,6 @@
 package sonia.scm.notify.api;
 
 import com.google.common.collect.Lists;
-import org.jboss.resteasy.core.Dispatcher;
-import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.notify.service.NotifyRepositoryConfigurationService;
+import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
@@ -47,15 +46,15 @@ public class NotifyRepositoryConfigurationResourceTest {
 
   private NotifyRepositoryConfigurationMapper mapper = new NotifyRepositoryConfigurationMapperImpl();
 
-  private Dispatcher dispatcher;
+  private RestDispatcher dispatcher;
   private final MockHttpResponse response = new MockHttpResponse();
 
 
   @BeforeEach
   public void init() {
     resource = new NotifyRepositoryConfigurationResource(service, mapper);
-    dispatcher = MockDispatcherFactory.createDispatcher();
-    dispatcher.getRegistry().addSingletonResource(resource);
+    dispatcher = new RestDispatcher();
+    dispatcher.addSingletonResource(resource);
   }
 
   @Test
