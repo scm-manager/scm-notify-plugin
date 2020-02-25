@@ -18,6 +18,21 @@
     <mustache.version>0.8.17</mustache.version>
   </properties>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.openapitools.swagger</groupId>
+        <artifactId>swagger-maven-plugin</artifactId>
+        <configuration>
+          <resourcePackages>
+            <resourcePackage>sonia.scm.notify</resourcePackage>
+            <resourcePackage>sonia.scm.notify.api</resourcePackage>
+          </resourcePackages>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
