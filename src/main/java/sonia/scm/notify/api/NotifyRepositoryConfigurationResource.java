@@ -41,7 +41,12 @@ public class NotifyRepositoryConfigurationResource {
   @GET
   @Path("/{namespace}/{name}")
   @Produces(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Get notify configuration", description = "Returns the notify configuration.", tags = "Notify Plugin")
+  @Operation(
+    summary = "Get notify configuration",
+    description = "Returns the notify configuration.",
+    tags = "Notify Plugin",
+    operationId = "notify_get_config"
+  )
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -68,7 +73,12 @@ public class NotifyRepositoryConfigurationResource {
   @PUT
   @Path("/{namespace}/{name}")
   @Consumes(MediaType.APPLICATION_JSON)
-  @Operation(summary = "Update notify configuration", description = "Modifies the notify configuration.", tags = "Notify Plugin")
+  @Operation(
+    summary = "Update notify configuration",
+    description = "Modifies the notify configuration.",
+    tags = "Notify Plugin",
+    operationId = "notify_put_config"
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the \"authormapping\" privilege")

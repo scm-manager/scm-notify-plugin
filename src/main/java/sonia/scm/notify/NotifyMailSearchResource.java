@@ -95,7 +95,12 @@ public class NotifyMailSearchResource {
    */
   @GET
   @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-  @Operation(summary = "Get mail search results", description = "Returns the mail search results.", tags = "Notify Plugin")
+  @Operation(
+    summary = "Get mail search results",
+    description = "Returns the mail search results.",
+    tags = "Notify Plugin",
+    operationId = "notify_get_search_result"
+  )
   @ApiResponse(
     responseCode = "200",
     description = "success",
