@@ -38,6 +38,7 @@ import sonia.scm.version.Version;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import static sonia.scm.update.V1PropertyReader.REPOSITORY_PROPERTY_READER;
 import static sonia.scm.version.Version.parse;
@@ -86,7 +87,7 @@ public class NotifyV2RepositoryConfigMigrationUpdateStep implements UpdateStep {
     NotifyRepositoryConfiguration v2NotifyRepositoryConfiguration = new NotifyRepositoryConfiguration();
     v2NotifyRepositoryConfiguration.setContactList(contactList);
     v2NotifyRepositoryConfiguration.setEmailPerPush(Boolean.parseBoolean(properties.get(NOTIFY_EMAIL_PER_PUSH)));
-    v2NotifyRepositoryConfiguration.setMaxDiffLines(Integer.parseInt(properties.get(NOTIFY_MAX_DIFF_LINES)));
+    v2NotifyRepositoryConfiguration.setMaxDiffLines(safeParseInt(properties.get(NOTIFY_MAX_DIFF_LINES)));
     v2NotifyRepositoryConfiguration.setSendToRepositoryContact(Boolean.parseBoolean(properties.get(NOTIFY_REPOSITORY_CONTACT)));
     v2NotifyRepositoryConfiguration.setUseAuthorAsFromAddress(Boolean.parseBoolean(properties.get(NOTIFY_USE_AUTHOR)));
 
@@ -95,6 +96,18 @@ public class NotifyV2RepositoryConfigMigrationUpdateStep implements UpdateStep {
 
   private ConfigurationStore<NotifyRepositoryConfiguration> createConfigStore(String repositoryId) {
     return storeFactory.withType(NotifyRepositoryConfiguration.class).withName(STORE_NAME).forRepository(repositoryId).build();
+  }
+
+  private <T> T safeParse(String str, T fallback, Function<String, T> parser) {
+    if (str == null || str.trim().equals("")) {
+      return fallback;
+    } else {
+      return parser.apply(str);
+    }
+  }
+
+  private int safeParseInt(String str) {
+    return safeParse(str, 0, Integer::parseInt);
   }
 
   @Override

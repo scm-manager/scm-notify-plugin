@@ -75,6 +75,30 @@ public class NotifyV2RepositoryConfigMigrationUpdateStepTest {
   }
 
   @Test
+  public void shouldMigratingForRepositoryIfMaxDiffLinesAreAnEmptyString() {
+    ImmutableMap<String, String> mockedValues =
+      ImmutableMap.of(
+        "notify.contact.repository","true",
+        "notify.max.diff.lines", "",
+        "notify.contact.list", "dritte@email.de;echo@off.de;abc@def.de;",
+        "notify.email.per.push", "true",
+        "notify.use.author.as.from.address", "false"
+      );
+
+    testUtil.mockRepositoryProperties(new V1PropertyDaoTestUtil.PropertiesForRepository(REPO_NAME, mockedValues));
+
+    updateStep.doUpdate();
+
+    assertThat(getConfigStore().get().getMaxDiffLines()).isEqualTo(0);
+    assertThat(getConfigStore().get().isEmailPerPush()).isTrue();
+    assertThat(getConfigStore().get().isSendToRepositoryContact()).isTrue();
+    assertThat(getConfigStore().get().isUseAuthorAsFromAddress()).isFalse();
+    assertThat(getConfigStore().get().getContactList()).contains("abc@def.de");
+    assertThat(getConfigStore().get().getContactList()).contains("echo@off.de");
+    assertThat(getConfigStore().get().getContactList().size()).isEqualTo(3);
+  }
+
+  @Test
   public void shouldSkipRepositoriesIfPermissionsAreEmpty() {
     ImmutableMap<String, String> mockedValues =
       ImmutableMap.of(
