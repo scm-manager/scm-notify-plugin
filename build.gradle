@@ -28,7 +28,6 @@ plugins {
 }
 
 dependencies {
-  implementation "com.github.spullara.mustache.java:compiler:${mustacheVersion}"
   plugin "sonia.scm.plugins:scm-mail-plugin:2.0.0"
 }
 
