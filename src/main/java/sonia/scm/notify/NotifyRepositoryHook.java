@@ -95,7 +95,7 @@ public class NotifyRepositoryHook {
   private void handleEvent(Repository repository, Iterable<Changeset> changesets) {
     logger.trace("handle notify event for repository {}", repository.getName());
 
-    NotifyRepositoryConfiguration repositoryConfiguration = configurationService.getNotifyConfiguration(repository.getNamespace(), repository.getName());
+    NotifyRepositoryConfiguration repositoryConfiguration = configurationService.getNotifyConfigurationWithoutPermissionCheck(repository);
 
     if (repositoryConfiguration.isEnabled()) {
       logger.trace("send notification for repository {}", repository.getName());

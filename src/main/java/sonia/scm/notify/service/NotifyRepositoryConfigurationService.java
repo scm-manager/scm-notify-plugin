@@ -74,10 +74,10 @@ public class NotifyRepositoryConfigurationService {
   public NotifyRepositoryConfiguration getNotifyConfiguration(String namespace, String name) {
     Repository repository = getRepository(namespace, name);
     checkPermission(repository);
-    return getNotifyConfiguration(repository);
+    return getNotifyConfigurationWithoutPermissionCheck(repository);
   }
 
-  private NotifyRepositoryConfiguration getNotifyConfiguration(Repository repository) {
+  public NotifyRepositoryConfiguration getNotifyConfigurationWithoutPermissionCheck(Repository repository) {
     ConfigurationStore<NotifyRepositoryConfiguration> store = getStore(repository);
     NotifyRepositoryConfiguration configuration = store.get();
     if (configuration == null) {
