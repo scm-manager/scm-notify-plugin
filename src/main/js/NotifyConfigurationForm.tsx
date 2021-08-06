@@ -49,11 +49,7 @@ class NotifyConfigurationForm extends React.Component<Props, State> {
   }
 
   isValid() {
-    const { sendToRepositoryContact, contactList } = this.state;
-    // the configurations are valid if there is at minimum one receiver
-    if (contactList.length === 0 && !sendToRepositoryContact) {
-      return false;
-    }
+    const { contactList } = this.state;
     let valid = true;
     contactList.map(contact => {
       valid = valid && validator.isMailValid(contact);
