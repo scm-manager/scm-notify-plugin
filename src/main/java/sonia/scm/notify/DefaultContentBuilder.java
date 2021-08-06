@@ -24,8 +24,6 @@
 
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import sonia.scm.config.ScmConfiguration;
@@ -38,65 +36,31 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-//~--- JDK imports ------------------------------------------------------------
+public class DefaultContentBuilder extends AbstractContentBuilder {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class DefaultContentBuilder extends AbstractContentBuilder
-{
+  private static final String TYPE_SVN = "svn";
 
-   /** Field description */
-  private static final String TPYE_SVN = "svn";
+  private final RepositoryServiceFactory repositoryServiceFactory;
+  private final ScmConfiguration configuration;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param configuration
-   * @param repositoryServiceFactory
-   */
   @Inject
   public DefaultContentBuilder(
     ScmConfiguration configuration,
-    RepositoryServiceFactory repositoryServiceFactory)
-  {
+    RepositoryServiceFactory repositoryServiceFactory) {
     this.configuration = configuration;
     this.repositoryServiceFactory = repositoryServiceFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @param configuration
-   * @param changesets
-   *  @return
-   *
-   * @throws IOException
-   */
   @Override
-  public Object createModel(Repository repository,
-                               NotifyRepositoryConfiguration configuration, Changeset... changesets)
-    throws IOException
-  {
+  public Object createModel(Repository repository, NotifyRepositoryConfiguration configuration, Changeset... changesets) throws IOException {
     List<BranchTemplateWrapper> branches;
 
-    try(ChangesetTemplateWrapperHelper helper = new ChangesetTemplateWrapperHelper(this.configuration,repositoryServiceFactory, configuration, repository))
-    {
+    try (ChangesetTemplateWrapperHelper helper =
+           new ChangesetTemplateWrapperHelper(this.configuration, repositoryServiceFactory, configuration, repository)) {
       branches = helper.wrapAndSortByBranch(changesets);
     }
 
     Map<String, Object> env = Maps.newHashMap();
-
     env.put("title", createSubject(repository, changesets));
     env.put("repository", repository);
     env.put("branches", branches);
@@ -105,28 +69,7 @@ public class DefaultContentBuilder extends AbstractContentBuilder
     return env;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private boolean isNamedBranchesSupported(Repository repository)
-  {
-
-    return !TPYE_SVN.equalsIgnoreCase(repository.getType());
+  private boolean isNamedBranchesSupported(Repository repository) {
+    return !TYPE_SVN.equalsIgnoreCase(repository.getType());
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final RepositoryServiceFactory repositoryServiceFactory;
-
-  /** Field description */
-  private ScmConfiguration configuration;
-
 }
