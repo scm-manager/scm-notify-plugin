@@ -76,4 +76,20 @@ class DefaultContentBuilderTest {
 
     assertThat(subject).isEqualTo("[happyVerticalPeopleTransporter][feature/top_secret_most_important_database_integration...");
   }
+
+  @Test
+  void shouldCreateSubjectWithSingleBranchHittingTheLimit() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+
+    Changeset ch1 = new Changeset("0", 0L, Person.toPerson("trillian"));
+    ch1.setBranches(ImmutableList.of("feature/with_really_long_i_mean_gigantic_long_feature_eh_i_mean_branch_name_dot_yes_it_is_very_long_v2"));
+
+    String subject = builder.createSubject(
+      repository,
+      ch1
+    );
+
+    assertThat(subject).isEqualTo("[HeartOfGold][feature/with_really_long_i_mean_gigantic_long_feature_eh_i_mean_branch_name_dot_yes...");
+  }
+
 }

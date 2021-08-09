@@ -68,7 +68,9 @@ public abstract class AbstractContentBuilder implements ContentBuilder {
     String result = MessageFormat.format(PATTERN_SUBJECT,
       repository.getName(),
       branchString.toString(),
-      idString.toString());
+      idString.toString()
+    );
+
     if (result.length() > MAX_SUBJECT_LENGTH) {
       logger.trace("notification subject exceeded maximum length");
       // Exceeded the max length, find the last ID separator before that length.
@@ -77,7 +79,7 @@ public abstract class AbstractContentBuilder implements ContentBuilder {
       if (lastSep != -1) {
         result = result.substring(0, lastSep) + "...";
       } else {
-        result = result.substring(0, MAX_BRANCHES_IN_SUBJECT - 3) + "...";
+        result = result.substring(0, MAX_SUBJECT_LENGTH - 3) + "...";
       }
     }
 
