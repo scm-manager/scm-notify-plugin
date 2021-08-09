@@ -34,13 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
-/**
- *
- * @author Sebastian Sdorra
- */
-public abstract class AbstractContentBuilder implements ContentBuilder
-{
+public abstract class AbstractContentBuilder implements ContentBuilder {
 
   /**
    * [repository][branches...] changeset IDs...
@@ -55,26 +49,12 @@ public abstract class AbstractContentBuilder implements ContentBuilder
 
   private static final char SEP = ',';
 
-  //~--- methods --------------------------------------------------------------
+  private static final Logger logger = LoggerFactory.getLogger(AbstractContentBuilder.class);
 
-  /**
-   * the logger for AbstractContentBuilder
-   */
-  private static final Logger logger = LoggerFactory.getLogger(
-    AbstractContentBuilder.class);
-  
-  /**
-   * Method description
-   *
-   * @param repository
-   * @param changesets
-   * @return
-   */
   @Override
-  public String createSubject(Repository repository, Changeset... changesets)
-  {
+  public String createSubject(Repository repository, Changeset... changesets) {
     final StringBuilder branchString = new StringBuilder();
-    final Set<String> branches = new HashSet<String>();
+    final Set<String> branches = new HashSet<>();
 
     final StringBuilder idString = new StringBuilder();
 
@@ -86,15 +66,21 @@ public abstract class AbstractContentBuilder implements ContentBuilder
     }
 
     String result = MessageFormat.format(PATTERN_SUBJECT,
-        repository.getName(),
-        branchString.toString(),
-        idString.toString());
+      repository.getName(),
+      branchString.toString(),
+      idString.toString()
+    );
+
     if (result.length() > MAX_SUBJECT_LENGTH) {
       logger.trace("notification subject exceeded maximum length");
       // Exceeded the max length, find the last ID separator before that length.
       int lastSep = result.lastIndexOf(SEP, MAX_SUBJECT_LENGTH - 3);
       // Chop & elide the rest of the subject
-      result = result.substring(0, lastSep) + "...";
+      if (lastSep != -1) {
+        result = result.substring(0, lastSep) + "...";
+      } else {
+        result = result.substring(0, MAX_SUBJECT_LENGTH - 3) + "...";
+      }
     }
 
     // Will look something like:
@@ -107,8 +93,10 @@ public abstract class AbstractContentBuilder implements ContentBuilder
 
 
   private void updateChangesetIdString(StringBuilder idString, Changeset c) {
-    if (idString.length() > 0) { idString.append(SEP); }
-    idString.append( shortenId(c.getId()) );
+    if (idString.length() > 0) {
+      idString.append(SEP);
+    }
+    idString.append(shortenId(c.getId()));
     if (isMerge(c)) {
       logger.trace("mark changeset {} as merge", c.getId());
       idString.append(" (merge)");
@@ -116,26 +104,25 @@ public abstract class AbstractContentBuilder implements ContentBuilder
   }
 
 
-  private boolean updateBranchString(StringBuilder branchString, Changeset c, boolean branchesElided,
-      Set<String> branches) {
-
+  private boolean updateBranchString(StringBuilder branchString, Changeset c, boolean branchesElided, Set<String> branches) {
     List<String> cBranches = c.getBranches();
     if (cBranches.isEmpty()) {
       logger.trace("empty list of branches. Mercurial default branch?");
-      cBranches.add( getDefaultBranchName() ); // No branch?  That means "default"
+      cBranches.add(getDefaultBranchName()); // No branch?  That means "default"
     }
 
     // Iterate through each branch in the changeset.
     for (String branch : cBranches) {
-      if (branches.add( branch )) {
+      if (branches.add(branch)) {
         // We haven't seen this one before, so add it to the String.
 
         if (branches.size() <= MAX_BRANCHES_IN_SUBJECT) {
           // Still within the maximum, add it (conditionally a separator)
-          if (branchString.length() > 0) { branchString.append(SEP); }
+          if (branchString.length() > 0) {
+            branchString.append(SEP);
+          }
           branchString.append(branch);
-        }
-        else if (!branchesElided) {
+        } else if (!branchesElided) {
           // Oops, over the maximum.  Add some indicator ...
           logger.trace("exceeded maximum branch length");
           branchString.append("...");
@@ -148,14 +135,14 @@ public abstract class AbstractContentBuilder implements ContentBuilder
   }
 
 
-  public static boolean isMerge(Changeset changeset){
+  public static boolean isMerge(Changeset changeset) {
     return changeset.getParents().size() > 1;
   }
 
 
   public static String shortenId(String id) {
     if (id.length() > 8) {
-      id = id.substring(0,8);
+      id = id.substring(0, 8);
     }
     return id;
   }
