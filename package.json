@@ -1,7 +1,7 @@
 {
     "name": "@scm-manager/scm-notify-plugin",
     "private": true,
-    "version": "2.0.3",
+    "version": "2.0.4-SNAPSHOT",
     "license": "MIT",
     "main": "./src/main/js/index.ts",
     "scripts": {
