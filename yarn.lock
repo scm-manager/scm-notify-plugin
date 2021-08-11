@@ -1659,10 +1659,10 @@
     jest-junit "^12.0.0"
     regenerator-runtime "^0.13.7"
 
-"@scm-manager/plugin-scripts@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/plugin-scripts/-/plugin-scripts-1.0.1.tgz#82c1be5bcec027d1eb994c4277c0e7e71f9cfdf5"
-  integrity sha512-4SujC2iCSZZMBQXoA8bkUiOlWVxqpI+n+za/s5MUnxoQBU0bdpC0ny/OE+TSWZl0WNQNQvXNPsgd93EN2DVQ2g==
+"@scm-manager/plugin-scripts@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/plugin-scripts/-/plugin-scripts-1.1.0.tgz#177373361579d0dd37cff40780951f73e32ac687"
+  integrity sha512-oIS088kF6X4V7k3kQ0wJ8AWbt1kIrul5OAMRrCNrEpYDkPBYey6s7jW6V1sj2R5Hj/y2+PaEXlc9P0SLFB5+Og==
   dependencies:
     babel-loader "^8.0.6"
     css-loader "^3.2.0"
@@ -8918,9 +8918,9 @@ path-key@^3.0.0, path-key@^3.1.0:
   integrity sha512-ojmeN0qd+y0jszEtoY48r0Peq5dwMEkIlCOu6Q5f41lfkswXuKtYrhgoTpLnyIcHm24Uhqx+5Tqm2InSwLhE6Q==
 
 path-parse@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.6.tgz#d62dbb5679405d72c4737ec58600e9ddcf06d24c"
-  integrity sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
+  integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
 path-to-regexp@0.1.7:
   version "0.1.7"
