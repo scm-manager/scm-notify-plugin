@@ -1659,10 +1659,10 @@
     jest-junit "^12.0.0"
     regenerator-runtime "^0.13.7"
 
-"@scm-manager/plugin-scripts@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/plugin-scripts/-/plugin-scripts-1.0.1.tgz#82c1be5bcec027d1eb994c4277c0e7e71f9cfdf5"
-  integrity sha512-4SujC2iCSZZMBQXoA8bkUiOlWVxqpI+n+za/s5MUnxoQBU0bdpC0ny/OE+TSWZl0WNQNQvXNPsgd93EN2DVQ2g==
+"@scm-manager/plugin-scripts@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/plugin-scripts/-/plugin-scripts-1.1.0.tgz#177373361579d0dd37cff40780951f73e32ac687"
+  integrity sha512-oIS088kF6X4V7k3kQ0wJ8AWbt1kIrul5OAMRrCNrEpYDkPBYey6s7jW6V1sj2R5Hj/y2+PaEXlc9P0SLFB5+Og==
   dependencies:
     babel-loader "^8.0.6"
     css-loader "^3.2.0"
@@ -11349,9 +11349,9 @@ tmp@^0.0.33:
     os-tmpdir "~1.0.2"
 
 tmpl@1.0.x:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.4.tgz#23640dd7b42d00433911140820e5cf440e521dd1"
-  integrity sha1-I2QN17QtAEM5ERQIIOXPRA5SHdE=
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
+  integrity sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==
 
 to-arraybuffer@^1.0.0:
   version "1.0.1"
