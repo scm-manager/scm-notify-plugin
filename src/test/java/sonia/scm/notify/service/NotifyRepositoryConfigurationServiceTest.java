@@ -52,7 +52,7 @@ public class NotifyRepositoryConfigurationServiceTest {
   ConfigurationStoreFactory storeFactory;
 
   NotifyRepositoryConfigurationService service;
-  public static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
+  public static final Repository REPOSITORY = new Repository("id-1", "git", "scm", "hog");
 
   @Before
   public void init() {

@@ -37,11 +37,13 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
+import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -55,40 +57,26 @@ import java.util.List;
 public class ChangesetTemplateWrapperHelper implements Closeable
 {
 
-  /**
-   * Field description
-   */
   private static final String LINE_SEPARATOR =
       System.getProperty("line.separator");
 
-  /**
-   * Field description
-   */
   private static final String MSG_REACHEDDIFFLIMIT =
       " ** Diff limit reached (max: %d lines) **";
 
-  /**
-   * the logger for ChangesetTemplateWrapperHelper
-   */
   private static final Logger logger =
       LoggerFactory.getLogger(ChangesetTemplateWrapperHelper.class);
   public static final String SCM_CHANGESET_URL_PATTERN = "{0}/repo/{1}/{2}/changeset/{3}";
+
+  private int diffLineCount = 0;
+  private int maxDiffLines;
+  private String reachedDiffLimitMessage;
+  private Repository repository;
+  private final RepositoryService repositoryService;
   private final String baseUrl;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   * @param configuration
-   * @param repositoryServiceFactory
-   * @param notifyConfiguration
-   * @param repository
-   */
   public ChangesetTemplateWrapperHelper(ScmConfiguration configuration,
                                         RepositoryServiceFactory repositoryServiceFactory,
-                                        NotifyRepositoryConfiguration notifyConfiguration, Repository repository)
-  {
+                                        NotifyRepositoryConfiguration notifyConfiguration, Repository repository) {
 
     baseUrl = configuration.getBaseUrl();
 
@@ -99,25 +87,12 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     reachedDiffLimitMessage = String.format(MSG_REACHEDDIFFLIMIT, maxDiffLines);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @throws IOException
-   */
   @Override
   public void close() throws IOException
   {
     Closeables.close(repositoryService, false);
   }
 
-  /**
-   * Method description
-   *
-   * @param changesets
-   * @return
-   */
   public List<BranchTemplateWrapper> wrapAndSortByBranch(Changeset[] changesets)
   {
     Builder<BranchTemplateWrapper> builder = ImmutableList.builder();
@@ -156,23 +131,11 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     return builder.build();
   }
 
-  /**
-   * Method description
-   *
-   * @return
-   */
   private boolean appendDiffLines()
   {
     return (maxDiffLines == -1) || (diffLineCount < maxDiffLines);
   }
 
-
-  /**
-   * Method description
-   *
-   * @param changeset
-   * @return
-   */
   private String createDiff(Changeset changeset)
   {
     String diff = null;
@@ -207,24 +170,11 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     return diff;
   }
 
-  /**
-   * Method description
-   *
-   * @param repository
-   * @param changeset
-   * @return
-   */
   private String createLink(Repository repository, Changeset changeset)
   {
     return MessageFormat.format(SCM_CHANGESET_URL_PATTERN, baseUrl, repository.getNamespace(), repository.getName(), changeset.getId());
   }
 
-  /**
-   * Method description
-   *
-   * @param changesets
-   * @return
-   */
   private List<ChangesetTemplateWrapper> wrap(Changeset[] changesets)
   {
     List<ChangesetTemplateWrapper> wrapperList = Lists.newArrayList();
@@ -236,45 +186,42 @@ public class ChangesetTemplateWrapperHelper implements Closeable
     return wrapperList;
   }
 
-  /**
-   * Method description
-   *
-   * @param changeset
-   * @return
-   */
   private ChangesetTemplateWrapper wrap(Changeset changeset)
   {
+    Modifications modifications = createModifications(changeset);
     String link = createLink(repository, changeset);
-    String diff = null;
-
-    if (appendDiffLines()) {
-      diff = createDiff(changeset);
-    } else if (maxDiffLines != 0) {
-      diff = reachedDiffLimitMessage;
-    }
-
-    return new ChangesetTemplateWrapper(repositoryService, changeset, link, diff);
+    String diff = createDiffOrMessage(changeset);
+    return new ChangesetTemplateWrapper(changeset, link, diff, modifications);
   }
 
-  //~--- inner classes --------------------------------------------------------
+  @Nullable
+  private String createDiffOrMessage(Changeset changeset) {
+    if (appendDiffLines()) {
+      return createDiff(changeset);
+    } else if (maxDiffLines != 0) {
+      return reachedDiffLimitMessage;
+    } else {
+      return null;
+    }
+  }
 
-  /**
-   * Class description
-   *
-   * @author Enter your name here...
-   * @version Enter version here..., 13/08/02
-   */
+  @Nullable
+  private Modifications createModifications(Changeset changeset) {
+    Modifications modifications;
+    try {
+      modifications = repositoryService.getModificationsCommand()
+        .revision(changeset.getId())
+        .getModifications();
+    } catch (IOException e) {
+      modifications = null;
+    }
+    return modifications;
+  }
+
   private static class ChangesetTemplateWrapperOrder
       extends Ordering<ChangesetTemplateWrapper>
   {
 
-    /**
-     * Method description
-     *
-     * @param left
-     * @param right
-     * @return
-     */
     @Override
     public int compare(ChangesetTemplateWrapper left,
                        ChangesetTemplateWrapper right)
@@ -288,23 +235,4 @@ public class ChangesetTemplateWrapperHelper implements Closeable
       //J+
     }
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private int diffLineCount = 0;
-
-  /** Field description */
-  private int maxDiffLines;
-
-  /** Field description */
-  private String reachedDiffLimitMessage;
-
-  /** Field description */
-  private Repository repository;
-
-  /** Field description */
-  private final RepositoryService repositoryService;
-
 }
