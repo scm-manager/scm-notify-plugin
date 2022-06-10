@@ -28,9 +28,7 @@ package sonia.scm.notify;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.api.RepositoryService;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -43,31 +41,30 @@ import java.util.Map;
 public class ChangesetTemplateWrapper
 {
 
-  private final RepositoryService service;
+  private final Modifications modifications;
 
   /**
    * Constructs ...
    *
-   *
    * @param changeset
    * @param link
    */
-  public ChangesetTemplateWrapper(RepositoryService service, Changeset changeset, String link)
+  public ChangesetTemplateWrapper(Changeset changeset, String link)
   {
-    this(service, changeset, link, null);
+    this(changeset, link, null, null);
   }
 
   /**
    * Constructs ...
    *
-   *
    * @param changeset
    * @param link
    * @param diff
+   * @param modifications
    */
-  public ChangesetTemplateWrapper(RepositoryService service, Changeset changeset, String link, String diff)
+  public ChangesetTemplateWrapper(Changeset changeset, String link, String diff, Modifications modifications)
   {
-    this.service = service;
+    this.modifications = modifications;
     this.changeset = changeset;
     this.link = link;
     this.diff = diff;
@@ -196,13 +193,7 @@ public class ChangesetTemplateWrapper
    */
   public Modifications getModifications()
   {
-    try {
-      return service.getModificationsCommand()
-        .revision(changeset.getId())
-        .getModifications();
-    } catch (IOException e) {
-      return null;
-    }
+    return modifications;
   }
 
   /**
