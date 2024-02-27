@@ -34,8 +34,8 @@ import sonia.scm.notify.service.NotifyRepositoryConfigurationService;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 
 @Extension
 @Enrich(Repository.class)

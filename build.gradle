@@ -23,15 +23,15 @@
  */
 
 plugins {
-  id 'org.scm-manager.smp' version '0.11.1'
+  id 'org.scm-manager.smp' version '0.16.3'
 }
 
 dependencies {
-  plugin "sonia.scm.plugins:scm-mail-plugin:2.0.0"
+  plugin "sonia.scm.plugins:scm-mail-plugin:2.10.2-SNAPSHOT"
 }
 
 scmPlugin {
-  scmVersion = "2.0.0"
+  scmVersion = "3.0.0"
   displayName = "Notify"
   description = "Sends email notifications to a list of subscribed addresses whenever a repo has changes"
   author = "Cloudogu GmbH"

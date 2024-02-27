@@ -34,8 +34,8 @@ import sonia.scm.api.v2.resources.LinkBuilder;
 import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.NamespaceAndName;
 
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.UriInfo;
 
 import static de.otto.edison.hal.Link.link;
 

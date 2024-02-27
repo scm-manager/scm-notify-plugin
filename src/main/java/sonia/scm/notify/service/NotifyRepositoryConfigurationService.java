@@ -31,7 +31,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Store the notify repository configurations in the repository store.

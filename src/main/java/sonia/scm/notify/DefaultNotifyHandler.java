@@ -23,13 +23,7 @@
  */
 package sonia.scm.notify;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.codemonkey.simplejavamail.Email;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.mail.api.MailSendBatchException;
@@ -38,18 +32,11 @@ import sonia.scm.mail.api.MailTemplateType;
 import sonia.scm.notify.service.NotifyRepositoryConfiguration;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
-import sonia.scm.security.Role;
-import sonia.scm.user.User;
 import sonia.scm.util.Util;
 
-import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
