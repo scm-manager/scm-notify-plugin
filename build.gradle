@@ -27,7 +27,7 @@ plugins {
 }
 
 dependencies {
-  plugin "sonia.scm.plugins:scm-mail-plugin:2.10.2-SNAPSHOT"
+  plugin "sonia.scm.plugins:scm-mail-plugin:3.0.0"
 }
 
 scmPlugin {
