@@ -15,27 +15,25 @@
  */
 
 import React from "react";
-import { Configuration, Subtitle } from "@scm-manager/ui-components";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { Configuration } from "@scm-manager/ui-components";
+import { Subtitle, useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import NotifyConfigurationForm from "./NotifyConfigurationForm";
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   link: string;
 };
 
-class NotifyConfigurationContainer extends React.Component<Props> {
-  render() {
-    const { t, link } = this.props;
-    return (
-      <>
-        <Subtitle subtitle={t("scm-notify-plugin.form.header")} />
-        <br />
-        <Configuration link={link} render={props => <NotifyConfigurationForm {...props} />} />
-      </>
-    );
-  }
+export default function NotifyConfigurationContainerFC({ repository, link }: Readonly<Props>) {
+  const [t] = useTranslation("plugins");
+  useDocumentTitleForRepository(repository, t("scm-notify-plugin.form.header"));
+  return (
+    <>
+      <Subtitle subtitle={t("scm-notify-plugin.form.header")} />
+      <br />
+      <Configuration link={link} render={(props) => <NotifyConfigurationForm {...props} t={t} />} />
+    </>
+  );
 }
-
-export default withTranslation("plugins")(NotifyConfigurationContainer);

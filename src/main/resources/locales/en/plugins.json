@@ -24,7 +24,7 @@
         "contactList" : "The email is not valid",
         "maxDiffLines" : "Please enter a number format"
       },
-      "header": "Edit email Notification configurations",
+      "header": "Edit Email Notification Configuration",
       "contactList" : "Emails",
       "contactListAdd" : "Add Email",
       "sendToRepositoryContact" :  "Send to Repository Contact",

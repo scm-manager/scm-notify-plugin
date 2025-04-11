@@ -3,8 +3,8 @@
     "repository": {
       "notify": {
         "*": {
-          "displayName": "E-Mail Benachrichtigungen ändern",
-          "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
+          "displayName": "E-Mail-Benachrichtigungen ändern",
+          "description": "Erlaubt die Konfiguration der E-Mail-Benachrichtigungen"
         }
       }
     }
@@ -12,16 +12,16 @@
   "verbs" : {
     "repository": {
       "notify": {
-        "displayName": "E-Mail Benachrichtigungen ändern",
-        "description": "Erlaubt die Konfiguration der E-Mail Benachrichtigungen"
+        "displayName": "E-Mail-Benachrichtigungen ändern",
+        "description": "Erlaubt die Konfiguration der E-Mail-Benachrichtigungen"
       }
     }
   },
   "scm-notify-plugin": {
-    "navLink": "E-Mail Benachrichtigungen",
+    "navLink": "E-Mail-Benachrichtigungen",
     "form": {
       "error": {
-        "contactList" : "Die E-Mail Adresse ist ungültig",
+        "contactList" : "Die E-Mail-Adresse ist ungültig",
         "maxDiffLines" : "Bitte geben Sie eine Zahl ein."
       },
       "header": "E-Mail-Benachrichtigungen konfigurieren",
