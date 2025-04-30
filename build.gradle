@@ -23,7 +23,7 @@ dependencies {
 }
 
 scmPlugin {
-  scmVersion = "3.7.0"
+  scmVersion = "3.8.1-SNAPSHOT"
   displayName = "Notify"
   description = "Sends email notifications to a list of subscribed addresses whenever a repo has changes"
   author = "Cloudogu GmbH"

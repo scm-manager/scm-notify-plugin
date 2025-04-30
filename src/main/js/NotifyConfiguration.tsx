@@ -14,26 +14,26 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-import React from "react";
+import React, { FC } from "react";
 import { Configuration } from "@scm-manager/ui-components";
-import { Subtitle, useDocumentTitleForRepository } from "@scm-manager/ui-core";
+import { Subtitle } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
 import NotifyConfigurationForm from "./NotifyConfigurationForm";
 
 type Props = {
-  repository: Repository;
   link: string;
 };
 
-export default function NotifyConfigurationContainerFC({ repository, link }: Readonly<Props>) {
+const NotifyConfiguration: FC<Props> = ({ link }) => {
   const [t] = useTranslation("plugins");
-  useDocumentTitleForRepository(repository, t("scm-notify-plugin.form.header"));
+
   return (
     <>
       <Subtitle subtitle={t("scm-notify-plugin.form.header")} />
       <br />
-      <Configuration link={link} render={(props) => <NotifyConfigurationForm {...props} t={t} />} />
+      <Configuration link={link} render={props => <NotifyConfigurationForm {...props} />} />
     </>
   );
-}
+};
+
+export default NotifyConfiguration;

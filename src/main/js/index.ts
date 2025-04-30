@@ -15,6 +15,6 @@
  */
 
 import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
-import NotifyConfigurationContainer from "./NotifyConfigurationContainer";
+import NotifyConfiguration from "./NotifyConfiguration";
 
-cfgBinder.bindRepositorySetting("/notify", "scm-notify-plugin.navLink", "notifyConfig", NotifyConfigurationContainer, "emailNotification");
+cfgBinder.bindRepositorySetting("/notify", "scm-notify-plugin.navLink", "notifyConfig", NotifyConfiguration);
