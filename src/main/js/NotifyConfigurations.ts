@@ -14,10 +14,12 @@
  * along with this program. If not, see https://www.gnu.org/licenses/.
  */
 
-export type NotifyConfigurations = {
+import { HalRepresentation } from "@scm-manager/ui-types";
+
+export type NotifyConfigurations = HalRepresentation & {
   contactList: string[];
   sendToRepositoryContact: boolean;
   useAuthorAsFromAddress: boolean;
   emailPerPush: boolean;
-  maxDiffLines: boolean;
+  maxDiffLines: number;
 };

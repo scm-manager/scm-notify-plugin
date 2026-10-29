@@ -19,27 +19,58 @@
   },
   "scm-notify-plugin": {
     "navLink": "E-Mail-Benachrichtigungen",
-    "form": {
-      "error": {
-        "contactList" : "Die E-Mail-Adresse ist ungültig",
-        "maxDiffLines" : "Bitte geben Sie eine Zahl ein."
+    "subpage": {
+      "title": "E-Mail-Benachrichtigungen für Commits",
+      "submit-success-notification": "Konfiguration erfolgreich gespeichert.",
+      "overview": {
+        "contactsLabel": "Benachrichtigungen senden an",
+        "editContacts": "Liste bearbeiten",
+        "emailHeader": "E-Mail-Adresse",
+        "noContacts": "Keine E-Mail-Adresse konfiguriert",
+        "settingsLabel": "Versandeinstellungen für Commit-Benachrichtigungen",
+        "editSettings": "Einstellungen bearbeiten",
+        "sendAs": "Versenden als",
+        "notifyOn": "Benachrichtigen bei",
+        "repositoryContact": "An Repository-Kontakt senden?",
+        "maxDiffLines": "Max. Anzahl Diff-Zeilen",
+        "yes": "Ja",
+        "no": "Nein"
       },
-      "header": "E-Mail-Benachrichtigungen konfigurieren",
-      "contactList" : "E-Mails",
-      "contactListAdd" : "E-Mail-Adresse hinzufügen",
-      "sendToRepositoryContact" :  "Sende an den Repository Kontakt",
-      "useAuthorAsFromAddress" : "Autor als Absender",
-      "emailPerPush" : "E-Mail pro Push",
-      "maxDiffLines" : "Maximale Zeilenanzahl für Diff "
-    },
-    "formHelpText": {
-      "contactList" : "Liste der E-Mail-Adressen an welche die Benachrichtigungen geschickt werden",
-      "sendToRepositoryContact" :  "Die Benachrichtigung wird an den Repository Kontakt geschickt",
-      "useAuthorAsFromAddress" : "Der Repository Autor ist der Absender der Benachrichtigung",
-      "emailPerPush" : "Es wird eine E-Mail pro Push geschickt",
-      "maxDiffLines" : "Die maximale Zeilenanzahl für das Diff"
+      "contacts": {
+        "title": "E-Mail-Liste bearbeiten",
+        "addTitle": "Neue Adresse hinzufügen",
+        "addressLabel": "E-Mail-Adresse",
+        "addButton": "Hinzufügen",
+        "removeTitle": "Adresse entfernen",
+        "emailHeader": "E-Mail-Adresse",
+        "delete": "Löschen",
+        "invalidEmail": "Die E-Mail-Adresse ist ungültig",
+        "duplicateEmail": "Diese E-Mail-Adresse ist bereits vorhanden"
+      },
+      "settings": {
+        "title": "Versandeinstellungen bearbeiten",
+        "sendAs": {
+          "label": "Versenden als",
+          "description": "Legt die Absendeadresse der E-Mail fest.",
+          "system": "SCM-Manager (Systemadresse)",
+          "author": "Person, die den Commit erstellt hat"
+        },
+        "notifyOn": {
+          "label": "Benachrichtigen bei",
+          "perCommit": "jedem Commit",
+          "perPush": "jedem Push"
+        },
+        "repositoryContact": {
+          "label": "Benachrichtigungen auch an den Repository-Kontakt senden?",
+          "no": "Nein, nur an E-Mail-Liste senden",
+          "yes": "Ja, zusätzlich an Repository-Kontakt senden"
+        },
+        "maxDiffLines": {
+          "label": "Maximale Zeilenanzahl für Diff",
+          "description": "Mögliche Zeilenanzahl: 0 bis 999. Bei \"0\" enthält die E-Mail keine Diff-Ansicht.",
+          "error": "Maximal 999 Zeilen"
+        }
+      }
     }
   }
 }
-
-

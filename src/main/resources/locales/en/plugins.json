@@ -4,7 +4,7 @@
       "notify": {
         "*": {
           "displayName": "Modify email notifications",
-          "description": "May configure the email notification configuration for repositories"
+          "description": "Allows you to configure email notifications"
         }
       }
     }
@@ -13,33 +13,64 @@
     "repository": {
       "notify": {
           "displayName": "email notification",
-          "description": "May configure the email notification configuration"
+          "description": "Allows you to configure email notifications"
         }
     }
   },
   "scm-notify-plugin": {
     "navLink": "Email Notification",
-    "form": {
-      "error": {
-        "contactList" : "The email is not valid",
-        "maxDiffLines" : "Please enter a number format"
+    "subpage": {
+      "title": "Email notifications for commits",
+      "submit-success-notification": "Configuration saved successfully.",
+      "overview": {
+        "contactsLabel": "Send notifications to",
+        "editContacts": "Edit list",
+        "emailHeader": "Email address",
+        "noContacts": "No email addresse configured",
+        "settingsLabel": "Delivery settings for commit notifications",
+        "editSettings": "Edit settings",
+        "sendAs": "Send as",
+        "notifyOn": "Notify on",
+        "repositoryContact": "Send to repository contact?",
+        "maxDiffLines": "Max. diff lines",
+        "yes": "Yes",
+        "no": "No"
       },
-      "header": "Edit Email Notification Configuration",
-      "contactList" : "Emails",
-      "contactListAdd" : "Add Email",
-      "sendToRepositoryContact" :  "Send to Repository Contact",
-      "useAuthorAsFromAddress" : "Use Author as from Address",
-      "emailPerPush" : "Email per Push",
-      "maxDiffLines" : "Maximum Diff Lines"
-    },
-    "formHelpText": {
-      "contactList" : "The list of emails receiving the notifications",
-      "sendToRepositoryContact" :  "Send the email to the repository contact",
-      "useAuthorAsFromAddress" : "Use the author email address as the from field of the email",
-      "emailPerPush" : "Send an email per push",
-      "maxDiffLines" : "The maximum number of diff lines included in the email"
+      "contacts": {
+        "title": "Edit email list",
+        "addTitle": "Add new address",
+        "addressLabel": "Email address",
+        "addButton": "Add",
+        "removeTitle": "Remove address",
+        "emailHeader": "Email address",
+        "delete": "Delete",
+        "invalidEmail": "The email address is not valid",
+        "duplicateEmail": "This email address already exists"
+      },
+      "settings": {
+        "title": "Edit delivery settings",
+        "sendAs": {
+          "label": "Send as",
+          "description": "Defines the sender address of the email.",
+          "system": "SCM-Manager (system address)",
+          "author": "Person who created the commit"
+        },
+        "notifyOn": {
+          "label": "Notify on",
+          "perCommit": "every commit",
+          "perPush": "every push"
+        },
+        "repositoryContact": {
+          "label": "Also send notifications to the repository contact?",
+          "no": "No, only send to email list",
+          "yes": "Yes, also send to repository contact"
+        },
+        "maxDiffLines": {
+          "label": "Maximum number of diff lines",
+          "description": "Possible number of lines: 0 to 999. If set to \"0\", the email will not contain a diff view.",
+          "error": "Maximum of 999 lines"
+        }
       }
+    }
   }
 }
-
-

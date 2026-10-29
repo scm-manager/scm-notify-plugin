@@ -15,24 +15,25 @@
  */
 
 import React, { FC } from "react";
-import { Configuration } from "@scm-manager/ui-components";
-import { Subtitle } from "@scm-manager/ui-core";
+import { ConfigurationSubpageForm, useRepositoryFromParams } from "@scm-manager/ui-core";
 import { useTranslation } from "react-i18next";
+import { Link } from "@scm-manager/ui-types";
 import NotifyConfigurationForm from "./NotifyConfigurationForm";
+import { NotifyConfigurations } from "./NotifyConfigurations";
 
-type Props = {
-  link: string;
-};
-
-const NotifyConfiguration: FC<Props> = ({ link }) => {
+const NotifyConfiguration: FC = () => {
   const [t] = useTranslation("plugins");
+  const repository = useRepositoryFromParams();
+  const link = (repository._links["notifyConfig"] as Link).href;
 
   return (
-    <>
-      <Subtitle subtitle={t("scm-notify-plugin.form.header")} />
-      <br />
-      <Configuration link={link} render={props => <NotifyConfigurationForm {...props} />} />
-    </>
+    <ConfigurationSubpageForm<NotifyConfigurations>
+      link={link}
+      title={t("scm-notify-plugin.subpage.title")}
+      translationPath={["plugins", "scm-notify-plugin.subpage"]}
+    >
+      <NotifyConfigurationForm />
+    </ConfigurationSubpageForm>
   );
 };
 
